@@ -138,6 +138,22 @@
         let currentIndex = 0;
         let playlist = [];
 
+
+        window.onload = function () {
+            alert('Collection of few TV Channels, IPTV and Radio Channels from different sources for educational & research purposes. No infringement or violation inteneded.');
+        };
+
+        // document.addEventListener("visibilitychange", function () {
+        //     if (currentPlayer.tagName === 'VIDEO')
+        //         if (document.hidden) {
+        //             currentPlayer.pause();
+        //         } else {
+        //             currentPlayer.play();
+        //         }
+        // });
+
+
+
         m3uSelect.addEventListener('change', () => {
             loadM3uFile(m3uSelect.value);
         });
@@ -230,11 +246,13 @@
                     hls.attachMedia(video);
                     hls.on(Hls.Events.MANIFEST_LOADED, function () {
                         video.play();
+                        //video.requestFullscreen();
                     });
                 } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                     video.src = item.url;
                     video.addEventListener('loadedmetadata', function () {
                         video.play();
+                        //video.requestFullscreen();
                     });
                 }
             } else if (item.url.includes('youtube')) {
@@ -246,6 +264,7 @@
                 iframe.allow = 'autoplay';
                 playerContainer.appendChild(iframe);
                 currentPlayer = iframe;
+                //currentPlayer.requestFullscreen();
             } else {
                 const audio = document.createElement('audio');
                 audio.src = item.url;
