@@ -72,14 +72,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
         }
 
         video,
         iframe,
         audio {
             width: 100%;
-            height: 80%;
+            height: 100%;
             object-fit: contain;
         }
 
@@ -93,7 +92,6 @@
 <body>
 
     <div class="left-pane">
-
         <select id="m3u-select">
             <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/0_news.m3u"
                 selected>News</option>
@@ -114,20 +112,21 @@
             <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_series.m3u">Series
             </option>
         </select>
+        <button id="prev-button">Previous</button>
+        <button id="next-button">Next</button>
         <div id="playlist-frame">
             <div id="playlist"></div>
+
         </div>
-        <button id="prev-button">Previous</button> <button id="next-button">Next</button>
+
     </div>
 
     <div class="right-pane" id="player-container">
-
         <!-- Player will be rendered here -->
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
-        // JavaScript code here
         const m3uSelect = document.getElementById('m3u-select');
         const playlistElement = document.getElementById('playlist');
         const playerContainer = document.getElementById('player-container');
@@ -214,12 +213,7 @@
             currentIndex = index;
 
             if (currentPlayer) {
-                if (currentPlayer.tagName === 'VIDEO' || currentPlayer.tagName === 'AUDIO') {
-                    currentPlayer.pause();
-                    playerContainer.removeChild(currentPlayer);
-                } else if (currentPlayer.tagName === 'IFRAME') {
-                    playerContainer.removeChild(currentPlayer);
-                }
+                playerContainer.removeChild(currentPlayer);
                 currentPlayer = null;
                 if (hls) hls.destroy();
             }
