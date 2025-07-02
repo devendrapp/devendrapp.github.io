@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M3U Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .left-pane {
+            width: 20%;
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-pane {
+            width: 80%;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+        }
+
+        #playlist-frame {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .playlist-item {
+            cursor: pointer;
+            margin-bottom: 10px;
+            display: block;
+            padding: 5px;
+        }
+
+        .playlist-item.selected {
+            background-color: #ccc;
+        }
+
+        #player-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        video,
+        iframe {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="left-pane">
+        <select id="m3u-select">
+            <option value="">Select M3U File</option>
+            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/0_news.m3u">News
+            </option>
+            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_GenRadio.m3u">
+                General Radio</option>
+            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_RetroRadio.m3u">
+                Retro Radio</option>
+            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_NewRadio.m3u">New
+                Radio</option>
+            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/2_movies.m3u">Movies
+            </option>
+            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/3_music.m3u">Music
+            </option>
+            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/4_anime.m3u">Anime
+            </option>
+            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/5_travelDoc.m3u">
+                Travel & Documentaries</option>
+            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_series.m3u">Series
+            </option>
+        </select>
+        <br>
+        <button id="load-m3u-button">Load Local M3U File</button>
+        <input type="file" id="m3uFile" accept=".m3u" style="display: none;" />
+        <div id="playlist-frame">
+            <div id="playlist"></div>
+        </div>
+    </div>
+
+    <div class="right-pane">
+        <div id="player-container">
+            <!-- Player will be rendered here -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        const loadM3uButton = document.getElementById('load-m3u-button');
+        const fileInput = document.getElementById('m3uFile');
+        const m3uSelect = document.getElementById('m3u-select');
+        const playlistElement = document.getElementById('playlist');
+        const playerContainer = document.getElementById('player-container');
+        let currentPlayer = null;
+        let hls = null;
+        let currentItem = null;
+
+        loadM3uButton.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', handleFileSelect);
+        m3uSelect.addEventListener('change', handleM3uSelect);
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+                const m3uData = event.target.result;
+                renderPlaylistFromData(m3uData);
+            };
+
+            reader.readAsText(file);
+        }
+
+        function handleM3uSelect(event) {
+            const url = event.target.value;
+            if (url) {
+                fetch(url)
+                    .then(response => response.text())
+                    .then(data => renderPlaylistFromData(data));
+            }
+        }
+
+        function renderPlaylistFromData(m3uData) {
+            const lines = m3uData.trim().split('\n');
+            const playlist = [];
+            let currentItem = null;
+
+            lines.forEach(line => {
+                if (line.startsWith('#EXTINF:')) {
+                    const match = line.match(/#EXTINF:,(.*)/);
+                    if (match) {
+                        currentItem = {
+                            name: match[1].trim(),
+                            url: ''
+                        };
+                    }
+                } else if (!line.startsWith('#') && line.trim() !== '') {
+                    currentItem.url = line.trim();
+                    playlist.push(currentItem);
+                    currentItem = null;
+                }
+            });
+
+            renderPlaylist(playlist);
+        }
+
+        function renderPlaylist(playlist) {
+            playlistElement.innerHTML = '';
+
+            playlist.forEach((item, index) => {
+                const element = document.createElement('div');
+                element.className = 'playlist-item';
+                element.textContent = item.name;
+                element.onclick = () => playItem(item, element);
+                playlistElement.appendChild(element);
+            });
+        }
+
+        function playItem(item, element) {
+            if (currentItem) {
+                currentItem.classList.remove('selected');
+            }
+            element.classList.add('selected');
+            currentItem = element;
+
+            if (currentPlayer) {
+                playerContainer.removeChild(currentPlayer);
+                currentPlayer = null;
+                if (hls) hls.destroy();
+            }
+
+            if (item.url.endsWith('.m3u8')) {
+                const video = document.createElement('video');
+                video.controls = true;
+                playerContainer.appendChild(video);
+                currentPlayer = video;
+
+                if (Hls.isSupported()) {
+                    hls = new Hls();
+                    hls.loadSource(item.url);
+                    hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_LOADED, function () {
+                        video.play();
+                    });
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = item.url;
+                    video.addEventListener('loadedmetadata', function () {
+                        video.play();
+                    });
+                }
+            } else if (item.url.includes('youtube')) {
+                const youtubeUrl = item.url.includes('embed') ? item.url : getYoutubeEmbedUrl(item.url);
+                const iframe = document.createElement('iframe');
+                iframe.src = youtubeUrl + '?autoplay=1';
+                iframe.frameBorder = 0;
+                iframe.allowFullScreen = true;
+                iframe.allow = 'autoplay';
+                playerContainer.appendChild(iframe);
+                currentPlayer = iframe;
+            }
+        }
+
+        function getYoutubeEmbedUrl(url) {
+            const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+            const match = url.match(regExp);
+            const videoId = (match && match[7].length == 11) ? match[7] : false;
+            return `https://www.youtube.com/embed/${videoId}`;
+        }
+    </script>
+
+</body>
+
+</html>
