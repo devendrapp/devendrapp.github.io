@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="screen-orientation" content="landscape" />
     <title>M3U Player</title>
     <style>
         body {
@@ -37,14 +38,9 @@
             background-color: #000;
         }
 
-        #m3u-table {
-            border-collapse: collapse;
-        }
-
-        #m3u-table td {
-            border: 1px solid #ddd;
+        #m3u-select {
             padding: 10px;
-            cursor: pointer;
+            width: 100%;
         }
 
         #playlist-frame {
@@ -86,33 +82,26 @@
 <body>
 
     <div class="left-pane">
-        <table id="m3u-table">
-            <tr>
-                <td data-url="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/0_news.m3u">News
-                </td>
-                <td data-url="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_GenRadio.m3u">
-                    General Radio</td>
-                <td
-                    data-url="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_RetroRadio.m3u">
-                    Retro Radio</td>
-            </tr>
-            <tr>
-                <td data-url="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_NewRadio.m3u">
-                    New Radio</td>
-                <td data-url="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/2_movies.m3u">
-                    Movies</td>
-                <td data-url="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/3_music.m3u">
-                    Music</td>
-            </tr>
-            <tr>
-                <td data-url="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/4_anime.m3u">
-                    Anime</td>
-                <td data-url="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/5_travelDoc.m3u">
-                    Travel & Documentaries</td>
-                <td data-url="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_series.m3u">
-                    Series</td>
-            </tr>
-        </table>
+        <select id="m3u-select">
+            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/0_news.m3u"
+                selected>News</option>
+            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_GenRadio.m3u">
+                General Radio</option>
+            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_RetroRadio.m3u">
+                Retro Radio</option>
+            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_NewRadio.m3u">New
+                Radio</option>
+            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/2_movies.m3u">Movies
+            </option>
+            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/3_music.m3u">Music
+            </option>
+            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/4_anime.m3u">Anime
+            </option>
+            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/5_travelDoc.m3u">
+                Travel & Documentaries</option>
+            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_series.m3u">Series
+            </option>
+        </select>
         <div id="playlist-frame">
             <div id="playlist"></div>
         </div>
@@ -126,22 +115,18 @@
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
-        const m3uTable = document.querySelectorAll('#m3u-table td');
+        const m3uSelect = document.getElementById('m3u-select');
         const playlistElement = document.getElementById('playlist');
         const playerContainer = document.getElementById('player-container');
         let currentPlayer = null;
         let hls = null;
         let currentItem = null;
 
-        m3uTable.forEach((item, index) => {
-            item.addEventListener('click', () => {
-                loadM3uFile(item.getAttribute('data-url'));
-            });
-
-            if (index === 0) {
-                loadM3uFile(item.getAttribute('data-url'));
-            }
+        m3uSelect.addEventListener('change', () => {
+            loadM3uFile(m3uSelect.value);
         });
+
+        loadM3uFile(m3uSelect.value);
 
         function loadM3uFile(url) {
             fetch(url)
