@@ -227,6 +227,13 @@
                 playerContainer.appendChild(audio);
                 currentPlayer = audio;
                 audio.play();
+            } else {
+                const audio = document.createElement('audio');
+                audio.src = item.url;
+                audio.controls = true;
+                playerContainer.appendChild(audio);
+                currentPlayer = audio;
+                audio.play();
             }
         }
 
