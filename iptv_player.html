@@ -11,21 +11,24 @@
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: row;
             height: 100vh;
             width: 100vw;
         }
 
         .left-pane {
-            width: 20%;
+            width: 30%;
             background-color: #f0f0f0;
-            padding: 20px;
+            padding: 10px;
             border-right: 1px solid #ddd;
             display: flex;
             flex-direction: column;
+            resize: horizontal;
+            overflow: auto;
         }
 
         .right-pane {
-            width: 80%;
+            flex-grow: 1;
             padding: 0;
             margin: 0;
             display: flex;
@@ -61,7 +64,8 @@
         }
 
         video,
-        iframe {
+        iframe,
+        audio {
             width: 100%;
             height: 100%;
             object-fit: contain;
@@ -73,9 +77,8 @@
 
     <div class="left-pane">
         <select id="m3u-select">
-            <option value="">Select M3U File</option>
-            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/0_news.m3u">News
-            </option>
+            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/0_news.m3u"
+                selected>News</option>
             <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_GenRadio.m3u">
                 General Radio</option>
             <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_RetroRadio.m3u">
@@ -93,7 +96,6 @@
             <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_series.m3u">Series
             </option>
         </select>
-        <br>
         <button id="load-m3u-button">Load Local M3U File</button>
         <input type="file" id="m3uFile" accept=".m3u" style="display: none;" />
         <div id="playlist-frame">
@@ -136,11 +138,9 @@
 
         function handleM3uSelect(event) {
             const url = event.target.value;
-            if (url) {
-                fetch(url)
-                    .then(response => response.text())
-                    .then(data => renderPlaylistFromData(data));
-            }
+            fetch(url)
+                .then(response => response.text())
+                .then(data => renderPlaylistFromData(data));
         }
 
         function renderPlaylistFromData(m3uData) {
@@ -220,6 +220,13 @@
                 iframe.allow = 'autoplay';
                 playerContainer.appendChild(iframe);
                 currentPlayer = iframe;
+            } else if (item.url.endsWith('.mp3') || item.url.endsWith('.aac')) {
+                const audio = document.createElement('audio');
+                audio.controls = true;
+                audio.src = item.url;
+                playerContainer.appendChild(audio);
+                currentPlayer = audio;
+                audio.play();
             }
         }
 
@@ -229,6 +236,11 @@
             const videoId = (match && match[7].length == 11) ? match[7] : false;
             return `https://www.youtube.com/embed/${videoId}`;
         }
+
+        // Load default playlist
+        fetch(m3uSelect.value)
+            .then(response => response.text())
+            .then(data => renderPlaylistFromData(data));
     </script>
 
 </body>
