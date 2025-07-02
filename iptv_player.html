@@ -220,13 +220,6 @@
                 iframe.allow = 'autoplay';
                 playerContainer.appendChild(iframe);
                 currentPlayer = iframe;
-            } else if (item.url.endsWith('.mp3') || item.url.endsWith('.aac')) {
-                const audio = document.createElement('audio');
-                audio.controls = true;
-                audio.src = item.url;
-                playerContainer.appendChild(audio);
-                currentPlayer = audio;
-                audio.play();
             } else {
                 const audio = document.createElement('audio');
                 audio.src = item.url;
