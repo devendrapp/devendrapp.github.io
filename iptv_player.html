@@ -60,15 +60,23 @@
             padding: 0;
             margin: 0;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
             background-color: #000;
             margin-left: 250px;
         }
 
         #player-container {
-            width: 100%;
-            height: 100%;
+            flex-grow: 1;
+            display: flex;
+            overflow-y: auto;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #controls-container {
+            height: 50px;
+            background-color: #ccc;
+            padding: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -85,6 +93,10 @@
         button {
             padding: 10px;
             margin: 10px;
+        }
+
+        .focused {
+            border: 2px solid #f00;
         }
     </style>
 </head>
@@ -112,8 +124,6 @@
             <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_series.m3u">Series
             </option>
         </select>
-        <button id="prev-button">Previous</button>
-        <button id="next-button">Next</button>
         <div id="playlist-frame">
             <div id="playlist"></div>
 
@@ -121,8 +131,20 @@
 
     </div>
 
-    <div class="right-pane" id="player-container">
-        <!-- Player will be rendered here -->
+    <div class="right-pane">
+
+        <div id="controls-container">
+            <span id="current-item-name" style="flex-grow: 1; text-align: center; margin-right: 10px;"></span>
+            <button id="prev-button">Previous</button>
+            <button id="play-pause-button">Play/Pause</button>
+            <button id="next-button">Next</button>
+            <button id="fullscreen-button">Fullscreen</button>
+
+        </div>
+        <div id="player-container">
+
+            <!-- Player will be rendered here -->
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -131,28 +153,19 @@
         const playlistElement = document.getElementById('playlist');
         const playerContainer = document.getElementById('player-container');
         const prevButton = document.getElementById('prev-button');
+        const playPauseButton = document.getElementById('play-pause-button');
         const nextButton = document.getElementById('next-button');
+        const fullscreenButton = document.getElementById('fullscreen-button');
         let currentPlayer = null;
         let hls = null;
         let currentItem = null;
         let currentIndex = 0;
         let playlist = [];
-
+        let currentFocus = m3uSelect;
 
         window.onload = function () {
             alert('Collection of few TV Channels, IPTV and Radio Channels from different sources for educational & research purposes. No infringement or violation inteneded.');
         };
-
-        // document.addEventListener("visibilitychange", function () {
-        //     if (currentPlayer.tagName === 'VIDEO')
-        //         if (document.hidden) {
-        //             currentPlayer.pause();
-        //         } else {
-        //             currentPlayer.play();
-        //         }
-        // });
-
-
 
         m3uSelect.addEventListener('change', () => {
             loadM3uFile(m3uSelect.value);
@@ -172,8 +185,30 @@
             playPreviousItem();
         });
 
+        playPauseButton.addEventListener('click', () => {
+            if (currentPlayer) {
+                if (currentPlayer.paused) {
+                    currentPlayer.play();
+                } else {
+                    currentPlayer.pause();
+                }
+            }
+        });
+
         nextButton.addEventListener('click', () => {
             playNextItem();
+        });
+
+        fullscreenButton.addEventListener('click', () => {
+            if (currentPlayer) {
+                if (currentPlayer.requestFullscreen) {
+                    currentPlayer.requestFullscreen();
+                } else if (currentPlayer.webkitRequestFullscreen) {
+                    currentPlayer.webkitRequestFullscreen();
+                } else if (currentPlayer.msRequestFullscreen) {
+                    currentPlayer.msRequestFullscreen();
+                }
+            }
         });
 
         loadM3uFile(m3uSelect.value);
@@ -232,6 +267,7 @@
                 playerContainer.removeChild(currentPlayer);
                 currentPlayer = null;
                 if (hls) hls.destroy();
+                document.getElementById('current-item-name').textContent = '';
             }
 
             if (item.url.endsWith('.m3u8')) {
@@ -246,13 +282,11 @@
                     hls.attachMedia(video);
                     hls.on(Hls.Events.MANIFEST_LOADED, function () {
                         video.play();
-                        //video.requestFullscreen();
                     });
                 } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                     video.src = item.url;
                     video.addEventListener('loadedmetadata', function () {
                         video.play();
-                        //video.requestFullscreen();
                     });
                 }
             } else if (item.url.includes('youtube')) {
@@ -264,7 +298,6 @@
                 iframe.allow = 'autoplay';
                 playerContainer.appendChild(iframe);
                 currentPlayer = iframe;
-                //currentPlayer.requestFullscreen();
             } else {
                 const audio = document.createElement('audio');
                 audio.src = item.url;
@@ -273,6 +306,7 @@
                 currentPlayer = audio;
                 audio.play();
             }
+            document.getElementById('current-item-name').textContent = item.name;
         }
 
         function playPreviousItem() {
@@ -296,6 +330,90 @@
             const match = url.match(regExp);
             const videoId = (match && match[7].length == 11) ? match[7] : false;
             return `https://www.youtube.com/embed/${videoId}`;
+        }
+
+        document.addEventListener('keydown', (e) => {
+            switch (e.key) {
+                case 'ArrowUp':
+                    navigateUp();
+                    break;
+                case 'ArrowDown':
+                    navigateDown();
+                    break;
+                case 'ArrowLeft':
+                    navigateLeft();
+                    break;
+                case 'ArrowRight':
+                    navigateRight();
+                    break;
+                case 'Enter':
+                    currentFocus.click();
+                    break;
+            }
+        });
+
+        function navigateUp() {
+            if (currentFocus === playlistElement.children[currentIndex]) {
+                currentFocus.classList.remove('focused');
+                currentFocus = prevButton;
+                prevButton.classList.add('focused');
+            } else if (currentFocus === nextButton) {
+                currentFocus.classList.remove('focused');
+                currentFocus = playPauseButton;
+                playPauseButton.classList.add('focused');
+            } else if (currentFocus === fullscreenButton) {
+                currentFocus.classList.remove('focused');
+                currentFocus = nextButton;
+                nextButton.classList.add('focused');
+            }
+        }
+
+        function navigateDown() {
+            if (currentFocus === prevButton) {
+                currentFocus.classList.remove('focused');
+                currentFocus = playPauseButton;
+                playPauseButton.classList.add('focused');
+            } else if (currentFocus === playPauseButton) {
+                currentFocus.classList.remove('focused');
+                currentFocus = nextButton;
+                nextButton.classList.add('focused');
+            } else if (currentFocus === nextButton) {
+                currentFocus.classList.remove('focused');
+                currentFocus = fullscreenButton;
+                fullscreenButton.classList.add('focused');
+            }
+        }
+
+        function navigateLeft() {
+            if (currentFocus === playPauseButton) {
+                currentFocus.classList.remove('focused');
+                currentFocus = prevButton;
+                prevButton.classList.add('focused');
+            } else if (currentFocus === nextButton) {
+                currentFocus.classList.remove('focused');
+                currentFocus = playPauseButton;
+                playPauseButton.classList.add('focused');
+            } else if (currentFocus === fullscreenButton) {
+                currentFocus.classList.remove('focused');
+                currentFocus = nextButton;
+                nextButton.classList.add('focused');
+            }
+        }
+
+        function navigateRight() {
+            if (currentFocus === prevButton) {
+                currentFocus.classList.remove('focused');
+                currentFocus = playPauseButton;
+                playPauseButton.classList.add('focused');
+            } else if (currentFocus === playPauseButton) {
+                currentFocus.classList.remove('focused');
+                currentFocus = nextButton;
+                nextButton.classList.add('focused');
+            } else if (currentFocus === nextButton) {
+                currentFocus.classList.remove('focused');
+                currentFocus = fullscreenButton;
+                fullscreenButton.classList.add('focused');
+            }
         }
     </script>
 
