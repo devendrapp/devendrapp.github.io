@@ -167,22 +167,20 @@
         //     alert('Collection of few TV Channels, IPTV and Radio Channels from different sources for educational & research purposes. No infringement or violation inteneded.');
         // };
 
-        function getUserName() {
-            const today = new Date();
-            const day = today.getDate();
-            const month = today.getMonth() + 1;
-            const year = today.getFullYear() % 100;
-            return day + month + year;
-        }
-
         window.onload = function () {
-            const username = prompt("Enter Username");
-            const currentDate = getUserName();
-            if (username !== currentDate) {
-                //window.location.href = 'about:blank';
+            const currentDate = new Date();
+            const dayOfMonth = currentDate.getDate();
+            const val = dayOfMonth + 96;
+            if (dayOfMonth > 26) {
+                dayOfMonth = 26;
+            }
+            const targetUsername = String.fromCharCode(val);
+
+            const username = prompt("Please enter your username:");
+            if (username !== targetUsername) {
                 window.close();
             }
-        }
+        };
 
         m3uSelect.addEventListener('change', () => {
             loadM3uFile(m3uSelect.value);
