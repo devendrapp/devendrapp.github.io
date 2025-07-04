@@ -98,32 +98,57 @@
         .focused {
             border: 2px solid #f00;
         }
+
+        #search-container {
+            padding: 2px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
     </style>
 </head>
 
 <body>
 
     <div class="left-pane">
-        <select id="m3u-select">
-            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/0_news.m3u"
-                selected>News</option>
-            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_GenRadio.m3u">
-                General Radio</option>
-            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_RetroRadio.m3u">
-                Retro Radio</option>
-            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_NewRadio.m3u">New
-                Radio</option>
-            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/2_movies.m3u">Movies
-            </option>
-            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/3_music.m3u">Music
-            </option>
-            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/4_anime.m3u">Anime
-            </option>
-            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/5_travelDoc.m3u">
-                Travel & Documentaries</option>
-            <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_series.m3u">Series
-            </option>
-        </select>
+        <div id="search-container">
+
+            <select id="m3u-select">
+                <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/0_news.m3u"
+                    selected>News</option>
+                <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_GenRadio.m3u">
+                    General Radio</option>
+                <option
+                    value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_RetroRadio.m3u">
+                    Retro Radio</option>
+                <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_NewRadio.m3u">
+                    New
+                    Radio</option>
+                <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/2_movies.m3u">
+                    Movies
+                </option>
+                <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/3_music.m3u">
+                    Music
+                </option>
+                <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/4_anime.m3u">
+                    Anime
+                </option>
+                <option
+                    value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/5_travelDoc.m3u">
+                    Travel & Documentaries</option>
+                <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_series.m3u">
+                    Series
+                </option>
+            </select>
+        </div>
+        <div id="search-container">
+            <input id="search-input" type="text" placeholder="Search playlist...">
+        </div>
         <div id="playlist-frame">
             <div id="playlist"></div>
 
@@ -156,6 +181,9 @@
         const playPauseButton = document.getElementById('play-pause-button');
         const nextButton = document.getElementById('next-button');
         const fullscreenButton = document.getElementById('fullscreen-button');
+        const searchInput = document.getElementById('search-input');
+
+
         let currentPlayer = null;
         let hls = null;
         let currentItem = null;
@@ -256,6 +284,25 @@
             });
 
             renderPlaylist(playlist);
+        }
+
+
+        function renderPlaylist(playlistToRender) {
+            playlistElement.innerHTML = '';
+
+            if (playlistToRender.length === 0) {
+                const noResultsElement = document.createElement('div');
+                noResultsElement.textContent = 'No results found';
+                playlistElement.appendChild(noResultsElement);
+            } else {
+                playlistToRender.forEach((item, index) => {
+                    const element = document.createElement('div');
+                    element.className = 'playlist-item';
+                    element.textContent = item.name;
+                    element.onclick = () => playItem(item, element, playlist.indexOf(item));
+                    playlistElement.appendChild(element);
+                });
+            }
         }
 
         function renderPlaylist(playlist) {
@@ -430,6 +477,13 @@
                 fullscreenButton.classList.add('focused');
             }
         }
+
+        searchInput.addEventListener('input', () => {
+            const searchQuery = searchInput.value.toLowerCase();
+            const filteredPlaylist = playlist.filter(item => item.name.toLowerCase().includes(searchQuery));
+            renderPlaylist(filteredPlaylist);
+        });
+
     </script>
 
 </body>
