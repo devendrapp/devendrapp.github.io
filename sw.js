@@ -3,8 +3,6 @@ self.addEventListener('install', (event) => {
     caches.open('door-chitra-vani-cache').then((cache) => {
       return cache.addAll([
         '/',
-        ,'/'
-
         // Add other essential files here
       ]);
     })
