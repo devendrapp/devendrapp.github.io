@@ -381,6 +381,26 @@
         loadChannels();
         loadPlaylist();
 
+        screen.orientation.addEventListener('change', function () {
+            if (currentPlayer && (currentPlayer.tagName === 'VIDEO' || currentPlayer.tagName === 'IFRAME')) {
+                if (screen.orientation.type.startsWith('landscape')) {
+                    // Landscape mode
+                    if (currentPlayer.requestFullscreen) {
+                        currentPlayer.requestFullscreen();
+                    } else if (currentPlayer.webkitRequestFullscreen) {
+                        currentPlayer.webkitRequestFullscreen();
+                    } else if (currentPlayer.msRequestFullscreen) {
+                        currentPlayer.msRequestFullscreen();
+                    }
+                } else {
+                    // Portrait mode
+                    if (document.fullscreenElement) {
+                        document.exitFullscreen();
+                    }
+                }
+            }
+        });
+
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
                 .then((registration) => {
