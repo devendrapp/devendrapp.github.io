@@ -157,13 +157,18 @@
             }
         };
 
-        function loadChannels() {
-            const currentDate = new Date().toISOString().split('T')[0];
-            const cachedDate = localStorage.getItem('0_currentDate');
+        function clearLocalStorage() {
+            localStorage.clear();
+        }
 
-            if (cachedDate !== currentDate) {
+        setInterval(clearLocalStorage, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
+
+        function loadChannels() {
+            const localStorageCount = localStorage.length;
+
+            if (localStorageCount == 0) {
                 localStorage.clear();
-                localStorage.setItem('0_currentDate', currentDate);
+
 
                 fetch('https://raw.githubusercontent.com/TVGarden/tv-garden-channel-list/refs/heads/main/channels/raw/categories/all-channels.json')
                     .then(response => response.json())
