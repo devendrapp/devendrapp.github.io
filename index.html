@@ -4,11 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <link rel="manifest" href="manifest.json">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="screen-orientation" content="landscape" />
-    <title>DoorChitraVani Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoorChitraVani</title>
     <style>
-        /* Add styles here */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -33,29 +31,6 @@
             overflow: auto;
         }
 
-        #m3u-select {
-            padding: 10px;
-            width: 100%;
-        }
-
-        #playlist-frame {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 10px;
-            border: 1px solid #ddd;
-        }
-
-        .playlist-item {
-            cursor: pointer;
-            margin-bottom: 10px;
-            display: block;
-            padding: 5px;
-        }
-
-        .playlist-item.selected {
-            background-color: #ccc;
-        }
-
         .right-pane {
             flex-grow: 1;
             padding: 0;
@@ -74,6 +49,13 @@
             align-items: center;
         }
 
+        #player-container video,
+        #player-container iframe {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
         #controls-container {
             height: 50px;
             background-color: #ccc;
@@ -83,21 +65,9 @@
             align-items: center;
         }
 
-        video,
-        iframe,
-        audio {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        button {
+        #controls-container button {
             padding: 10px;
-            margin: 10px;
-        }
-
-        .focused {
-            border: 2px solid #f00;
+            margin: 0 10px;
         }
 
         #search-container {
@@ -111,74 +81,53 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
+        #playlist {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .playlist-item {
+            cursor: pointer;
+            margin-bottom: 10px;
+            display: block;
+            padding: 5px;
+        }
+
+        .playlist-item.selected {
+            background-color: #ccc;
+        }
     </style>
 </head>
 
 <body>
-
     <div class="left-pane">
         <div id="search-container">
-
-            <select id="m3u-select">
-                <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/0_news.m3u"
-                    selected>News</option>
-                <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_GenRadio.m3u">
-                    General Radio</option>
-                <option
-                    value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_RetroRadio.m3u">
-                    Retro Radio</option>
-                <option value="https://raw.githubusercontent.com/devendrapp/public/refs/heads/master/TV/1_NewRadio.m3u">
-                    New Radio</option>
-            </select>
+            <input id="search-input" type="text" placeholder="">
         </div>
-        <div id="search-container">
-            <input id="search-input" type="text" placeholder="Search playlist...">
-        </div>
-        <div id="playlist-frame">
-            <div id="playlist"></div>
-
-        </div>
-
+        <div id="playlist"></div>
     </div>
-
     <div class="right-pane">
 
         <div id="controls-container">
-            <span id="current-item-name" style="flex-grow: 1; text-align: center; margin-right: 10px;"></span>
-            <button id="fullscreen-button">Fullscreen</button>
-            <button id="prev-button">Previous</button>
+            <button id="prev-button">Prev</button>
             <button id="play-pause-button">Play/Pause</button>
             <button id="next-button">Next</button>
+            <button id="fullscreen-button">Fullscreen</button>
+            <button id="channel-name-button">Channel</button>
         </div>
-        <div id="player-container">
-
-            <!-- Player will be rendered here -->
-        </div>
+        <div id="player-container"></div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
-        screen.orientation.lock('landscape');
-        const m3uSelect = document.getElementById('m3u-select');
-        const playlistElement = document.getElementById('playlist');
-        const playerContainer = document.getElementById('player-container');
-        const prevButton = document.getElementById('prev-button');
-        const playPauseButton = document.getElementById('play-pause-button');
-        const nextButton = document.getElementById('next-button');
-        const fullscreenButton = document.getElementById('fullscreen-button');
-        const searchInput = document.getElementById('search-input');
-
-
         let currentPlayer = null;
         let hls = null;
         let currentItem = null;
         let currentIndex = 0;
-        let playlist = [];
-        let currentFocus = m3uSelect;
-
-        // window.onload = function () {
-        //     alert('Collection of few TV Channels, IPTV and Radio Channels from different sources for educational & research purposes. No infringement or violation inteneded.');
-        // };
+        let channels = {};
+        let currentChannelName = '';
 
         window.onload = function () {
             const currentDate = new Date();
@@ -195,105 +144,72 @@
             }
         };
 
-        m3uSelect.addEventListener('change', () => {
-            loadM3uFile(m3uSelect.value);
-        });
+        function loadChannels() {
+            const currentDate = new Date().toISOString().split('T')[0];
+            const cachedDate = localStorage.getItem('0_currentDate');
 
-        playerContainer.addEventListener('click', () => {
-            if (currentPlayer) {
-                if (currentPlayer.paused) {
-                    currentPlayer.play();
-                } else {
-                    currentPlayer.pause();
-                }
-            }
-        });
+            if (cachedDate !== currentDate) {
+                localStorage.clear();
+                localStorage.setItem('0_currentDate', currentDate);
 
-        prevButton.addEventListener('click', () => {
-            playPreviousItem();
-        });
+                fetch('https://raw.githubusercontent.com/TVGarden/tv-garden-channel-list/refs/heads/main/channels/raw/categories/all-channels.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(channel => {
+                            if (channel.language != "eng" && channel.language != "hin" && channel.language != "mar" && channel.country != "in" && channel.country != "us" && channel.country != "uk")
+                                return;
+                            let url = '';
+                            if (channel.iptv_urls && channel.iptv_urls.length > 0) {
+                                url = channel.iptv_urls[0];
+                            } else if (channel.youtube_urls && channel.youtube_urls.length > 0) {
+                                url = channel.youtube_urls[0];
+                            }
+                            if (url) {
+                                let name = channel.name;
+                                if (channel.language) {
+                                    name += ` (${channel.language})`;
+                                } else if (channel.country) {
+                                    name += ` (${channel.country})`;
+                                }
+                                channels[name] = url;
+                                localStorage.setItem(name, url);
+                            }
+                        });
+                    })
+                    .catch(error => console.error('Error:', error));
 
-        playPauseButton.addEventListener('click', () => {
-            if (currentPlayer) {
-                if (currentPlayer.paused) {
-                    currentPlayer.play();
-                } else {
-                    currentPlayer.pause();
-                }
-            }
-        });
 
-        nextButton.addEventListener('click', () => {
-            playNextItem();
-        });
-
-        fullscreenButton.addEventListener('click', () => {
-            if (currentPlayer) {
-                if (currentPlayer.requestFullscreen) {
-                    currentPlayer.requestFullscreen();
-                } else if (currentPlayer.webkitRequestFullscreen) {
-                    currentPlayer.webkitRequestFullscreen();
-                } else if (currentPlayer.msRequestFullscreen) {
-                    currentPlayer.msRequestFullscreen();
-                }
-            }
-        });
-
-        loadM3uFile(m3uSelect.value);
-
-        function loadM3uFile(url) {
-            fetch(url)
-                .then(response => response.text())
-                .then(data => renderPlaylistFromData(data));
-        }
-
-        function renderPlaylistFromData(m3uData) {
-            const lines = m3uData.trim().split('\n');
-            playlist = [];
-            let currentItem = null;
-
-            lines.forEach(line => {
-                if (line.startsWith('#EXTINF:')) {
-                    const match = line.match(/#EXTINF:,(.*)/);
-                    if (match) {
-                        currentItem = {
-                            name: match[1].trim(),
-                            url: ''
-                        };
+                fetch('https://raw.githubusercontent.com/junguler/m3u-radio-music-playlists/refs/heads/main/zeno.fm/India.m3u')
+                    .then(response => response.text())
+                    .then(data => {
+                        const lines = data.split('\n');
+                        let channelName = null;
+                        lines.forEach(line => {
+                            if (line.startsWith('#EXTINF:')) {
+                                channelName = line.split(',')[1].trim();
+                            } else if (line.startsWith('http')) {
+                                if (channelName) {
+                                    localStorage.setItem(channelName, line.trim());
+                                    channelName = null;
+                                }
+                            }
+                        });
+                    }).catch(error => console.error('Error:', error));
+            } else {
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key !== '0_currentDate') {
+                        channels[key] = localStorage.getItem(key);
                     }
-                } else if (!line.startsWith('#') && line.trim() !== '') {
-                    currentItem.url = line.trim();
-                    playlist.push(currentItem);
-                    currentItem = null;
                 }
-            });
-
-            renderPlaylist(playlist);
+            }
         }
-
 
         function renderPlaylist(playlistToRender) {
+            const playlistElement = document.getElementById('playlist');
             playlistElement.innerHTML = '';
 
-            if (playlistToRender.length === 0) {
-                const noResultsElement = document.createElement('div');
-                noResultsElement.textContent = 'No results found';
-                playlistElement.appendChild(noResultsElement);
-            } else {
-                playlistToRender.forEach((item, index) => {
-                    const element = document.createElement('div');
-                    element.className = 'playlist-item';
-                    element.textContent = item.name;
-                    element.onclick = () => playItem(item, element, playlist.indexOf(item));
-                    playlistElement.appendChild(element);
-                });
-            }
-        }
-
-        function renderPlaylist(playlist) {
-            playlistElement.innerHTML = '';
-
-            playlist.forEach((item, index) => {
+            playlistToRender.forEach((item, index) => {
                 const element = document.createElement('div');
                 element.className = 'playlist-item';
                 element.textContent = item.name;
@@ -302,6 +218,21 @@
             });
         }
 
+        document.getElementById('search-input').addEventListener('input', () => {
+            const searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
+            if (searchQuery.length >= 2) {
+                const searchWords = searchQuery.split(' ').filter(word => word.length > 1);
+                const filteredPlaylist = Object.keys(channels).filter(name => {
+                    const nameLower = name.toLowerCase();
+                    return searchWords.every(word => nameLower.includes(word));
+                }).map((name, index) => ({ name, url: channels[name], index }));
+                renderPlaylist(filteredPlaylist);
+            } else {
+                document.getElementById('playlist').innerHTML = '';
+                loadPlaylist();
+            }
+        });
+
         function playItem(item, element, index) {
             if (currentItem) {
                 currentItem.classList.remove('selected');
@@ -309,18 +240,28 @@
             element.classList.add('selected');
             currentItem = element;
             currentIndex = index;
+            currentChannelName = item.name;
+            document.getElementById('channel-name-button').textContent = currentChannelName;
+
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: item.name
+                    // artist: 'Artist Name',
+                    // album: 'Album Name',
+                    // artwork: [{ src: 'cover.jpg' }]
+                });
+            }
 
             if (currentPlayer) {
-                playerContainer.removeChild(currentPlayer);
+                document.getElementById('player-container').removeChild(currentPlayer);
                 currentPlayer = null;
                 if (hls) hls.destroy();
-                document.getElementById('current-item-name').textContent = '';
             }
 
             if (item.url.endsWith('.m3u8')) {
                 const video = document.createElement('video');
                 video.controls = true;
-                playerContainer.appendChild(video);
+                document.getElementById('player-container').appendChild(video);
                 currentPlayer = video;
 
                 if (Hls.isSupported()) {
@@ -343,34 +284,65 @@
                 iframe.frameBorder = 0;
                 iframe.allowFullScreen = true;
                 iframe.allow = 'autoplay';
-                playerContainer.appendChild(iframe);
+                document.getElementById('player-container').appendChild(iframe);
                 currentPlayer = iframe;
             } else {
                 const audio = document.createElement('audio');
-                audio.src = item.url;
                 audio.controls = true;
-                playerContainer.appendChild(audio);
+                audio.src = item.url;
+                document.getElementById('player-container').appendChild(audio);
                 currentPlayer = audio;
                 audio.play();
             }
-            document.getElementById('current-item-name').textContent = item.name;
         }
 
-        function playPreviousItem() {
+        document.getElementById('player-container').addEventListener('click', () => {
+            if (currentPlayer) {
+                if (currentPlayer.paused) {
+                    currentPlayer.play();
+                } else {
+                    currentPlayer.pause();
+                }
+            }
+        });
+
+        document.getElementById('prev-button').addEventListener('click', () => {
             if (currentIndex > 0) {
-                const previousItem = playlist[currentIndex - 1];
-                const previousElement = playlistElement.children[currentIndex - 1];
+                const previousItem = Object.keys(channels).map((name, index) => ({ name, url: channels[name], index }))[currentIndex - 1];
+                const previousElement = document.getElementById('playlist').children[currentIndex - 1];
                 playItem(previousItem, previousElement, currentIndex - 1);
             }
-        }
+        });
 
-        function playNextItem() {
-            if (currentIndex < playlist.length - 1) {
-                const nextItem = playlist[currentIndex + 1];
-                const nextElement = playlistElement.children[currentIndex + 1];
+        document.getElementById('play-pause-button').addEventListener('click', () => {
+            if (currentPlayer) {
+                if (currentPlayer.paused) {
+                    currentPlayer.play();
+                } else {
+                    currentPlayer.pause();
+                }
+            }
+        });
+
+        document.getElementById('next-button').addEventListener('click', () => {
+            if (currentIndex < Object.keys(channels).length - 1) {
+                const nextItem = Object.keys(channels).map((name, index) => ({ name, url: channels[name], index }))[currentIndex + 1];
+                const nextElement = document.getElementById('playlist').children[currentIndex + 1];
                 playItem(nextItem, nextElement, currentIndex + 1);
             }
-        }
+        });
+
+        document.getElementById('fullscreen-button').addEventListener('click', () => {
+            if (currentPlayer) {
+                if (currentPlayer.requestFullscreen) {
+                    currentPlayer.requestFullscreen();
+                } else if (currentPlayer.webkitRequestFullscreen) {
+                    currentPlayer.webkitRequestFullscreen();
+                } else if (currentPlayer.msRequestFullscreen) {
+                    currentPlayer.msRequestFullscreen();
+                }
+            }
+        });
 
         function getYoutubeEmbedUrl(url) {
             const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
@@ -379,96 +351,21 @@
             return `https://www.youtube.com/embed/${videoId}`;
         }
 
-        document.addEventListener('keydown', (e) => {
-            switch (e.key) {
-                case 'ArrowUp':
-                    navigateUp();
-                    break;
-                case 'ArrowDown':
-                    navigateDown();
-                    break;
-                case 'ArrowLeft':
-                    navigateLeft();
-                    break;
-                case 'ArrowRight':
-                    navigateRight();
-                    break;
-                case 'Enter':
-                    currentFocus.click();
-                    break;
-            }
-        });
-
-        function navigateUp() {
-            if (currentFocus === playlistElement.children[currentIndex]) {
-                currentFocus.classList.remove('focused');
-                currentFocus = prevButton;
-                prevButton.classList.add('focused');
-            } else if (currentFocus === nextButton) {
-                currentFocus.classList.remove('focused');
-                currentFocus = playPauseButton;
-                playPauseButton.classList.add('focused');
-            } else if (currentFocus === fullscreenButton) {
-                currentFocus.classList.remove('focused');
-                currentFocus = nextButton;
-                nextButton.classList.add('focused');
-            }
+        function loadPlaylist() {
+            const searchTerms = ['NDTV India', 'NDTV Marathi', 'Aaj Tak', 'ABP Majha', 'TV9 Marathi', 'Saam', 'Zee 24 Taas', 'Lok Sabha'];
+            const channelsToLoad = [];
+            searchTerms.forEach(term => {
+                Object.keys(channels).forEach(channel => {
+                    if (channel.toLowerCase().includes(term.toLowerCase()) && !channelsToLoad.find(c => c.name === channel)) {
+                        channelsToLoad.push({ name: channel, url: channels[channel] });
+                    }
+                });
+            });
+            renderPlaylist(channelsToLoad);
         }
 
-        function navigateDown() {
-            if (currentFocus === prevButton) {
-                currentFocus.classList.remove('focused');
-                currentFocus = playPauseButton;
-                playPauseButton.classList.add('focused');
-            } else if (currentFocus === playPauseButton) {
-                currentFocus.classList.remove('focused');
-                currentFocus = nextButton;
-                nextButton.classList.add('focused');
-            } else if (currentFocus === nextButton) {
-                currentFocus.classList.remove('focused');
-                currentFocus = fullscreenButton;
-                fullscreenButton.classList.add('focused');
-            }
-        }
-
-        function navigateLeft() {
-            if (currentFocus === playPauseButton) {
-                currentFocus.classList.remove('focused');
-                currentFocus = prevButton;
-                prevButton.classList.add('focused');
-            } else if (currentFocus === nextButton) {
-                currentFocus.classList.remove('focused');
-                currentFocus = playPauseButton;
-                playPauseButton.classList.add('focused');
-            } else if (currentFocus === fullscreenButton) {
-                currentFocus.classList.remove('focused');
-                currentFocus = nextButton;
-                nextButton.classList.add('focused');
-            }
-        }
-
-        function navigateRight() {
-            if (currentFocus === prevButton) {
-                currentFocus.classList.remove('focused');
-                currentFocus = playPauseButton;
-                playPauseButton.classList.add('focused');
-            } else if (currentFocus === playPauseButton) {
-                currentFocus.classList.remove('focused');
-                currentFocus = nextButton;
-                nextButton.classList.add('focused');
-            } else if (currentFocus === nextButton) {
-                currentFocus.classList.remove('focused');
-                currentFocus = fullscreenButton;
-                fullscreenButton.classList.add('focused');
-            }
-        }
-
-        searchInput.addEventListener('input', () => {
-            const searchQuery = searchInput.value.toLowerCase();
-            const filteredPlaylist = playlist.filter(item => item.name.toLowerCase().includes(searchQuery));
-            renderPlaylist(filteredPlaylist);
-        });
-
+        loadChannels();
+        loadPlaylist();
 
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
@@ -480,7 +377,6 @@
                 });
         }
     </script>
-
 </body>
 
 </html>
