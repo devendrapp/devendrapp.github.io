@@ -158,65 +158,87 @@
         };
 
         function clearLocalStorage() {
+            const jsonUrl = localStorage.getItem('jsonUrl');
+            const m3uUrl = localStorage.getItem('m3uUrl');
             localStorage.clear();
+            localStorage.setItem('jsonUrl', jsonUrl);
+            localStorage.setItem('m3uUrl', m3uUrl);
+
         }
 
         setInterval(clearLocalStorage, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
 
         function loadChannels() {
+            let jsonUrl = localStorage.getItem('jsonUrl');
+            let m3uUrl = localStorage.getItem('m3uUrl');
+
+            if (!jsonUrl) {
+                jsonUrl = prompt("Enter JSON URL:");
+                if (jsonUrl) {
+                    localStorage.setItem('jsonUrl', jsonUrl);
+                }
+            }
+
+            if (!m3uUrl) {
+                m3uUrl = prompt("Enter M3U URL:");
+                if (m3uUrl) {
+                    localStorage.setItem('m3uUrl', m3uUrl);
+                }
+            }
+
             const localStorageCount = localStorage.length;
 
-            if (localStorageCount == 0) {
-                localStorage.clear();
-
-
-                fetch('https://raw.githubusercontent.com/TVGarden/tv-garden-channel-list/refs/heads/main/channels/raw/categories/all-channels.json')
-                    .then(response => response.json())
-                    .then(data => {
-                        data.forEach(channel => {
-                            if (channel.language != "eng" && channel.language != "hin" && channel.language != "mar" && channel.country != "in" && channel.country != "us" && channel.country != "uk")
-                                return;
-                            let url = '';
-                            if (channel.iptv_urls && channel.iptv_urls.length > 0) {
-                                url = channel.iptv_urls[0];
-                            } else if (channel.youtube_urls && channel.youtube_urls.length > 0) {
-                                url = channel.youtube_urls[0];
-                            }
-                            if (url) {
-                                let name = channel.name;
-                                if (channel.language) {
-                                    name += ` (${channel.language})`;
-                                } else if (channel.country) {
-                                    name += ` (${channel.country})`;
+            if (localStorageCount <= 2) { // 2 because we have jsonUrl and m3uUrl in local storage
+                if (jsonUrl) {
+                    fetch(jsonUrl)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(channel => {
+                                if (channel.language != "eng" && channel.language != "hin" && channel.language != "mar" && channel.country != "in" && channel.country != "us" && channel.country != "uk")
+                                    return;
+                                let url = '';
+                                if (channel.iptv_urls && channel.iptv_urls.length > 0) {
+                                    url = channel.iptv_urls[0];
+                                } else if (channel.youtube_urls && channel.youtube_urls.length > 0) {
+                                    url = channel.youtube_urls[0];
                                 }
-                                channels[name] = url;
-                                localStorage.setItem(name, url);
-                            }
-                        });
-                    })
-                    .catch(error => console.error('Error:', error));
-
-
-                fetch('https://raw.githubusercontent.com/junguler/m3u-radio-music-playlists/refs/heads/main/zeno.fm/India.m3u')
-                    .then(response => response.text())
-                    .then(data => {
-                        const lines = data.split('\n');
-                        let channelName = null;
-                        lines.forEach(line => {
-                            if (line.startsWith('#EXTINF:')) {
-                                channelName = line.split(',')[1].trim();
-                            } else if (line.startsWith('http')) {
-                                if (channelName) {
-                                    localStorage.setItem(channelName, line.trim());
-                                    channelName = null;
+                                if (url) {
+                                    let name = channel.name;
+                                    if (channel.language) {
+                                        name += ` (${channel.language})`;
+                                    } else if (channel.country) {
+                                        name += ` (${channel.country})`;
+                                    }
+                                    channels[name] = url;
+                                    localStorage.setItem(name, url);
                                 }
-                            }
-                        });
-                    }).catch(error => console.error('Error:', error));
+                            });
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
+
+                if (m3uUrl) {
+                    fetch(m3uUrl)
+                        .then(response => response.text())
+                        .then(data => {
+                            const lines = data.split('\n');
+                            let channelName = null;
+                            lines.forEach(line => {
+                                if (line.startsWith('#EXTINF:')) {
+                                    channelName = line.split(',')[1].trim();
+                                } else if (line.startsWith('http')) {
+                                    if (channelName) {
+                                        localStorage.setItem(channelName, line.trim());
+                                        channelName = null;
+                                    }
+                                }
+                            });
+                        }).catch(error => console.error('Error:', error));
+                }
             } else {
                 for (let i = 0; i < localStorage.length; i++) {
                     const key = localStorage.key(i);
-                    if (key !== '0_currentDate') {
+                    if (key !== 'jsonUrl' && key !== 'm3uUrl' && key !== '0_currentDate') {
                         channels[key] = localStorage.getItem(key);
                     }
                 }
