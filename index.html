@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="manifest" href="manifest.json">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DoorChitraVani</title>
     <style>
         body {
@@ -12,23 +12,20 @@
             margin: 0;
             padding: 0;
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             height: 100vh;
             width: 100vw;
+            overflow: hidden;
         }
 
         .left-pane {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 250px;
-            height: 100vh;
+            width: 100%;
+            height: 30vh;
             background-color: #f0f0f0;
             padding: 10px;
-            border-right: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
             display: flex;
             flex-direction: column;
-            overflow: auto;
         }
 
         .right-pane {
@@ -38,13 +35,12 @@
             display: flex;
             flex-direction: column;
             background-color: #000;
-            margin-left: 250px;
         }
 
         #player-container {
             flex-grow: 1;
             display: flex;
-            overflow-y: auto;
+            overflow: hidden;
             justify-content: center;
             align-items: center;
         }
@@ -73,6 +69,7 @@
         #search-container {
             padding: 2px;
             border-bottom: 1px solid #ddd;
+            flex-shrink: 0;
         }
 
         #search-input {
@@ -97,6 +94,23 @@
 
         .playlist-item.selected {
             background-color: #ccc;
+        }
+
+        @media only screen and (orientation: landscape) {
+            body {
+                flex-direction: row;
+            }
+
+            .left-pane {
+                width: 250px;
+                height: 100vh;
+                border-bottom: none;
+                border-right: 1px solid #ddd;
+            }
+
+            .right-pane {
+                flex-grow: 1;
+            }
         }
     </style>
 </head>
