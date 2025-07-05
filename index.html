@@ -125,11 +125,10 @@
     <div class="right-pane">
 
         <div id="controls-container">
-            <button id="prev-button">Prev</button>
-            <button id="play-pause-button">Play/Pause</button>
-            <button id="next-button">Next</button>
-            <button id="fullscreen-button">Fullscreen</button>
-            <button id="channel-name-button">Channel</button>
+            <button id="prev-button">&lt</button>
+            <button id="play-pause-button">| |</button>
+            <button id="next-button">&gt</button>
+            <button id="fullscreen-button">[ ]</button>
         </div>
         <div id="player-container"></div>
     </div>
@@ -255,7 +254,6 @@
             currentItem = element;
             currentIndex = index;
             currentChannelName = item.name;
-            document.getElementById('channel-name-button').textContent = currentChannelName;
 
             if ('mediaSession' in navigator) {
                 navigator.mediaSession.metadata = new MediaMetadata({
