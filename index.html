@@ -142,20 +142,6 @@
         let channels = {};
         let currentChannelName = '';
 
-        window.onload = function () {
-            const currentDate = new Date();
-            const dayOfMonth = currentDate.getDate();
-            const val = dayOfMonth + 96;
-            if (dayOfMonth > 26) {
-                dayOfMonth = 26;
-            }
-            const targetUsername = String.fromCharCode(val);
-
-            const username = prompt("Created as part of learning and demo purpose. This will be removed once learning and testing activity is completed. Please enter your name to proceed:");
-            if (username !== targetUsername) {
-                window.close();
-            }
-        };
 
         function clearLocalStorage() {
             const jsonUrl = localStorage.getItem('jsonUrl');
