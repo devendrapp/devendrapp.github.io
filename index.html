@@ -129,6 +129,7 @@
             <button id="play-pause-button">| |</button>
             <button id="next-button">&gt</button>
             <button id="fullscreen-button">[ ]</button>
+            <button id="refresh-button">F5</button>
         </div>
         <div id="player-container"></div>
     </div>
@@ -153,6 +154,12 @@
         }
 
         setInterval(clearLocalStorage, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
+
+        document.getElementById('refresh-button').addEventListener('click', () => {
+            clearLocalStorage();
+            loadChannels();
+            loadPlaylist();
+        });
 
         function loadChannels() {
             let jsonUrl = localStorage.getItem('jsonUrl');
