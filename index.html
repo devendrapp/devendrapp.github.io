@@ -55,6 +55,12 @@
             object-fit: contain;
         }
 
+        video::-webkit-media-controls-volume-slider,
+        video::-webkit-media-controls-mute-button {
+            display: none;
+        }
+
+
         #controls-container {
             height: 50px;
             background-color: #ccc;
@@ -98,6 +104,16 @@
 
         .playlist-item.selected {
             background-color: #ccc;
+        }
+
+        .playlist-item:focus {
+            background-color: #ccc;
+            outline: none;
+        }
+
+        #search-input:focus {
+            outline: none;
+            border-color: #aaa;
         }
 
         @media only screen and (orientation: portrait) {
@@ -415,7 +431,7 @@
 
         function loadPlaylist() {
             document.getElementById('current-media').textContent = '';
-            const searchTerms = ['Solapur Akashwani', 'AIR Pune FM', 'NDTV India', 'NDTV Marathi', 'Aaj Tak', 'DD News', 'ABP Majha', 'TV9 Marathi', 'Saam', 'Zee 24 Taas', 'Republic Bharat', 'Zee News', 'India TV', 'Zee Business', 'Lok Sabha', 'vivid bharti', 'Mangeshkar', 'kishore kumar', 'med Rafi', 'Sanskrit Bhar'];
+            const searchTerms = ['Solapur Akashwani', 'AIR Pune FM', 'NDTV India', 'NDTV Marathi', 'Aaj Tak', 'DD News', 'ABP Majha', 'TV9 Marathi', 'Saam', 'Zee 24 Taas', 'Republic Bharat', 'Zee News', 'India TV', 'Zee Business', 'Lok Sabha', 'vivid bharti', 'Mangeshkar', 'kishore kumar', 'med Rafi', 'Sanskrit Bhar', 'India Today', 'IndiaTV'];
             const channelsToLoad = [];
             searchTerms.forEach(term => {
                 Object.keys(channels).forEach(channel => {
@@ -459,6 +475,77 @@
                     console.error('Service Worker registration failed:', error);
                 });
         }
+
+        // Make search bar focusable
+        document.getElementById('search-input').tabIndex = 0;
+
+        // Make playlist items focusable
+        const playlistItems = document.querySelectorAll('.playlist-item');
+        playlistItems.forEach((item) => {
+            item.tabIndex = 0;
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (currentItem && currentPlayer) {
+                const playlistElement = document.getElementById('playlist');
+                const playlistItems = playlistElement.children;
+                switch (e.key) {
+                    case 'ArrowUp':
+                        if (currentIndex > 0) {
+                            currentItem.classList.remove('selected');
+                            currentIndex--;
+                            currentItem = document.getElementById('playlist').children[currentIndex];
+                            currentItem.classList.add('selected');
+                            const previousItemData = { name: currentItem.textContent, url: channels[currentItem.textContent] };
+                            playItem(previousItemData, currentItem, currentIndex);
+                        }
+                        break;
+                    case 'ArrowDown':
+
+                        if (currentIndex < playlistItems.length - 1) {
+                            currentItem.classList.remove('selected');
+                            currentIndex++;
+                            currentItem = playlistItems[currentIndex];
+                            currentItem.classList.add('selected');
+                            const nextItemData = { name: currentItem.textContent, url: channels[currentItem.textContent] };
+                            playItem(nextItemData, currentItem, currentIndex);
+                        }
+                        break;
+                    case 'ArrowLeft':
+                        currentPlayer.currentTime = Math.max(0, currentPlayer.currentTime - 30);
+                        break;
+                    case 'ArrowRight':
+                        currentPlayer.currentTime = Math.min(currentPlayer.duration, currentPlayer.currentTime + 30);
+                        break;
+                    case 'MediaTrackPrevious':
+                        // Play previous item
+                        if (currentIndex > 0) {
+                            const previousItem = document.getElementById('playlist').children[currentIndex - 1];
+                            const previousItemData = { name: previousItem.textContent, url: channels[previousItem.textContent] };
+                            playItem(previousItemData, previousItem, currentIndex - 1);
+                        }
+                        break;
+                    case 'MediaTrackNext':
+                        // Play next item
+                        if (currentIndex < playlistItems.length - 1) {
+                            const nextItem = playlistItems[currentIndex + 1];
+                            const nextItemData = { name: nextItem.textContent, url: channels[nextItem.textContent] };
+                            playItem(nextItemData, nextItem, currentIndex + 1);
+                        }
+                        break;
+                    case 'MediaPlayPause':
+                        if (currentPlayer) {
+                            if (currentPlayer.paused) {
+                                currentPlayer.play();
+                            } else {
+                                currentPlayer.pause();
+                            }
+                        }
+                        break;
+                }
+            }
+        });
+
     </script>
 </body>
 
