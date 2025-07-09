@@ -60,34 +60,45 @@
             display: none;
         }
 
-
-        #controls-container {
-            height: 50px;
-            background-color: #ccc;
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #controls-container button {
-            padding: 10px;
-            margin: 0 10px;
-        }
-
         #search-container {
             padding: 2px;
             border-bottom: 1px solid #ddd;
             flex-shrink: 0;
         }
 
+        .search-bar-container {
+            display: flex;
+            align-items: center;
+            padding: 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
         #search-input {
             width: 100%;
             box-sizing: border-box;
             padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+
+            /*border: 1px solid #ccc;
+            border-radius: 5px; */
+
+            border: none;
+            flex-grow: 1;
         }
+
+        .search-controls {
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+            border-left: 1px solid #ccc;
+        }
+
+        .search-controls button {
+            padding: 5px;
+            margin: 0 5px;
+            font-size: 12px;
+        }
+
 
         #playlist {
             flex-grow: 1;
@@ -113,7 +124,8 @@
 
         #search-input:focus {
             outline: none;
-            border-color: #aaa;
+
+            /*border-color: #aaa;*/
         }
 
         @media only screen and (orientation: portrait) {
@@ -122,7 +134,8 @@
             }
 
             .left-pane {
-                height: 30vh;
+                /*height: 30vh;*/
+                height: 65%;
                 width: 100%;
                 border-right: none;
                 border-bottom: 1px solid #ddd;
@@ -159,23 +172,26 @@
         <span id="current-media" style="font-size: 16px; margin-left: 10px;"></span>
     </header>
     <div id="main-container">
+        <div class="right-pane">
+
+            <div id="player-container"></div>
+        </div>
         <div class="left-pane">
             <div id="search-container">
-                <input id="search-input" type="text" placeholder="Search...">
+                <div class="search-bar-container">
+                    <input id="search-input" type="text" placeholder="Search...">
+                    <div class="search-controls">
+                        <button id="prev-button">&lt</button>
+                        <button id="next-button">&gt</button>
+                        <button id="refresh-button">F5</button>
+                        <button id="load-json-button">json</button>
+                        <button id="load-m3u-button">m3u</button>
+                    </div>
+                </div>
             </div>
             <div id="playlist"></div>
         </div>
-        <div class="right-pane">
 
-            <div id="controls-container">
-                <button id="prev-button">&lt</button>
-                <button id="play-pause-button">| |</button>
-                <button id="next-button">&gt</button>
-                <button id="fullscreen-button">[ ]</button>
-                <button id="refresh-button">F5</button>
-            </div>
-            <div id="player-container"></div>
-        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -187,14 +203,12 @@
         let channels = {};
         let currentChannelName = '';
 
-
         function clearLocalStorage() {
             const jsonUrl = localStorage.getItem('jsonUrl');
             const m3uUrl = localStorage.getItem('m3uUrl');
             localStorage.clear();
             localStorage.setItem('jsonUrl', jsonUrl);
             localStorage.setItem('m3uUrl', m3uUrl);
-
         }
 
         setInterval(clearLocalStorage, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
@@ -203,6 +217,23 @@
             clearLocalStorage();
             loadChannels();
             loadPlaylist();
+        });
+
+        document.getElementById('load-json-button').addEventListener('click', () => {
+            let jsonUrl = localStorage.getItem('jsonUrl');
+            jsonUrl = prompt("Enter JSON URL:");
+            if (jsonUrl) {
+                localStorage.setItem('jsonUrl', jsonUrl);
+            }
+
+        });
+
+        document.getElementById('load-m3u-button').addEventListener('click', () => {
+            let m3uUrl = localStorage.getItem('m3uUrl');
+            m3uUrl = prompt("Enter M3U URL:");
+            if (m3uUrl) {
+                localStorage.setItem('m3uUrl', m3uUrl);
+            }
         });
 
         function loadChannels() {
@@ -392,15 +423,7 @@
             }
         });
 
-        document.getElementById('play-pause-button').addEventListener('click', () => {
-            if (currentPlayer) {
-                if (currentPlayer.paused) {
-                    currentPlayer.play();
-                } else {
-                    currentPlayer.pause();
-                }
-            }
-        });
+
 
         document.getElementById('next-button').addEventListener('click', () => {
             if (currentIndex < Object.keys(channels).length - 1) {
@@ -410,17 +433,7 @@
             }
         });
 
-        document.getElementById('fullscreen-button').addEventListener('click', () => {
-            if (currentPlayer) {
-                if (currentPlayer.requestFullscreen) {
-                    currentPlayer.requestFullscreen();
-                } else if (currentPlayer.webkitRequestFullscreen) {
-                    currentPlayer.webkitRequestFullscreen();
-                } else if (currentPlayer.msRequestFullscreen) {
-                    currentPlayer.msRequestFullscreen();
-                }
-            }
-        });
+
 
         function getYoutubeEmbedUrl(url) {
             const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
@@ -431,7 +444,7 @@
 
         function loadPlaylist() {
             document.getElementById('current-media').textContent = '';
-            const searchTerms = ['Solapur Akashwani', 'AIR Pune FM', 'NDTV India', 'NDTV Marathi', 'Aaj Tak', 'DD News', 'ABP Majha', 'TV9 Marathi', 'Saam', 'Zee 24 Taas', 'Republic Bharat', 'Zee News', 'India TV', 'Zee Business', 'Lok Sabha', 'vivid bharti', 'Mangeshkar', 'kishore kumar', 'med Rafi', 'Sanskrit Bhar', 'India Today', 'IndiaTV'];
+            const searchTerms = ['NDTV India', 'NDTV Marathi', 'Solapur Akashwani', 'AIR Pune FM', 'Aaj Tak', 'DD News', 'ABP Majha', 'TV9 Marathi', 'Saam', 'Zee 24 Taas', 'Republic Bharat', 'Zee News', 'India TV', 'Zee Business', 'Lok Sabha', 'vivid bharti', 'Mangeshkar', 'kishore kumar', 'med Rafi', 'Evergreen Mukesh', 'Nostalgic Bollywood 90s', 'baingan', 'desi hits 2000', '2010', 'Sanskrit Bhar', 'India Today', 'IndiaTV', 'classic mr bean', 'disney', 'nick', 'rakuten', 'filmrise', 'mgm+', 'sphere', 'hallmark', 'wild', 'geog'];
             const channelsToLoad = [];
             searchTerms.forEach(term => {
                 Object.keys(channels).forEach(channel => {
