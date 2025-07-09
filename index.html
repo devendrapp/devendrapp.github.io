@@ -114,12 +114,29 @@
             font-size: 20px;
         }
 
+        /* Alternate background color theme with inverse text color */
+        .playlist-item:nth-child(even) {
+            background-color: #000000;
+            /* Black */
+            color: #ffffff;
+            /* White text */
+        }
+
+        .playlist-item:nth-child(odd) {
+            background-color: #ffffff;
+            /* White */
+            color: #000000;
+            /* Black text */
+        }
+
+
         .playlist-item.selected {
-            background-color: #ccc;
+            background-color: #0b07ff;
+            color: #ffffff;
         }
 
         .playlist-item:focus {
-            background-color: #ccc;
+            background-color: #06b300;
             outline: none;
         }
 
