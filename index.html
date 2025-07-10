@@ -373,9 +373,13 @@
             currentIndex = index;
             currentChannelName = item.name;
 
+            //remove icon suffix from name
+            splitChlName = item.name.split(';')[1] || item.name;
+
             if ('mediaSession' in navigator) {
+
                 navigator.mediaSession.metadata = new MediaMetadata({
-                    title: item.name
+                    title: splitChlName
                     // artist: 'Artist Name',
                     // album: 'Album Name',
                     // artwork: [{ src: 'cover.jpg' }]
@@ -426,6 +430,8 @@
             }
 
             document.getElementById('current-media').textContent = `(${item.name})`;
+            document.getElementById('current-media').textContent = splitChlName;
+
         }
 
         document.getElementById('player-container').addEventListener('click', () => {
