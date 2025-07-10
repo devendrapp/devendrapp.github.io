@@ -200,8 +200,8 @@
                 <div class="search-bar-container">
                     <input id="search-input" type="text" placeholder="Search...">
                     <div class="search-controls">
-                        <button id="prev-button">&lt</button>
-                        <button id="next-button">&gt</button>
+                        <button id="prev-button">prev</button>
+                        <button id="next-button">next</button>
                         <button id="load-json-button">json</button>
                         <button id="load-m3u-button">m3u</button>
                         <button id="refresh-button">F5</button>
@@ -281,16 +281,20 @@
                         .then(response => response.json())
                         .then(data => {
                             data.forEach(channel => {
+                                let name = "";
+
                                 if (channel.language != "eng" && channel.language != "hin" && channel.language != "mar" && channel.country != "in" && channel.country != "us" && channel.country != "uk")
                                     return;
                                 let url = '';
                                 if (channel.iptv_urls && channel.iptv_urls.length > 0) {
+                                    name = '&#x1F4FA; ' + channel.name;
                                     url = channel.iptv_urls[0];
                                 } else if (channel.youtube_urls && channel.youtube_urls.length > 0) {
+                                    name = '&#x25B6; ' + channel.name;
                                     url = channel.youtube_urls[0];
                                 }
                                 if (url) {
-                                    let name = channel.name;
+                                    //name = channel.name;
                                     if (channel.language) {
                                         name += ` (${channel.language})`;
                                     } else if (channel.country) {
@@ -315,7 +319,7 @@
                                     channelName = line.split(',')[1].trim();
                                 } else if (line.startsWith('http')) {
                                     if (channelName) {
-                                        localStorage.setItem(channelName, line.trim());
+                                        localStorage.setItem('&#x1F4FB; ' + channelName, line.trim());
                                         channelName = null;
                                     }
                                 }
@@ -339,7 +343,7 @@
             playlistToRender.forEach((item, index) => {
                 const element = document.createElement('div');
                 element.className = 'playlist-item';
-                element.textContent = item.name;
+                element.innerHTML = item.name;
                 element.onclick = () => playItem(item, element, index);
                 playlistElement.appendChild(element);
             });
