@@ -281,18 +281,16 @@
                         .then(response => response.json())
                         .then(data => {
                             data.forEach(channel => {
-                                let name = "";
-
                                 if (channel.language != "eng" && channel.language != "hin" && channel.language != "mar" && channel.country != "in" && channel.country != "us" && channel.country != "uk")
                                     return;
                                 let url = '';
+                                let name = '';
                                 if (channel.iptv_urls && channel.iptv_urls.length > 0) {
-                                    name = '&#x1F4FA; ' + channel.name;
                                     url = channel.iptv_urls[0];
                                 } else if (channel.youtube_urls && channel.youtube_urls.length > 0) {
-                                    name = '&#x25B6; ' + channel.name;
                                     url = channel.youtube_urls[0];
                                 }
+                                name = formatChannelName(channel.name, url);
                                 if (url) {
                                     //name = channel.name;
                                     if (channel.language) {
@@ -319,6 +317,7 @@
                                     channelName = line.split(',')[1].trim();
                                 } else if (line.startsWith('http')) {
                                     if (channelName) {
+                                        //localStorage.setItem(formatChannelName(channelName, line.trim()), line.trim());
                                         localStorage.setItem('&#x1F4FB; ' + channelName, line.trim());
                                         channelName = null;
                                     }
@@ -333,6 +332,16 @@
                         channels[key] = localStorage.getItem(key);
                     }
                 }
+            }
+        }
+
+        function formatChannelName(name, url) {
+            if (url.includes('m3u8')) {
+                return '&#x1F4FA; ' + name;
+            } else if (url.includes('youtube')) {
+                return '&#x25B6; ' + name;
+            } else {
+                return '&#x1F4FB; ' + name;
             }
         }
 
