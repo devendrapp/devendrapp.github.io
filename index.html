@@ -204,6 +204,7 @@
                         <button id="next-button">next</button>
                         <button id="load-json-button">json</button>
                         <button id="load-m3u-button">m3u</button>
+                        <button id="load-static-button">static</button>
                         <button id="refresh-button">F5</button>
                     </div>
                 </div>
@@ -236,6 +237,7 @@
             clearLocalStorage();
             loadChannels();
             loadPlaylist();
+            alert("Media Refreshed from sources");
         });
 
         document.getElementById('load-json-button').addEventListener('click', () => {
@@ -255,9 +257,18 @@
             }
         });
 
+        document.getElementById('load-static-button').addEventListener('click', () => {
+            let staticUrl = localStorage.getItem('staticUrl');
+            staticUrl = prompt("Enter static URL:");
+            if (staticUrl) {
+                localStorage.setItem('staticUrl', staticUrl);
+            }
+        });
+
         function loadChannels() {
             let jsonUrl = localStorage.getItem('jsonUrl');
             let m3uUrl = localStorage.getItem('m3uUrl');
+            let staticUrl = localStorage.getItem('staticUrl');
 
             if (!jsonUrl) {
                 jsonUrl = prompt("Enter JSON URL:");
@@ -273,9 +284,16 @@
                 }
             }
 
+            if (!staticUrl) {
+                staticUrl = prompt("Enter Static URL:");
+                if (staticUrl) {
+                    localStorage.setItem('staticUrl', staticUrl);
+                }
+            }
+
             const localStorageCount = localStorage.length;
 
-            if (localStorageCount <= 2) { // 2 because we have jsonUrl and m3uUrl in local storage
+            if (localStorageCount <= 3) { // 2 because we have jsonUrl,m3uUrl and staticUrl in local storage
                 if (jsonUrl) {
                     fetch(jsonUrl)
                         .then(response => response.json())
@@ -325,6 +343,28 @@
                             });
                         }).catch(error => console.error('Error:', error));
                 }
+
+                if (staticUrl) {
+                    fetch(staticUrl)
+                        .then(response => response.text())
+                        .then(data => {
+                            const lines = data.split('\n');
+                            let channelName = null;
+                            lines.forEach(line => {
+                                if (line.startsWith('#EXTINF:')) {
+                                    channelName = line.split(',')[1].trim();
+                                } else if (line.startsWith('http')) {
+                                    if (channelName) {
+                                        //localStorage.setItem(formatChannelName(channelName, line.trim()), line.trim());
+                                        localStorage.setItem(channelName, line.trim());
+                                        channelName = null;
+                                    }
+                                }
+                            });
+                        }).catch(error => console.error('Error:', error));
+                }
+
+
             } else {
                 for (let i = 0; i < localStorage.length; i++) {
                     const key = localStorage.key(i);
