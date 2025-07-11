@@ -222,18 +222,32 @@
         let currentIndex = 0;
         let channels = {};
         let currentChannelName = '';
+        let staticChannelSuffix = ' 🙂';
 
         function clearLocalStorage() {
             const jsonUrl = localStorage.getItem('jsonUrl');
             const m3uUrl = localStorage.getItem('m3uUrl');
-            localStorage.clear();
+
+            for (let i = localStorage.length - 1; i >= 0; i--) {
+                const key = localStorage.key(i);
+                if (!key.includes(staticChannelSuffix)) {
+                    localStorage.removeItem(key);
+                }
+            }
+
             localStorage.setItem('jsonUrl', jsonUrl);
             localStorage.setItem('m3uUrl', m3uUrl);
+
         }
 
         setInterval(clearLocalStorage, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
 
         document.getElementById('refresh-button').addEventListener('click', () => {
+            if (!confirm("Are you sure you want to refresh channels from source?")) {
+                console.log("User chose to continue.");
+                return;
+            }
+
             clearLocalStorage();
             loadChannels();
             loadPlaylist();
@@ -258,17 +272,49 @@
         });
 
         document.getElementById('load-static-button').addEventListener('click', () => {
-            let staticUrl = localStorage.getItem('staticUrl');
-            staticUrl = prompt("Enter static URL:");
-            if (staticUrl) {
-                localStorage.setItem('staticUrl', staticUrl);
-            }
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '.m3u, .txt';
+
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+
+                reader.onload = (event) => {
+                    for (let i = localStorage.length - 1; i >= 0; i--) {
+                        const key = localStorage.key(i);
+                        if (key.includes(staticChannelSuffix)) {
+                            localStorage.removeItem(key);
+                        }
+                    }
+
+                    const fileContents = event.target.result;
+                    const lines = fileContents.split('\n');
+                    let channelName = null;
+                    lines.forEach(line => {
+                        if (line.startsWith('#EXTINF:')) {
+                            channelName = line.split(',')[1].trim();
+                        } else if (line.startsWith('http')) {
+                            if (channelName) {
+                                localStorage.setItem(channelName + staticChannelSuffix, line.trim());
+                                channelName = null;
+                            }
+                        }
+                    });
+                };
+
+                reader.readAsText(file);
+            });
+
+            fileInput.click();
         });
+
+
 
         function loadChannels() {
             let jsonUrl = localStorage.getItem('jsonUrl');
             let m3uUrl = localStorage.getItem('m3uUrl');
-            let staticUrl = localStorage.getItem('staticUrl');
+
 
             if (!jsonUrl) {
                 jsonUrl = prompt("Enter JSON URL:");
@@ -284,16 +330,9 @@
                 }
             }
 
-            if (!staticUrl) {
-                staticUrl = prompt("Enter Static URL:");
-                if (staticUrl) {
-                    localStorage.setItem('staticUrl', staticUrl);
-                }
-            }
-
             const localStorageCount = localStorage.length;
 
-            if (localStorageCount <= 3) { // 2 because we have jsonUrl,m3uUrl and staticUrl in local storage
+            if (true) {
                 if (jsonUrl) {
                     fetch(jsonUrl)
                         .then(response => response.json())
@@ -343,34 +382,22 @@
                             });
                         }).catch(error => console.error('Error:', error));
                 }
-
-                if (staticUrl) {
-                    fetch(staticUrl)
-                        .then(response => response.text())
-                        .then(data => {
-                            const lines = data.split('\n');
-                            let channelName = null;
-                            lines.forEach(line => {
-                                if (line.startsWith('#EXTINF:')) {
-                                    channelName = line.split(',')[1].trim();
-                                } else if (line.startsWith('http')) {
-                                    if (channelName) {
-                                        //localStorage.setItem(formatChannelName(channelName, line.trim()), line.trim());
-                                        localStorage.setItem(channelName, line.trim());
-                                        channelName = null;
-                                    }
-                                }
-                            });
-                        }).catch(error => console.error('Error:', error));
-                }
-
-
             } else {
                 for (let i = 0; i < localStorage.length; i++) {
                     const key = localStorage.key(i);
                     if (key !== 'jsonUrl' && key !== 'm3uUrl' && key !== '0_currentDate') {
                         channels[key] = localStorage.getItem(key);
                     }
+                }
+            }
+        }
+
+
+        function initializePlaylist() {
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key !== 'jsonUrl' && key !== 'm3uUrl' && key !== '0_currentDate') {
+                    channels[key] = localStorage.getItem(key);
                 }
             }
         }
@@ -522,7 +549,7 @@
 
         function loadPlaylist() {
             document.getElementById('current-media').textContent = '';
-            const searchTerms = ['NDTV India', 'NDTV Marathi', 'Solapur Akashwani', 'AIR Pune FM', 'Aaj Tak', 'DD News', 'ABP Majha', 'TV9 Marathi', 'Saam', 'Zee 24 Taas', 'Republic Bharat', 'Zee News', 'India TV', 'Zee Business', 'Lok Sabha', 'vivid bharti', 'Mangeshkar', 'kishore kumar', 'med Rafi', 'Evergreen Mukesh', 'Nostalgic Bollywood 90s', 'baingan', 'desi hits 2000', '2010', 'Sanskrit Bhar', 'India Today', 'IndiaTV', 'classic mr bean', 'disney', 'nick', 'rakuten', 'filmrise', 'mgm+', 'sphere', 'hallmark', 'wild', 'geog'];
+            const searchTerms = ['NDTV_India', 'NDTV_Marathi', 'AIR_Solapur', 'AIR_Pune', 'Aaj_Tak', 'DD_News', 'ABP_Majha', 'TV9 Marathi', 'Saam', 'Zee 24 Taas', 'Republic_Bharat', 'Zee News', 'India_TV', 'Zee Business', 'Lok_Sabha', 'Rajya_Sabha', 'vividh_bharti', 'Mangeshkar', 'kishore kumar', 'med Rafi', 'Evergreen Mukesh', 'Nostalgic Bollywood 90s', 'baingan', 'desi hits 2000', '2010', 'Sanskrit Bhar', 'India_Today', 'India_TV', 'jerry show', 'classic mr bean', 'disney', 'nick', 'rakuten', 'filmrise', 'mgm+', 'sphere', 'hallmark', 'wild', 'geog'];
             const channelsToLoad = [];
             searchTerms.forEach(term => {
                 Object.keys(channels).forEach(channel => {
@@ -534,7 +561,8 @@
             renderPlaylist(channelsToLoad);
         }
 
-        loadChannels();
+        //loadChannels();
+        initializePlaylist();
         loadPlaylist();
 
         screen.orientation.addEventListener('change', function () {
