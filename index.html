@@ -200,11 +200,8 @@
                 <div class="search-bar-container">
                     <input id="search-input" type="text" placeholder="Search...">
                     <div class="search-controls">
-                        <button id="prev-button">prev</button>
-                        <button id="next-button">next</button>
                         <button id="load-json-button">json</button>
-                        <button id="load-m3u-button">m3u</button>
-                        <button id="load-static-button">static</button>
+                        <button id="load-static-button">m3u</button>
                         <button id="refresh-button">F5</button>
                     </div>
                 </div>
@@ -226,7 +223,6 @@
 
         function clearLocalStorage() {
             const jsonUrl = localStorage.getItem('jsonUrl');
-            const m3uUrl = localStorage.getItem('m3uUrl');
 
             for (let i = localStorage.length - 1; i >= 0; i--) {
                 const key = localStorage.key(i);
@@ -236,8 +232,6 @@
             }
 
             localStorage.setItem('jsonUrl', jsonUrl);
-            localStorage.setItem('m3uUrl', m3uUrl);
-
         }
 
         setInterval(clearLocalStorage, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
@@ -261,14 +255,6 @@
                 localStorage.setItem('jsonUrl', jsonUrl);
             }
 
-        });
-
-        document.getElementById('load-m3u-button').addEventListener('click', () => {
-            let m3uUrl = localStorage.getItem('m3uUrl');
-            m3uUrl = prompt("Enter M3U URL:");
-            if (m3uUrl) {
-                localStorage.setItem('m3uUrl', m3uUrl);
-            }
         });
 
         document.getElementById('load-static-button').addEventListener('click', () => {
@@ -314,20 +300,10 @@
 
         function loadChannels() {
             let jsonUrl = localStorage.getItem('jsonUrl');
-            let m3uUrl = localStorage.getItem('m3uUrl');
-
-
             if (!jsonUrl) {
                 jsonUrl = prompt("Enter JSON URL:");
                 if (jsonUrl) {
                     localStorage.setItem('jsonUrl', jsonUrl);
-                }
-            }
-
-            if (!m3uUrl) {
-                m3uUrl = prompt("Enter M3U URL:");
-                if (m3uUrl) {
-                    localStorage.setItem('m3uUrl', m3uUrl);
                 }
             }
 
@@ -362,6 +338,9 @@
                                     if (channel.name.includes('Saam TV News')) {
                                         name = '🖥️ 📰 ' + channel.name + staticChannelSuffix + ' - 7';
                                     }
+                                    if (channel.name.includes('Zee 24 Taas')) {
+                                        name = '🖥️ 📰 ' + channel.name + staticChannelSuffix + ' - 8';
+                                    }
 
                                     channels[name] = url;
                                     localStorage.setItem(name, url);
@@ -370,41 +349,20 @@
                         })
                         .catch(error => console.error('Error:', error));
                 }
-
-                if (m3uUrl) {
-                    fetch(m3uUrl)
-                        .then(response => response.text())
-                        .then(data => {
-                            const lines = data.split('\n');
-                            let channelName = null;
-                            lines.forEach(line => {
-                                if (line.startsWith('#EXTINF:')) {
-                                    channelName = line.split(',')[1].trim();
-                                } else if (line.startsWith('http')) {
-                                    if (channelName) {
-                                        //localStorage.setItem(formatChannelName(channelName, line.trim()), line.trim());
-                                        localStorage.setItem('&#x1F4FB; ' + channelName, line.trim());
-                                        channelName = null;
-                                    }
-                                }
-                            });
-                        }).catch(error => console.error('Error:', error));
-                }
             } else {
                 for (let i = 0; i < localStorage.length; i++) {
                     const key = localStorage.key(i);
-                    if (key !== 'jsonUrl' && key !== 'm3uUrl' && key !== '0_currentDate') {
+                    if (key !== 'jsonUrl' && key !== '0_currentDate') {
                         channels[key] = localStorage.getItem(key);
                     }
                 }
             }
         }
 
-
         function initializePlaylist() {
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
-                if (key !== 'jsonUrl' && key !== 'm3uUrl' && key !== '0_currentDate') {
+                if (key !== 'jsonUrl' && key !== '0_currentDate') {
                     channels[key] = localStorage.getItem(key);
                 }
             }
@@ -556,26 +514,6 @@
             }
         });
 
-        document.getElementById('prev-button').addEventListener('click', () => {
-            if (currentIndex > 0) {
-                const previousItem = Object.keys(channels).map((name, index) => ({ name, url: channels[name], index }))[currentIndex - 1];
-                const previousElement = document.getElementById('playlist').children[currentIndex - 1];
-                playItem(previousItem, previousElement, currentIndex - 1);
-            }
-        });
-
-
-
-        document.getElementById('next-button').addEventListener('click', () => {
-            if (currentIndex < Object.keys(channels).length - 1) {
-                const nextItem = Object.keys(channels).map((name, index) => ({ name, url: channels[name], index }))[currentIndex + 1];
-                const nextElement = document.getElementById('playlist').children[currentIndex + 1];
-                playItem(nextItem, nextElement, currentIndex + 1);
-            }
-        });
-
-
-
         function getYoutubeEmbedUrl(url) {
             const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
             const match = url.match(regExp);
@@ -597,7 +535,6 @@
             renderPlaylist(channelsToLoad);
         }
 
-        //loadChannels();
         initializePlaylist();
         loadPlaylist();
 
@@ -631,47 +568,11 @@
                 });
         }
 
-        // Make search bar focusable
-        document.getElementById('search-input').tabIndex = 0;
-
-        // Make playlist items focusable
-        const playlistItems = document.querySelectorAll('.playlist-item');
-        playlistItems.forEach((item) => {
-            item.tabIndex = 0;
-        });
-
         document.addEventListener('keydown', (e) => {
             if (currentItem && currentPlayer) {
                 const playlistElement = document.getElementById('playlist');
                 const playlistItems = playlistElement.children;
                 switch (e.key) {
-                    case 'ArrowUp':
-                        if (currentIndex > 0) {
-                            currentItem.classList.remove('selected');
-                            currentIndex--;
-                            currentItem = document.getElementById('playlist').children[currentIndex];
-                            currentItem.classList.add('selected');
-                            const previousItemData = { name: currentItem.textContent, url: channels[currentItem.textContent] };
-                            playItem(previousItemData, currentItem, currentIndex);
-                        }
-                        break;
-                    case 'ArrowDown':
-
-                        if (currentIndex < playlistItems.length - 1) {
-                            currentItem.classList.remove('selected');
-                            currentIndex++;
-                            currentItem = playlistItems[currentIndex];
-                            currentItem.classList.add('selected');
-                            const nextItemData = { name: currentItem.textContent, url: channels[currentItem.textContent] };
-                            playItem(nextItemData, currentItem, currentIndex);
-                        }
-                        break;
-                    case 'ArrowLeft':
-                        currentPlayer.currentTime = Math.max(0, currentPlayer.currentTime - 30);
-                        break;
-                    case 'ArrowRight':
-                        currentPlayer.currentTime = Math.min(currentPlayer.duration, currentPlayer.currentTime + 30);
-                        break;
                     case 'MediaTrackPrevious':
                         // Play previous item
                         if (currentIndex > 0) {
