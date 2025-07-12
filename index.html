@@ -222,7 +222,7 @@
         let currentIndex = 0;
         let channels = {};
         let currentChannelName = '';
-        let staticChannelSuffix = ' 🙂';
+        let staticChannelSuffix = ' 🙂'; //TODO Emoji
 
         function clearLocalStorage() {
             const jsonUrl = localStorage.getItem('jsonUrl');
@@ -291,12 +291,13 @@
                     const fileContents = event.target.result;
                     const lines = fileContents.split('\n');
                     let channelName = null;
+                    let i = 0;
                     lines.forEach(line => {
                         if (line.startsWith('#EXTINF:')) {
                             channelName = line.split(',')[1].trim();
                         } else if (line.startsWith('http')) {
                             if (channelName) {
-                                localStorage.setItem(channelName + staticChannelSuffix, line.trim());
+                                localStorage.setItem(channelName + staticChannelSuffix + ' - ' + (++i), line.trim());
                                 channelName = null;
                             }
                         }
@@ -413,15 +414,43 @@
         }
 
         function renderPlaylist(playlistToRender) {
+            // Create a new map to store items with number suffix as key
+            const orderedPlaylist = new Map();
+            const otherItems = [];
             const playlistElement = document.getElementById('playlist');
             playlistElement.innerHTML = '';
 
-            playlistToRender.forEach((item, index) => {
+            // Populate the new map and otherItems array
+            playlistToRender.forEach((item) => {
+                const match = item.name.match(/\d+$/);
+                if (match) {
+                    const key = parseInt(match[0]);
+                    orderedPlaylist.set(key, item);
+                } else {
+                    otherItems.push(item);
+                }
+            });
+
+            // Render the playlist using the new map with keys in order
+            const sortedKeys = Array.from(orderedPlaylist.keys()).sort((a, b) => a - b);
+            let index = 0;
+            sortedKeys.forEach((key) => {
+                const item = orderedPlaylist.get(key);
                 const element = document.createElement('div');
                 element.className = 'playlist-item';
                 element.innerHTML = item.name;
                 element.onclick = () => playItem(item, element, index);
                 playlistElement.appendChild(element);
+                index++;
+            });
+
+            otherItems.forEach((item) => {
+                const element = document.createElement('div');
+                element.className = 'playlist-item';
+                element.innerHTML = item.name;
+                element.onclick = () => playItem(item, element, index);
+                playlistElement.appendChild(element);
+                index++;
             });
         }
 
@@ -549,7 +578,7 @@
 
         function loadPlaylist() {
             document.getElementById('current-media').textContent = '';
-            const searchTerms = ['NDTV_India', 'NDTV_Marathi', 'AIR_Solapur', 'AIR_Pune', 'Aaj_Tak', 'DD_News', 'ABP_Majha', 'TV9 Marathi', 'Saam', 'Zee 24 Taas', 'Republic_Bharat', 'Zee News', 'India_TV', 'Zee Business', 'Lok_Sabha', 'Rajya_Sabha', 'vividh_bharti', 'Mangeshkar', 'kishore kumar', 'med Rafi', 'Evergreen Mukesh', 'Nostalgic Bollywood 90s', 'baingan', 'desi hits 2000', '2010', 'Sanskrit Bhar', 'India_Today', 'India_TV', 'jerry show', 'classic mr bean', 'disney', 'nick', 'rakuten', 'filmrise', 'mgm+', 'sphere', 'hallmark', 'wild', 'geog'];
+            const searchTerms = [staticChannelSuffix];
             const channelsToLoad = [];
             searchTerms.forEach(term => {
                 Object.keys(channels).forEach(channel => {
