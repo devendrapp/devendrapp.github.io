@@ -109,7 +109,7 @@
 
         .playlist-item {
             cursor: pointer;
-            margin-bottom: 10px;
+            margin-bottom: 13px;
             display: block;
             padding: 5px;
             font-size: 20px;
@@ -356,6 +356,13 @@
                                     } else if (channel.country) {
                                         name += ` (${channel.country})`;
                                     }
+                                    if (channel.name.includes('TV9 Marathi')) {
+                                        name = '🖥️ 📰 ' + channel.name + staticChannelSuffix + ' - 6';
+                                    }
+                                    if (channel.name.includes('Saam TV News')) {
+                                        name = '🖥️ 📰 ' + channel.name + staticChannelSuffix + ' - 7';
+                                    }
+
                                     channels[name] = url;
                                     localStorage.setItem(name, url);
                                 }
