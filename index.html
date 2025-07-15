@@ -281,7 +281,7 @@
                     lines.forEach(line => {
                         if (line.startsWith('#EXTINF:')) {
                             channelName = line.split(',')[1].trim();
-                        } else if (line.startsWith('http')) {
+                        } else if (line.startsWith('http') || line.startsWith('file:')) {
                             if (channelName) {
                                 localStorage.setItem(channelName + staticChannelSuffix + ' - ' + (++i), line.trim());
                                 channelName = null;
@@ -498,8 +498,6 @@
                 currentPlayer = audio;
                 audio.play();
             }
-
-            document.getElementById('current-media').textContent = `(${item.name})`;
             document.getElementById('current-media').textContent = splitChlName;
 
         }
