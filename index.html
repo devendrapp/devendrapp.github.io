@@ -16,18 +16,20 @@
             height: 100vh;
             width: 100vw;
             overflow: hidden;
+            background-color: #000000;
         }
 
         #main-container {
             display: flex;
             flex-grow: 1;
             overflow: hidden;
+            background-color: #000000;
         }
 
         .left-pane {
             display: flex;
             flex-direction: column;
-            background-color: #f0f0f0;
+            background-color: #000000;
             border-right: 1px solid #ddd;
         }
 
@@ -64,6 +66,7 @@
             padding: 2px;
             border-bottom: 1px solid #ddd;
             flex-shrink: 0;
+            background-color: #000;
         }
 
         .search-bar-container {
@@ -72,6 +75,7 @@
             padding: 0;
             border: 1px solid #ccc;
             border-radius: 5px;
+            background-color: #000;
         }
 
         #search-input {
@@ -79,10 +83,10 @@
             font-size: 20px;
             box-sizing: border-box;
             padding: 10px;
-
+            color: #ccc;
             /*border: 1px solid #ccc;
             border-radius: 5px; */
-
+            background-color: #000;
             border: none;
             flex-grow: 1;
         }
@@ -117,16 +121,16 @@
 
         /* Alternate background color theme with inverse text color */
         .playlist-item:nth-child(even) {
-            background-color: #000000;
+            background-color: #272727;
             /* Black */
             color: #ffffff;
             /* White text */
         }
 
         .playlist-item:nth-child(odd) {
-            background-color: #ffffff;
+            background-color: #000000;
             /* White */
-            color: #000000;
+            color: #ffffff;
             /* Black text */
         }
 
@@ -207,7 +211,7 @@
                         <option value="🎶"></option>
                         <option value="📰"></option>
                         <option value="📻"></option>
-                        <option value="卐"></option>
+
                     </datalist>
                     <div class="search-controls">
                         <button id="load-json-button">json</button>
