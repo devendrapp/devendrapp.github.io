@@ -170,14 +170,39 @@
         }
 
         @media only screen and (orientation: landscape) {
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                width: 100vw;
+                overflow: hidden;
+                background-color: #000000;
+            }
+
+            #root-container {
+                aspect-ratio: 9 / 16;
+                max-width: calc(100vh * 9 / 16);
+                max-height: 100vh;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+
             #main-container {
-                flex-direction: row;
+                flex-direction: column;
             }
 
             .left-pane {
-                width: 250px;
-                height: 100%;
-                border-right: 1px solid #ddd;
+                /*height: 30vh;*/
+                height: 65%;
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #ddd;
             }
 
             .right-pane {
@@ -188,41 +213,47 @@
 </head>
 
 <body>
-    <header id="title-bar"
-        style="display: flex; align-items: center; padding: 10px; background-color: #333; color: #fff;">
-        <img id="app-icon" src="icon-192x192.png" alt="App Icon" style="width: 40px; height: 40px; margin-right: 10px;">
-        <h1 id="app-title" style="font-size: 18px;">DoorChitraVani</h1>
-        <span id="current-media" style="font-size: 16px; margin-left: 10px;"></span>
-    </header>
-    <div id="main-container">
-        <div class="right-pane">
+    <div id="root-container">
+        <header id="title-bar"
+            style="display: flex; align-items: center; padding: 10px; background-color: #333; color: #fff;">
+            <img id="app-icon" src="icon-192x192.png" alt="App Icon"
+                style="width: 40px; height: 40px; margin-right: 10px;">
+            <h1 id="app-title" style="font-size: 18px;">DoorChitraVani</h1>
+            <span id="current-media" style="font-size: 16px; margin-left: 10px;"></span>
+        </header>
+        <div id="main-container">
+            <div class="right-pane">
 
-            <div id="player-container"></div>
-        </div>
-        <div class="left-pane">
-            <div id="search-container">
-                <div class="search-bar-container">
-                    <input id="search-input" type="text" placeholder="Search..." list="searchHints">
-                    <datalist id="searchHints">
-                        <option value="🙏"></option>
-                        <option value="🎙️"> </option>
-                        <option value="🎵"></option>
-                        <option value="🤣"></option>
-                        <option value="🎶"></option>
-                        <option value="📰"></option>
-                        <option value="📻"></option>
+                <div id="player-container"></div>
+            </div>
+            <div class="left-pane">
+                <div id="search-container">
+                    <div class="search-bar-container">
+                        <input id="search-input" type="text" placeholder="Search..." list="searchHints">
+                        <datalist id="searchHints">
+                            <option value="🙏"></option>
+                            <option value="🎶"></option>
+                            <option value="🖥️"></option>
+                            <option value="📰"></option>
+                            <option value="🎙️"> </option>
+                            <option value="🎵"></option>
+                            <option value="🤣"></option>
+                            <option value="📻"></option>
+                            <option value="🎬"></option>
+                            <option value="▶️"></option>
 
-                    </datalist>
-                    <div class="search-controls">
-                        <button id="load-json-button">json</button>
-                        <button id="load-static-button">m3u</button>
-                        <button id="refresh-button">F5</button>
+                        </datalist>
+                        <div class="search-controls">
+                            <button id="load-json-button">json</button>
+                            <button id="load-static-button">m3u</button>
+                            <button id="refresh-button">F5</button>
+                        </div>
                     </div>
                 </div>
+                <div id="playlist"></div>
             </div>
-            <div id="playlist"></div>
-        </div>
 
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -235,20 +266,12 @@
         let currentChannelName = '';
         let staticChannelSuffix = ' 🙂'; //TODO Emoji
 
-        function clearLocalStorage() {
-            const jsonUrl = localStorage.getItem('jsonUrl');
 
-            for (let i = localStorage.length - 1; i >= 0; i--) {
-                const key = localStorage.key(i);
-                if (!key.includes(staticChannelSuffix)) {
-                    localStorage.removeItem(key);
-                }
-            }
+        setInterval(loadChannels, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
 
-            localStorage.setItem('jsonUrl', jsonUrl);
-        }
-
-        setInterval(clearLocalStorage, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
+        document.getElementById('search-input').addEventListener('focus', function () {
+            this.value = '';
+        });
 
         document.getElementById('refresh-button').addEventListener('click', () => {
             if (!confirm("Are you sure you want to refresh channels from source?")) {
@@ -256,7 +279,6 @@
                 return;
             }
 
-            clearLocalStorage();
             loadChannels();
             loadPlaylist();
             alert("Media Refreshed from sources");
@@ -281,12 +303,6 @@
                 const reader = new FileReader();
 
                 reader.onload = (event) => {
-                    for (let i = localStorage.length - 1; i >= 0; i--) {
-                        const key = localStorage.key(i);
-                        if (key.includes(staticChannelSuffix)) {
-                            localStorage.removeItem(key);
-                        }
-                    }
 
                     const fileContents = event.target.result;
                     const lines = fileContents.split('\n');
@@ -303,14 +319,10 @@
                         }
                     });
                 };
-
                 reader.readAsText(file);
             });
-
             fileInput.click();
         });
-
-
 
         function loadChannels() {
             let jsonUrl = localStorage.getItem('jsonUrl');
@@ -321,56 +333,47 @@
                 }
             }
 
-            const localStorageCount = localStorage.length;
 
-            if (true) {
-                if (jsonUrl) {
-                    fetch(jsonUrl)
-                        .then(response => response.json())
-                        .then(data => {
-                            data.forEach(channel => {
-                                if (channel.language != "eng" && channel.language != "hin" && channel.language != "mar" && channel.country != "in" && channel.country != "us" && channel.country != "uk")
-                                    return;
-                                let url = '';
-                                let name = '';
-                                if (channel.iptv_urls && channel.iptv_urls.length > 0) {
-                                    url = channel.iptv_urls[0];
-                                } else if (channel.youtube_urls && channel.youtube_urls.length > 0) {
-                                    url = channel.youtube_urls[0];
+            if (jsonUrl) {
+                fetch(jsonUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(channel => {
+                            if (channel.language != "eng" && channel.language != "hin" && channel.language != "mar" && channel.country != "in" && channel.country != "us" && channel.country != "uk")
+                                return;
+                            let url = '';
+                            let name = '';
+                            if (channel.iptv_urls && channel.iptv_urls.length > 0) {
+                                url = channel.iptv_urls[0];
+                            } else if (channel.youtube_urls && channel.youtube_urls.length > 0) {
+                                url = channel.youtube_urls[0];
+                            }
+                            name = formatChannelName(channel.name, url);
+                            if (url) {
+                                //name = channel.name;
+                                if (channel.language) {
+                                    name += ` (${channel.language})`;
+                                } else if (channel.country) {
+                                    name += ` (${channel.country})`;
                                 }
-                                name = formatChannelName(channel.name, url);
-                                if (url) {
-                                    //name = channel.name;
-                                    if (channel.language) {
-                                        name += ` (${channel.language})`;
-                                    } else if (channel.country) {
-                                        name += ` (${channel.country})`;
-                                    }
-                                    if (channel.name.includes('TV9 Marathi')) {
-                                        name = '🖥️ 📰 ' + channel.name + staticChannelSuffix + ' - 6';
-                                    }
-                                    if (channel.name.includes('Saam TV News')) {
-                                        name = '🖥️ 📰 ' + channel.name + staticChannelSuffix + ' - 7';
-                                    }
-                                    if (channel.name.includes('Zee 24 Taas')) {
-                                        name = '🖥️ 📰 ' + channel.name + staticChannelSuffix + ' - 8';
-                                    }
+                                if (channel.name.includes('TV9 Marathi')) {
+                                    name = '🖥️ 📰 ' + channel.name + staticChannelSuffix + ' - 6';
+                                }
+                                if (channel.name.includes('Saam TV News')) {
+                                    name = '🖥️ 📰 ' + channel.name + staticChannelSuffix + ' - 7';
+                                }
+                                if (channel.name.includes('Zee 24 Taas')) {
+                                    name = '🖥️ 📰 ' + channel.name + staticChannelSuffix + ' - 8';
+                                }
 
-                                    channels[name] = url;
-                                    localStorage.setItem(name, url);
-                                }
-                            });
-                        })
-                        .catch(error => console.error('Error:', error));
-                }
-            } else {
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (key !== 'jsonUrl' && key !== '0_currentDate') {
-                        channels[key] = localStorage.getItem(key);
-                    }
-                }
+                                channels[name] = url;
+                                localStorage.setItem(name, url);
+                            }
+                        });
+                    })
+                    .catch(error => console.error('Error:', error));
             }
+
         }
 
         function initializePlaylist() {
@@ -384,11 +387,11 @@
 
         function formatChannelName(name, url) {
             if (url.includes('m3u8')) {
-                return '&#x1F4FA; ' + name;
+                return '🎬 ' + name;
             } else if (url.includes('youtube')) {
-                return '&#x25B6; ' + name;
+                return '▶️ ' + name;
             } else {
-                return '&#x1F4FB; ' + name;
+                return '📻 ' + name;
             }
         }
 
