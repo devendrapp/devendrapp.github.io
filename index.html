@@ -264,13 +264,14 @@
         let currentIndex = 0;
         let channels = {};
         let currentChannelName = '';
-        let staticChannelSuffix = ' 🙂'; //TODO Emoji
+        let staticChannelSuffix = ' ▪️'; //TODO Emoji
 
 
         setInterval(loadChannels, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
 
         document.getElementById('search-input').addEventListener('focus', function () {
             this.value = '';
+            loadPlaylist();
         });
 
         document.getElementById('refresh-button').addEventListener('click', () => {
@@ -313,7 +314,7 @@
                             channelName = line.split(',')[1].trim();
                         } else if (line.startsWith('http') || line.startsWith('file')) {
                             if (channelName) {
-                                localStorage.setItem(channelName + staticChannelSuffix + ' - ' + (++i), line.trim());
+                                localStorage.setItem(channelName + staticChannelSuffix + ' ' + (++i), line.trim());
                                 channelName = null;
                             }
                         }
@@ -357,13 +358,13 @@
                                     name += ` (${channel.country})`;
                                 }
                                 if (channel.name.includes('TV9 Marathi')) {
-                                    name = '🖥️ 📰 ' + channel.name + staticChannelSuffix + ' - 6';
+                                    name = '🖥️ 📰 ' + channel.name + staticChannelSuffix + ' 6';
                                 }
                                 if (channel.name.includes('Saam TV News')) {
-                                    name = '🖥️ 📰 ' + channel.name + staticChannelSuffix + ' - 7';
+                                    name = '🖥️ 📰 ' + channel.name + staticChannelSuffix + ' 7';
                                 }
                                 if (channel.name.includes('Zee 24 Taas')) {
-                                    name = '🖥️ 📰 ' + channel.name + staticChannelSuffix + ' - 8';
+                                    name = '🖥️ 📰 ' + channel.name + staticChannelSuffix + ' 8';
                                 }
 
                                 channels[name] = url;
