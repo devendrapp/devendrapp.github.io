@@ -281,7 +281,7 @@
                     lines.forEach(line => {
                         if (line.startsWith('#EXTINF:')) {
                             channelName = line.split(',')[1].trim();
-                        } else if (line.startsWith('http') || line.startsWith('file:')) {
+                        } else if (line.startsWith('http') || line.startsWith('file')) {
                             if (channelName) {
                                 localStorage.setItem(channelName + staticChannelSuffix + ' - ' + (++i), line.trim());
                                 channelName = null;
@@ -490,6 +490,9 @@
                 iframe.allow = 'autoplay';
                 document.getElementById('player-container').appendChild(iframe);
                 currentPlayer = iframe;
+            } else if (item.url.startsWith('file://')) {
+                const intentUrl = `intent://${item.url.substring(7)}#Intent;action=android.intent.action.VIEW;type=audio/mpeg;end`;
+                window.location.href = intentUrl;
             } else {
                 const audio = document.createElement('audio');
                 audio.controls = true;
