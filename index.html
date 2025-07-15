@@ -171,39 +171,14 @@
         }
 
         @media only screen and (orientation: landscape) {
-            body {
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 0;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-                width: 100vw;
-                overflow: hidden;
-                background-color: #000000;
-            }
-
-            #root-container {
-                aspect-ratio: 9 / 16;
-                max-width: calc(100vh * 9 / 16);
-                max-height: 100vh;
-                width: 100%;
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-            }
-
             #main-container {
-                flex-direction: column;
+                flex-direction: row;
             }
 
             .left-pane {
-                /*height: 30vh;*/
-                height: 65%;
-                width: 100%;
-                border-right: none;
-                border-bottom: 1px solid #ddd;
+                width: 250px;
+                height: 100%;
+                border-right: 1px solid #ddd;
             }
 
             .right-pane {
@@ -214,47 +189,44 @@
 </head>
 
 <body>
-    <div id="root-container">
-        <header id="title-bar"
-            style="display: flex; align-items: center; padding: 10px; background-color: #333; color: #fff;">
-            <img id="app-icon" src="icon-192x192.png" alt="App Icon"
-                style="width: 40px; height: 40px; margin-right: 10px;">
-            <h1 id="app-title" style="font-size: 18px;">DoorChitraVani</h1>
-            <span id="current-media" style="font-size: 16px; margin-left: 10px;"></span>
-        </header>
-        <div id="main-container">
-            <div class="right-pane">
+    <header id="title-bar"
+        style="display: flex; align-items: center; padding: 10px; background-color: #333; color: #fff;">
+        <img id="app-icon" src="icon-192x192.png" alt="App Icon" style="width: 40px; height: 40px; margin-right: 10px;">
+        <h1 id="app-title" style="font-size: 18px;">DoorChitraVani</h1>
+        <span id="current-media" style="font-size: 16px; margin-left: 10px;"></span>
+    </header>
+    <div id="main-container">
+        <div class="right-pane">
 
-                <div id="player-container"></div>
-            </div>
-            <div class="left-pane">
-                <div id="search-container">
-                    <div class="search-bar-container">
-                        <input id="search-input" type="text" placeholder="Search..." list="searchHints">
-                        <datalist id="searchHints">
-                            <option value="🙏"></option>
-                            <option value="🎶"></option>
-                            <option value="🖥️"></option>
-                            <option value="📰"></option>
-                            <option value="🎙️"> </option>
-                            <option value="🎵"></option>
-                            <option value="🤣"></option>
-                            <option value="📻"></option>
-                            <option value="🎬"></option>
-                            <option value="▶️"></option>
+            <div id="player-container"></div>
+        </div>
+        <div class="left-pane">
+            <div id="search-container">
+                <div class="search-bar-container">
+                    <input id="search-input" type="text" placeholder="Search..." list="searchHints">
+                    <datalist id="searchHints">
+                        <option value="🙏"></option>
+                        <option value="🎶"></option>
+                        <option value="🖥️"></option>
+                        <option value="📰"></option>
+                        <option value="🎙️"> </option>
+                        <option value="🎵"></option>
+                        <option value="🤣"></option>
+                        <option value="📻"></option>
+                        <option value="🎬"></option>
+                        <option value="▶️"></option>
 
-                        </datalist>
-                        <div class="search-controls">
-                            <button id="load-json-button">json</button>
-                            <button id="load-static-button">m3u</button>
-                            <button id="refresh-button">F5</button>
-                        </div>
+                    </datalist>
+                    <div class="search-controls">
+                        <button id="load-json-button">json</button>
+                        <button id="load-static-button">m3u</button>
+                        <button id="refresh-button">F5</button>
                     </div>
                 </div>
-                <div id="playlist"></div>
             </div>
-
+            <div id="playlist"></div>
         </div>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -269,10 +241,6 @@
 
 
         setInterval(loadChannels, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
-
-        document.getElementById('search-input').addEventListener('focus', function () {
-            this.value = '';
-        });
 
         document.getElementById('refresh-button').addEventListener('click', () => {
             if (!confirm("Are you sure you want to refresh channels from source?")) {
