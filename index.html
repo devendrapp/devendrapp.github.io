@@ -230,7 +230,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
+
     <script>
         let currentPlayer = null;
         let hls = null;
@@ -239,24 +239,6 @@
         let channels = {};
         let currentChannelName = '';
         let staticChannelSuffix = ' ▪️';
-
-        function initCast() {
-            castContext.setOptions({
-                receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
-                autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
-            });
-            const castButton = document.createElement('button');
-            alert(castButton);
-            castButton.is = 'google-cast-button';
-            document.getElementById('player-container').appendChild(castButton);
-        }
-
-        // Play media on cast device
-        function castMedia(item) {
-            const mediaInfo = new chrome.cast.media.MediaInfo(item.url, 'video/mp4');
-            const request = new chrome.cast.media.LoadRequest(mediaInfo);
-            castContext.getCurrentSession().loadMedia(request);
-        }
 
         setInterval(loadChannels, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
 
