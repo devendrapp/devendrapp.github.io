@@ -459,13 +459,11 @@
                     hls.loadSource(item.url);
                     hls.attachMedia(video);
                     hls.on(Hls.Events.MANIFEST_LOADED, function () {
-                        initCast();
                         video.play();
                     });
                 } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                     video.src = item.url;
                     video.addEventListener('loadedmetadata', function () {
-                        initCast();
                         video.play();
                     });
                 }
