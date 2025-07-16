@@ -335,6 +335,9 @@
                                     name = '🖥️ 📰 ' + channel.name + staticChannelSuffix + ' 8';
                                 }
 
+                                if (url.includes("youtube-nocookie")) {
+                                    url = url.replace("-nocookie", "");
+                                }
                                 channels[name] = url;
                                 localStorage.setItem(name, url);
                             }
