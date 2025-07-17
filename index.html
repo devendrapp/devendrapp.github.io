@@ -473,9 +473,9 @@
             } else if (item.url.includes('youtube')) {
                 const youtubeUrl = item.url.includes('embed') ? item.url : getYoutubeEmbedUrl(item.url);
                 const iframe = document.createElement('iframe');
-                iframe.src = youtubeUrl + '?autoplay=1';
+                iframe.src = youtubeUrl + '?autoplay=1&fs=0';
                 iframe.frameBorder = 0;
-                //iframe.allowFullScreen = true;
+                iframe.allowFullScreen = true;
                 iframe.allow = 'autoplay';
                 document.getElementById('player-container').appendChild(iframe);
                 currentPlayer = iframe;
@@ -530,7 +530,7 @@
 
         screen.orientation.addEventListener('change', function () {
             if (currentPlayer && (currentPlayer.tagName === 'VIDEO'
-                //|| currentPlayer.tagName === 'IFRAME'
+                || currentPlayer.tagName === 'IFRAME'
             )) {
                 if (screen.orientation.type.startsWith('landscape')) {
                     // Landscape mode
