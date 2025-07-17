@@ -475,7 +475,7 @@
                 const iframe = document.createElement('iframe');
                 iframe.src = youtubeUrl + '?autoplay=1';
                 iframe.frameBorder = 0;
-                iframe.allowFullScreen = true;
+                //iframe.allowFullScreen = true;
                 iframe.allow = 'autoplay';
                 document.getElementById('player-container').appendChild(iframe);
                 currentPlayer = iframe;
@@ -529,7 +529,9 @@
         loadPlaylist();
 
         screen.orientation.addEventListener('change', function () {
-            if (currentPlayer && (currentPlayer.tagName === 'VIDEO' || currentPlayer.tagName === 'IFRAME')) {
+            if (currentPlayer && (currentPlayer.tagName === 'VIDEO'
+                //|| currentPlayer.tagName === 'IFRAME'
+            )) {
                 if (screen.orientation.type.startsWith('landscape')) {
                     // Landscape mode
                     if (currentPlayer.requestFullscreen) {
