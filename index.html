@@ -152,6 +152,31 @@
             /*border-color: #aaa;*/
         }
 
+        #hamburger-menu {
+            font-size: 24px;
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        #nav-drawer {
+            position: fixed;
+            top: 60px;
+            /* adjust this value based on your app bar height */
+            bottom: 0;
+            right: 0;
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            display: none;
+            flex-direction: column;
+            width: 200px;
+            /* adjust this value based on your desired width */
+        }
+
+        #nav-drawer.show {
+            display: flex;
+        }
+
         @media only screen and (orientation: portrait) {
             #main-container {
                 flex-direction: column;
@@ -194,6 +219,7 @@
         <img id="app-icon" src="icon-192x192.png" alt="App Icon" style="width: 40px; height: 40px; margin-right: 10px;">
         <h1 id="app-title" style="font-size: 18px;">DoorChitraVani</h1>
         <span id="current-media" style="font-size: 16px; margin-left: 10px;"></span>
+        <div id="hamburger-menu">&#9776;</div>
     </header>
     <div id="main-container">
         <div class="right-pane">
@@ -201,31 +227,39 @@
             <div id="player-container"></div>
         </div>
         <div class="left-pane">
+            <div id="quick-search-buttons" style="padding: 10px; display: flex; flex-wrap: wrap;">
+                <button class="quick-search-button" style="flex: 1; margin-right: 2px;">🙏</button>
+                <button class="quick-search-button" style="flex: 1; margin-right: 2px;">📰</button>
+                <button class="quick-search-button" style="flex: 1; margin-right: 2px;">📀</button>
+                <button class="quick-search-button" style="flex: 1; margin-right: 2px;">🎵</button>
+                <button class="quick-search-button" style="flex: 1; margin-right: 2px;">🎶</button>
+                <button class="quick-search-button" style="flex: 1; margin-right: 2px;">🎙️</button>
+                <button class="quick-search-button" style="flex: 1; margin-right: 2px;">🤣</button>
+                <button class="quick-search-button" style="flex: 1; margin-right: 2px;">🐤</button>
+                <button class="quick-search-button" style="flex: 1; margin-right: 2px;">🐅</button>
+                <button class="quick-search-button" style="flex: 1; margin-right: 2px;">🎬</button>
+                <button class="quick-search-button" style="flex: 1; margin-right: 2px;">▶️</button>
+                <button class="quick-search-button" style="flex: 1; margin-right: 2px;">📻</button>
+                <button class="quick-search-button" style="flex: 1; margin-right: 2px;">🖥️</button>
+
+            </div>
             <div id="search-container">
                 <div class="search-bar-container">
-                    <input id="search-input" type="text" placeholder="Search..." list="searchHints">
-                    <datalist id="searchHints">
-                        <option value="🙏"></option>
-                        <option value="🎶"></option>
-                        <option value="📰"></option>
-                        <option value="🎙️"> </option>
-                        <option value="📀"></option>
-                        <option value="🎬"></option>
-                        <option value="🐤"></option>
-                        <option value="🎵"></option>
-                        <option value="🐅"></option>
-                        <option value="▶️"></option>
-                        <option value="🖥️"></option>
-                        <option value="📻"></option>
-                    </datalist>
+                    <input id="search-input" type="text" placeholder="Search...">
                     <div class="search-controls">
-                        <button id="load-json-button">json</button>
+                        <!--<button id="load-json-button">json</button>
                         <button id="load-static-button">m3u</button>
-                        <button id="refresh-button">F5</button>
+                        <button id="refresh-button">F5</button>-->
                     </div>
                 </div>
             </div>
             <div id="playlist"></div>
+        </div>
+        <div id="nav-drawer">
+            <!-- add your navigation links or content here -->
+            <button id="load-json-button">json</button><br>
+            <button id="load-static-button">m3u</button><br>
+            <button id="refresh-button">F5</button>
         </div>
 
     </div>
@@ -240,6 +274,34 @@
         let channels = {};
         let currentChannelName = '';
         let staticChannelSuffix = ' ▪️';
+        const searchInput = document.getElementById('search-input');
+        const quickSearchButtons = document.querySelectorAll('.quick-search-button');
+
+        quickSearchButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                searchInput.value = button.textContent;
+                searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+                searchInput.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+        });
+
+        const hamburgerMenu = document.getElementById('hamburger-menu');
+        const navDrawer = document.getElementById('nav-drawer');
+
+        hamburgerMenu.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navDrawer.classList.toggle('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!navDrawer.contains(e.target) && !hamburgerMenu.contains(e.target)) {
+                navDrawer.classList.remove('show');
+            }
+        });
+
+        navDrawer.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
 
         setInterval(loadChannels, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
 
