@@ -264,6 +264,7 @@
             <!-- add your navigation links or content here -->
             <button id="load-json-button" style="font-size: 24px;">json</button><br>
             <button id="load-static-button" style="font-size: 24px;">m3u</button><br>
+            <button id="clear-storage-button" style="font-size: 24px;">Clear Storage</button><br>
             <button id="refresh-button" style="font-size: 24px;">F5</button>
         </div>
 
@@ -312,13 +313,23 @@
 
         document.getElementById('refresh-button').addEventListener('click', () => {
             if (!confirm("Are you sure you want to refresh channels from source?")) {
-                console.log("User chose to continue.");
                 return;
             }
 
             loadChannels();
             loadPlaylist();
             alert("Media Refreshed from sources");
+        });
+
+        document.getElementById('clear-storage-button').addEventListener('click', () => {
+            if (!confirm("Are you sure you want to clear channels from this app?")) {
+                return;
+            }
+            let jsonUrl = localStorage.getItem('jsonUrl');
+            localStorage.clear();
+            if (jsonUrl) {
+                localStorage.setItem('jsonUrl', jsonUrl);
+            }
         });
 
         document.getElementById('load-json-button').addEventListener('click', () => {
@@ -426,12 +437,14 @@
         }
 
         function formatChannelName(name, url) {
-            if (url.includes('m3u8')) {
+            if (url.includes('m3u8') &&
+                (name.includes('movi') || name.includes("film") || name.includes("trail"))
+            ) {
                 return '🎬 ' + name;
             } else if (url.includes('youtube')) {
                 return '▶️ ' + name;
             } else {
-                return '📻 ' + name;
+                return name;
             }
         }
 
