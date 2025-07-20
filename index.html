@@ -251,6 +251,8 @@
                 <div class="search-bar-container">
                     <input id="search-input" type="text" placeholder="Search...">
                     <div class="search-controls">
+                        <button id="prev-button" style="font-size: 24px;">Prev</button><br>
+                        <button id="next-button" style="font-size: 24px;">Next</button><br>
                         <button id="clear-search-input" style="font-size: 24px;">x</button><br>
                     </div>
                 </div>
@@ -280,6 +282,57 @@
         const searchInput = document.getElementById('search-input');
         const quickSearchButtons = document.querySelectorAll('.quick-search-button');
 
+        document.getElementById('prev-button').addEventListener('click', () => {
+            playPreviousItem();
+        });
+
+        document.getElementById('next-button').addEventListener('click', () => {
+            playNextItem();
+        });
+
+        function getPlaylistItems() {
+            const playlistElement = document.getElementById('playlist');
+            const playlistItemElements = playlistElement.children;
+            const playlistItems = [];
+            for (let i = 0; i < playlistItemElements.length; i++) {
+                const itemElement = playlistItemElements[i];
+                playlistItems.push({
+                    name: itemElement.textContent,
+                    element: itemElement,
+                });
+            }
+            return playlistItems;
+        }
+
+        function getCurrentIndex() {
+            if (!currentChannelName) return 0;
+            const playlistItems = getPlaylistItems();
+            const currentItem = playlistItems.find((item) => item.name === currentChannelName);
+            return currentItem ? playlistItems.indexOf(currentItem) : 0;
+        }
+
+        function playPreviousItem() {
+            const currentIndex = getCurrentIndex();
+            const playlistItems = getPlaylistItems();
+            if (currentIndex > 0) {
+                const previousItem = playlistItems[currentIndex - 1];
+                previousItem.element.click();
+            } else {
+                playlistItems[0].element.click();
+            }
+        }
+
+        function playNextItem() {
+            const currentIndex = getCurrentIndex();
+            const playlistItems = getPlaylistItems();
+            if (currentIndex < playlistItems.length - 1) {
+                const nextItem = playlistItems[currentIndex + 1];
+                nextItem.element.click();
+            } else {
+                playlistItems[0].element.click();
+            }
+        }
+
         quickSearchButtons.forEach(button => {
             button.addEventListener('click', () => {
                 searchInput.value = button.textContent + ' ';
@@ -305,6 +358,16 @@
         document.addEventListener('click', (e) => {
             if (!navDrawer.contains(e.target) && !hamburgerMenu.contains(e.target)) {
                 navDrawer.classList.remove('show');
+            }
+        });
+
+        document.getElementById('player-container').addEventListener('click', () => {
+            if (currentPlayer) {
+                if (currentPlayer.paused) {
+                    currentPlayer.play();
+                } else {
+                    currentPlayer.pause();
+                }
             }
         });
 
@@ -344,6 +407,21 @@
 
         });
 
+        document.getElementById('search-input').addEventListener('input', () => {
+            const searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
+            if (searchQuery.length >= 2) {
+                const searchWords = searchQuery.split(' ').filter(word => word.length > 1);
+                const filteredPlaylist = Object.keys(channels).filter(name => {
+                    const nameLower = name.toLowerCase();
+                    return searchWords.every(word => nameLower.includes(word));
+                }).map((name, index) => ({ name, url: channels[name], index }));
+                renderPlaylist(filteredPlaylist);
+            } else {
+                document.getElementById('playlist').innerHTML = '';
+                loadPlaylist();
+            }
+        });
+
         document.getElementById('load-static-button').addEventListener('click', () => {
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
@@ -375,6 +453,62 @@
             fileInput.click();
         });
 
+        document.addEventListener('keydown', (e) => {
+            if (currentItem && currentPlayer) {
+                const playlistElement = document.getElementById('playlist');
+                const playlistItems = playlistElement.children;
+                switch (e.key) {
+                    case 'MediaTrackPrevious':
+                        // Play previous item
+                        if (currentIndex > 0) {
+                            const previousItem = document.getElementById('playlist').children[currentIndex - 1];
+                            const previousItemData = { name: previousItem.textContent, url: channels[previousItem.textContent] };
+                            playItem(previousItemData, previousItem, currentIndex - 1);
+                        }
+                        break;
+                    case 'MediaTrackNext':
+                        // Play next item
+                        if (currentIndex < playlistItems.length - 1) {
+                            const nextItem = playlistItems[currentIndex + 1];
+                            const nextItemData = { name: nextItem.textContent, url: channels[nextItem.textContent] };
+                            playItem(nextItemData, nextItem, currentIndex + 1);
+                        }
+                        break;
+                    case 'MediaPlayPause':
+                        if (currentPlayer) {
+                            if (currentPlayer.paused) {
+                                currentPlayer.play();
+                            } else {
+                                currentPlayer.pause();
+                            }
+                        }
+                        break;
+                }
+            }
+        });
+
+        screen.orientation.addEventListener('change', function () {
+            if (currentPlayer && (currentPlayer.tagName === 'VIDEO'
+                || currentPlayer.tagName === 'IFRAME'
+            )) {
+                if (screen.orientation.type.startsWith('landscape')) {
+                    // Landscape mode
+                    if (currentPlayer.requestFullscreen) {
+                        currentPlayer.requestFullscreen();
+                    } else if (currentPlayer.webkitRequestFullscreen) {
+                        currentPlayer.webkitRequestFullscreen();
+                    } else if (currentPlayer.msRequestFullscreen) {
+                        currentPlayer.msRequestFullscreen();
+                    }
+                } else {
+                    // Portrait mode
+                    if (document.fullscreenElement) {
+                        document.exitFullscreen();
+                    }
+                }
+            }
+        });
+
         function loadChannels() {
             let jsonUrl = localStorage.getItem('jsonUrl');
             if (!jsonUrl) {
@@ -383,7 +517,6 @@
                     localStorage.setItem('jsonUrl', jsonUrl);
                 }
             }
-
 
             if (jsonUrl) {
                 fetch(jsonUrl)
@@ -442,7 +575,6 @@
         function formatChannelName(name, url) {
             let lName = name.toLowerCase();
             if (url.includes('m3u8')) {
-
                 if (lName.includes('movi') || lName.includes('film') || lName.includes('trail')) {
                     return '🎬 ' + name;
                 } else if (lName.includes('wild') || lName.includes('nature') || lName.includes('earth') || lName.includes('geog')) {
@@ -450,8 +582,6 @@
                 } else {
                     return name;
                 }
-
-
             } else if (url.includes('youtube')) {
                 return '▶️ ' + name;
             } else {
@@ -499,21 +629,6 @@
                 index++;
             });
         }
-
-        document.getElementById('search-input').addEventListener('input', () => {
-            const searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
-            if (searchQuery.length >= 2) {
-                const searchWords = searchQuery.split(' ').filter(word => word.length > 1);
-                const filteredPlaylist = Object.keys(channels).filter(name => {
-                    const nameLower = name.toLowerCase();
-                    return searchWords.every(word => nameLower.includes(word));
-                }).map((name, index) => ({ name, url: channels[name], index }));
-                renderPlaylist(filteredPlaylist);
-            } else {
-                document.getElementById('playlist').innerHTML = '';
-                loadPlaylist();
-            }
-        });
 
         function playItem(item, element, index) {
             if (currentItem) {
@@ -586,16 +701,6 @@
 
         }
 
-        document.getElementById('player-container').addEventListener('click', () => {
-            if (currentPlayer) {
-                if (currentPlayer.paused) {
-                    currentPlayer.play();
-                } else {
-                    currentPlayer.pause();
-                }
-            }
-        });
-
         function getYoutubeEmbedUrl(url) {
             const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
             const match = url.match(regExp);
@@ -620,28 +725,6 @@
         initializePlaylist();
         loadPlaylist();
 
-        screen.orientation.addEventListener('change', function () {
-            if (currentPlayer && (currentPlayer.tagName === 'VIDEO'
-                || currentPlayer.tagName === 'IFRAME'
-            )) {
-                if (screen.orientation.type.startsWith('landscape')) {
-                    // Landscape mode
-                    if (currentPlayer.requestFullscreen) {
-                        currentPlayer.requestFullscreen();
-                    } else if (currentPlayer.webkitRequestFullscreen) {
-                        currentPlayer.webkitRequestFullscreen();
-                    } else if (currentPlayer.msRequestFullscreen) {
-                        currentPlayer.msRequestFullscreen();
-                    }
-                } else {
-                    // Portrait mode
-                    if (document.fullscreenElement) {
-                        document.exitFullscreen();
-                    }
-                }
-            }
-        });
-
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
                 .then((registration) => {
@@ -651,40 +734,6 @@
                     console.error('Service Worker registration failed:', error);
                 });
         }
-
-        document.addEventListener('keydown', (e) => {
-            if (currentItem && currentPlayer) {
-                const playlistElement = document.getElementById('playlist');
-                const playlistItems = playlistElement.children;
-                switch (e.key) {
-                    case 'MediaTrackPrevious':
-                        // Play previous item
-                        if (currentIndex > 0) {
-                            const previousItem = document.getElementById('playlist').children[currentIndex - 1];
-                            const previousItemData = { name: previousItem.textContent, url: channels[previousItem.textContent] };
-                            playItem(previousItemData, previousItem, currentIndex - 1);
-                        }
-                        break;
-                    case 'MediaTrackNext':
-                        // Play next item
-                        if (currentIndex < playlistItems.length - 1) {
-                            const nextItem = playlistItems[currentIndex + 1];
-                            const nextItemData = { name: nextItem.textContent, url: channels[nextItem.textContent] };
-                            playItem(nextItemData, nextItem, currentIndex + 1);
-                        }
-                        break;
-                    case 'MediaPlayPause':
-                        if (currentPlayer) {
-                            if (currentPlayer.paused) {
-                                currentPlayer.play();
-                            } else {
-                                currentPlayer.pause();
-                            }
-                        }
-                        break;
-                }
-            }
-        });
 
     </script>
 </body>
