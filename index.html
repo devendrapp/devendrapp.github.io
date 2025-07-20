@@ -556,14 +556,8 @@
                                 } else if (channel.country) {
                                     name += ` (${channel.country})`;
                                 }
-                                if (channel.name.includes('TV9 Marathi')) {
-                                    name = '📰 ' + channel.name + staticChannelSuffix + ' 6';
-                                }
-                                if (channel.name.includes('Saam TV News')) {
-                                    name = '📰 ' + channel.name + staticChannelSuffix + ' 7';
-                                }
-                                if (channel.name.includes('Zee 24 Taas')) {
-                                    name = '📰 ' + channel.name + staticChannelSuffix + ' 8';
+                                if (channel.name.includes('TV9 Marathi') || channel.name.includes('Saam TV News') || channel.name.includes('Zee 24 Taas')) {
+                                    name = '📰 ' + channel.name + staticChannelSuffix;
                                 }
 
                                 if (url.includes("youtube-nocookie")) {
