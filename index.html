@@ -290,6 +290,20 @@
             playNextItem();
         });
 
+        function stopCurrentPlayer() {
+            if (currentPlayer) {
+                if (currentPlayer.pause) {
+                    currentPlayer.pause();
+                }
+                if (hls) {
+                    hls.stopLoad();
+                    hls.detachMedia();
+                }
+                document.getElementById('player-container').removeChild(currentPlayer);
+                currentPlayer = null;
+            }
+        }
+
         function getPlaylistItems() {
             const playlistElement = document.getElementById('playlist');
             const playlistItemElements = playlistElement.children;
@@ -314,6 +328,7 @@
         function playPreviousItem() {
             const currentIndex = getCurrentIndex();
             const playlistItems = getPlaylistItems();
+            stopCurrentPlayer();
             if (currentIndex > 0) {
                 const previousItem = playlistItems[currentIndex - 1];
                 previousItem.element.click();
@@ -325,6 +340,7 @@
         function playNextItem() {
             const currentIndex = getCurrentIndex();
             const playlistItems = getPlaylistItems();
+            stopCurrentPlayer();
             if (currentIndex < playlistItems.length - 1) {
                 const nextItem = playlistItems[currentIndex + 1];
                 nextItem.element.click();
