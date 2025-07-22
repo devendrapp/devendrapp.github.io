@@ -711,6 +711,13 @@
                         video.play();
                     });
                 }
+            } else if (item.url.endsWith('.mp4')) {
+                const video = document.createElement('video');
+                video.src = item.url;
+                video.controls = true;
+                document.getElementById('player-container').appendChild(video);
+                currentPlayer = video;
+                video.play();
             } else if (item.url.includes('youtube')) {
                 const youtubeUrl = item.url.includes('embed') ? item.url : getYoutubeEmbedUrl(item.url);
                 const iframe = document.createElement('iframe');
@@ -720,6 +727,15 @@
                 iframe.allow = 'autoplay';
                 document.getElementById('player-container').appendChild(iframe);
                 currentPlayer = iframe;
+            } else if (item.url.endsWith('.jpg') || item.url.endsWith('.png') || item.url.endsWith('.jpeg')) {
+                if (navigator.userAgent.match(/Android/i)) {
+                    window.location.href = item.url;
+                } else {
+                    const img = document.createElement('img');
+                    img.src = item.url;
+                    document.getElementById('player-container').appendChild(img);
+                    currentPlayer = img;
+                }
             } else if (item.url.startsWith('file://')) {
                 const intentUrl = `intent://${item.url.substring(7)}#Intent;action=android.intent.action.VIEW;type=audio/mpeg;end`;
                 window.location.href = intentUrl;
