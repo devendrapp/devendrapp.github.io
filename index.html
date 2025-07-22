@@ -727,7 +727,7 @@
                 iframe.allow = 'autoplay';
                 document.getElementById('player-container').appendChild(iframe);
                 currentPlayer = iframe;
-            } else if (item.url.endsWith('.jpg') || item.url.endsWith('.png') || item.url.endsWith('.jpeg')) {
+            } else if (item.url.endsWith('.jpg') || item.url.endsWith('.png') || item.url.endsWith('.jpeg') || item.name.toLowerCase().includes("jpg")) {
                 if (navigator.userAgent.match(/Android/i)) {
                     window.location.href = item.url;
                 } else {
