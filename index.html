@@ -563,8 +563,8 @@
                     .then(response => response.json())
                     .then(data => {
                         data.forEach(channel => {
-                            if (channel.language != "eng" && channel.language != "hin" && channel.language != "mar" && channel.country != "in" && channel.country != "us" && channel.country != "uk")
-                                return;
+                            //if (channel.language != "eng" && channel.language != "hin" && channel.language != "mar" && channel.country != "in" && channel.country != "us" && channel.country != "uk")
+                            //return;
                             let url = '';
                             let name = '';
                             if (channel.iptv_urls && channel.iptv_urls.length > 0) {
