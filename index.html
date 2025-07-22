@@ -154,7 +154,7 @@
         #hamburger-menu {
             font-size: 24px;
             cursor: pointer;
-            margin-left: auto;
+            margin-left: 10px;
         }
 
         #nav-drawer {
@@ -162,7 +162,7 @@
             top: 60px;
             /* adjust this value based on your app bar height */
             bottom: 0;
-            right: 0;
+            left: 0;
             background-color: #333;
             color: #fff;
             padding: 10px;
@@ -215,10 +215,10 @@
 <body>
     <header id="title-bar"
         style="display: flex; align-items: center; padding: 10px; background-color: #333; color: #fff;">
-        <img id="app-icon" src="icon-192x192.png" alt="App Icon" style="width: 40px; height: 40px; margin-right: 10px;">
-        <h1 id="app-title" style="font-size: 18px;">DoorChitraVani</h1>
-        <span id="current-media" style="font-size: 16px; margin-left: 10px;"></span>
         <div id="hamburger-menu">&#9776;</div>
+        <span id="current-media" style="font-size: 16px; margin-left: 10px;"></span>
+        <button id="prev-button" style="font-size: 24px; margin-left: auto;">Prev</button>
+        <button id="next-button" style="font-size: 24px;margin-left: 10px;">Next</button>
     </header>
     <div id="main-container">
         <div class="right-pane">
@@ -251,9 +251,8 @@
                 <div class="search-bar-container">
                     <input id="search-input" type="text" placeholder="Search...">
                     <div class="search-controls">
-                        <button id="prev-button" style="font-size: 24px;">Prev</button><br>
-                        <button id="next-button" style="font-size: 24px;">Next</button><br>
-                        <button id="clear-search-input" style="font-size: 24px;">x</button><br>
+                        <a id="clear-search-input"
+                            style="font-size: 24px; text-decoration: none; cursor: pointer; color: white;">x</a>
                     </div>
                 </div>
             </div>
@@ -261,10 +260,20 @@
         </div>
         <div id="nav-drawer">
             <!-- add your navigation links or content here -->
-            <button id="load-json-button" style="font-size: 24px;">json</button><br>
-            <button id="load-static-button" style="font-size: 24px;">m3u</button><br>
-            <button id="clear-storage-button" style="font-size: 24px;">Clear Storage</button><br>
-            <button id="refresh-button" style="font-size: 24px;">F5</button>
+            <img id="app-icon" src="icon-192x192.png" alt="App Icon"
+                style="width: 32px; height: 32px; margin-left: 5px; margin-right: 5px;">
+            <h1 id="app-title" style="font-size: 18px;">DoorChitraVani</h1><br>
+            <a id="load-json-button" style="font-size: 24px; text-decoration: none; cursor: pointer; color: white;">➡️
+                Load JSON</a><br>
+            <a id="load-static-button" style="font-size: 24px; text-decoration: none; cursor: pointer; color: white;">➡️
+                Load m3u</a><br>
+            <a id="loadSingleURL" style="font-size: 24px; text-decoration: none; cursor: pointer; color: white;">➡️ Load
+                Single URL</a>
+            <a id="clear-storage-button"
+                style="font-size: 24px; text-decoration: none; cursor: pointer; color: white;">➡️ Clear Storage</a><br>
+            <a id="refresh-button" style="font-size: 24px; text-decoration: none; cursor: pointer; color: white;">➡️
+                Refresh Storage</a><br>
+
         </div>
 
     </div>
@@ -281,6 +290,10 @@
         let staticChannelSuffix = ' ▪️';
         const searchInput = document.getElementById('search-input');
         const quickSearchButtons = document.querySelectorAll('.quick-search-button');
+
+        document.getElementById('loadSingleURL').addEventListener('click', () => {
+            loadSingleURL();
+        });
 
         document.getElementById('prev-button').addEventListener('click', () => {
             playPreviousItem();
@@ -351,7 +364,12 @@
 
         quickSearchButtons.forEach(button => {
             button.addEventListener('click', () => {
-                searchInput.value = button.textContent + ' ';
+                if (searchInput.value.includes(button.textContent)) {
+                    searchInput.value = '';
+                } else {
+                    searchInput.value = button.textContent + ' ';
+                }
+
                 searchInput.dispatchEvent(new Event('input', { bubbles: true }));
                 searchInput.dispatchEvent(new Event('change', { bubbles: true }));
             });
@@ -524,6 +542,12 @@
                 }
             }
         });
+
+        function loadSingleURL() {
+            let url = prompt("Enter Single Video / Audio / Youtube URL:");
+            let name = prompt("Enter name:");
+            localStorage.setItem(name, url);
+        }
 
         function loadChannels() {
             let jsonUrl = localStorage.getItem('jsonUrl');
@@ -732,8 +756,64 @@
             renderPlaylist(channelsToLoad);
         }
 
+        // Function to get words from local storage keys
+        function getWordsFromLocalStorage() {
+            const words = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const wordArray = key.split(/[\s_]+/); // Split key into words
+                words.push(...wordArray.filter(word => word.length >= 7)); // Filter words with length >= 4
+            }
+            return words;
+        }
+
+        // Function to count occurrences of each word
+        function countWordOccurrences(words) {
+            const wordCount = {};
+            words.forEach(word => {
+                const lowerCaseWord = word.toLowerCase(); // Convert to lowercase for case-insensitive comparison
+                if (lowerCaseWord == "channel" || lowerCaseWord == "network" || lowerCaseWord == "television"
+                    || lowerCaseWord == "community" || lowerCaseWord.includes("nation") || lowerCaseWord == "blessing"
+                    || lowerCaseWord == "telemundo" || lowerCaseWord.includes("america") || lowerCaseWord == "universal"
+                    || lowerCaseWord == "country" || lowerCaseWord == "committee" || lowerCaseWord.includes("educat"))
+                    return;
+                wordCount[lowerCaseWord] = (wordCount[lowerCaseWord] || 0) + 1;
+            });
+            return wordCount;
+        }
+
+        // Function to get repeating words
+        function getRepeatingWords(wordCount) {
+            const repeatingWords = Object.keys(wordCount).filter(word => wordCount[word] >= 5);
+            return repeatingWords.sort((a, b) => wordCount[b] - wordCount[a]); // Sort in descending order of occurrences
+        }
+
+        // Function to add datalist to search input
+        function addDatalist(repeatingWords) {
+            const datalist = document.createElement('datalist');
+            datalist.id = 'search-options';
+            repeatingWords.forEach(word => {
+                const option = document.createElement('option');
+                option.value = word;
+                datalist.appendChild(option);
+            });
+            document.body.appendChild(datalist);
+            const searchInput = document.getElementById('search-input');
+            searchInput.setAttribute('list', 'search-options');
+        }
+
+
+        function populateDataListForSearchInput() {
+            const words = getWordsFromLocalStorage();
+            const wordCount = countWordOccurrences(words);
+            const repeatingWords = getRepeatingWords(wordCount);
+            addDatalist(repeatingWords);
+        }
+
+
         initializePlaylist();
         loadPlaylist();
+        populateDataListForSearchInput();
 
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
