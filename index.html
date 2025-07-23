@@ -226,6 +226,15 @@
             <div id="player-container"></div>
         </div>
         <div class="left-pane">
+            <div id="search-container">
+                <div class="search-bar-container">
+                    <input id="search-input" type="text" placeholder="Search...">
+                    <div class="search-controls">
+                        <a id="clear-search-input"
+                            style="font-size: 24px; text-decoration: none; cursor: pointer; color: white; margin-right: 10px;">clear</a>
+                    </div>
+                </div>
+            </div>
             <div id="quick-search-buttons" style="padding: 5px;  display: flex; flex-wrap: wrap;">
                 <button class="quick-search-button" style="flex: 1; margin-right: 4px; font-size: 24px;">📰</button>
                 <button class="quick-search-button" style="flex: 1; margin-right: 4px; font-size: 24px;">📀</button>
@@ -244,25 +253,18 @@
                 <button class="quick-search-button" style="flex: 1; margin-right: 4px; font-size: 24px;">🖥️</button>
                 <button class="quick-search-button" style="flex: 1; margin-right: 4px; font-size: 24px;">🎬</button>
                 <button class="quick-search-button" style="flex: 1; margin-right: 4px; font-size: 24px;">▶️</button>
-
-
-            </div>
-            <div id="search-container">
-                <div class="search-bar-container">
-                    <input id="search-input" type="text" placeholder="Search...">
-                    <div class="search-controls">
-                        <a id="clear-search-input"
-                            style="font-size: 24px; text-decoration: none; cursor: pointer; color: white; margin-right: 10px;">clear</a>
-                    </div>
-                </div>
             </div>
             <div id="playlist"></div>
+
         </div>
         <div id="nav-drawer">
             <!-- add your navigation links or content here -->
             <img id="app-icon" src="icon-192x192.png" alt="App Icon"
                 style="width: 32px; height: 32px; margin-left: 5px; margin-right: 5px;">
             <h1 id="app-title" style="font-size: 18px;">DoorChitraVani</h1><br>
+            <a id="notes-button" href="tracker.html"
+                style="font-size: 24px; text-decoration: none; cursor: pointer; color: white;">➡️
+                Tracker</a><br>
             <a id="load-json-button" style="font-size: 24px; text-decoration: none; cursor: pointer; color: white;">➡️
                 Load JSON</a><br>
             <a id="load-static-button" style="font-size: 24px; text-decoration: none; cursor: pointer; color: white;">➡️
@@ -273,6 +275,8 @@
                 style="font-size: 24px; text-decoration: none; cursor: pointer; color: white;">➡️ Clear Storage</a><br>
             <a id="refresh-button" style="font-size: 24px; text-decoration: none; cursor: pointer; color: white;">➡️
                 Refresh Storage</a><br>
+            <a id="about-button" style="font-size: 24px; text-decoration: none; cursor: pointer; color: white;">➡️
+                About</a><br>
 
         </div>
 
@@ -419,6 +423,10 @@
             loadChannels();
             loadPlaylist();
             alert("Media Refreshed from sources");
+        });
+
+        document.getElementById('about-button').addEventListener('click', () => {
+
         });
 
         document.getElementById('clear-storage-button').addEventListener('click', () => {

@@ -1,6 +1,7 @@
 const CACHE_NAME = 'door-chitra-vani-cache-070725'; // Update the version number
 const urlsToCache = [
   '/',
+  '/tracker.html',
   '/index.html',
 ];
 
