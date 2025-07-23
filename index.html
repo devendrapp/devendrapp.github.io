@@ -736,7 +736,7 @@
                     document.getElementById('player-container').appendChild(img);
                     currentPlayer = img;
                 }
-            } else if (item.url.endsWith('.pdf')) {
+            } else if (item.url.endsWith('.pdf') || item.name.toLowerCase().includes('pdf')) {
                 const iframe = document.createElement('iframe');
                 iframe.src = item.url;
                 iframe.frameBorder = 0;
