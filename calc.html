@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+        }
+
+        .calculator {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            height: 10vh;
+            font-size: 5vh;
+            border: none;
+            border-radius: 5px;
+            background-color: #111;
+            color: #fff;
+            padding: 10px;
+            box-sizing: border-box;
+            text-align: right;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+
+        button {
+            height: 10vh;
+            font-size: 5vh;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button.number {
+            background-color: #444;
+        }
+
+        button.operator {
+            background-color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="calculator">
+        <input type="text" id="display" disabled>
+        <input type="text" id="result" disabled>
+        <div class="buttons">
+            <button class="operator" onclick="clearDisplay()">C</button>
+            <button class="operator" onclick="backspace()">DEL</button>
+            <button class="operator" onclick="calculate('%')">%</button>
+            <button class="operator" onclick="calculate('/')">/</button>
+            <button class="number" onclick="appendNumber(7)">7</button>
+            <button class="number" onclick="appendNumber(8)">8</button>
+            <button class="number" onclick="appendNumber(9)">9</button>
+            <button class="operator" onclick="calculate('*')">*</button>
+            <button class="number" onclick="appendNumber(4)">4</button>
+            <button class="number" onclick="appendNumber(5)">5</button>
+            <button class="number" onclick="appendNumber(6)">6</button>
+            <button class="operator" onclick="calculate('-')">-</button>
+            <button class="number" onclick="appendNumber(1)">1</button>
+            <button class="number" onclick="appendNumber(2)">2</button>
+            <button class="number" onclick="appendNumber(3)">3</button>
+            <button class="operator" onclick="calculate('+')">+</button>
+            <button class="number" onclick="appendNumber(0)">0</button>
+            <button class="number" onclick="appendDecimal()">.</button>
+            <button class="operator" onclick="calculateResult()">=</button>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+        let result = document.getElementById('result');
+        let freshOperation = false;
+
+        function appendNumber(num) {
+            if (freshOperation) {
+                display.value = num;
+                freshOperation = false;
+            } else {
+                display.value += num;
+            }
+        }
+
+        function appendDecimal() {
+            if (freshOperation) {
+                display.value = '0.';
+                freshOperation = false;
+            } else if (!display.value.includes('.')) {
+                display.value += '.';
+            }
+        }
+
+        function calculate(operator) {
+            display.value += operator;
+            freshOperation = false;
+        }
+
+        function calculateResult() {
+            try {
+                result.value = eval(display.value);
+                freshOperation = true;
+            } catch (error) {
+                result.value = 'Error';
+            }
+        }
+
+        function clearDisplay() {
+            display.value = '';
+            result.value = '';
+            freshOperation = false;
+        }
+
+        function backspace() {
+            display.value = display.value.slice(0, -1);
+        }
+
+        document.addEventListener('keydown', (event) => {
+            switch (event.key) {
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    appendNumber(event.key);
+                    break;
+                case '.':
+                    appendDecimal();
+                    break;
+                case '+':
+                case '-':
+                case '*':
+                case '/':
+                case '%':
+                    calculate(event.key);
+                    break;
+                case '=':
+                case 'Enter':
+                    calculateResult();
+                    break;
+                case 'Backspace':
+                    backspace();
+                    break;
+                case 'c':
+                case 'C':
+                    clearDisplay();
+                    break;
+            }
+        });
+
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:,')
+                .then((registration) => {
+                    console.log('Service worker registered:', registration);
+                })
+                .catch((error) => {
+                    console.error('Error registering service worker:', error);
+                });
+        }
+    </script>
+    <link rel="manifest"
+        href='data:application/manifest+json,{ "short_name": "Calculator", "name": "Calculator PWA", "icons": [ { "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QYcEgQb1pQ3sQAAAB10RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAlSURBVDjLY/j//z8DshAgMNjIysrKysrJyR9oPHz+/fz"8+/Pz8/Pz8+fPnzhx8fHx8fHx8fDw+Pj4+Pj4+Pj4+Pj4+Pj4+bm5ubm5ubm5+Pj5+Pj4+Pj4+Pj4+Pj4+Pj4+PAAAAAElFTkSuQmCC", "type": "image/png", "sizes": "192x192" } ], "start_url": "/", "display": "standalone", "theme_color": "#000", "background_color": "#000" }'>
+</body>
+
+</html>

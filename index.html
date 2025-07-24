@@ -294,104 +294,29 @@
         let staticChannelSuffix = ' ▪️';
         const searchInput = document.getElementById('search-input');
         const quickSearchButtons = document.querySelectorAll('.quick-search-button');
-
-        document.getElementById('loadSingleURL').addEventListener('click', () => {
-            loadSingleURL();
-        });
-
-        document.getElementById('prev-button').addEventListener('click', () => {
-            playPreviousItem();
-        });
-
-        document.getElementById('next-button').addEventListener('click', () => {
-            playNextItem();
-        });
-
-        function stopCurrentPlayer() {
-            if (currentPlayer) {
-                if (currentPlayer.pause) {
-                    currentPlayer.pause();
-                }
-                if (hls) {
-                    hls.stopLoad();
-                    hls.detachMedia();
-                }
-                document.getElementById('player-container').removeChild(currentPlayer);
-                currentPlayer = null;
-            }
-        }
-
-        function getPlaylistItems() {
-            const playlistElement = document.getElementById('playlist');
-            const playlistItemElements = playlistElement.children;
-            const playlistItems = [];
-            for (let i = 0; i < playlistItemElements.length; i++) {
-                const itemElement = playlistItemElements[i];
-                playlistItems.push({
-                    name: itemElement.textContent,
-                    element: itemElement,
-                });
-            }
-            return playlistItems;
-        }
-
-        function getCurrentIndex() {
-            if (!currentChannelName) return 0;
-            const playlistItems = getPlaylistItems();
-            const currentItem = playlistItems.find((item) => item.name === currentChannelName);
-            return currentItem ? playlistItems.indexOf(currentItem) : 0;
-        }
-
-        function playPreviousItem() {
-            const currentIndex = getCurrentIndex();
-            const playlistItems = getPlaylistItems();
-            stopCurrentPlayer();
-            if (currentIndex > 0) {
-                const previousItem = playlistItems[currentIndex - 1];
-                previousItem.element.click();
-            } else {
-                playlistItems[0].element.click();
-            }
-        }
-
-        function playNextItem() {
-            const currentIndex = getCurrentIndex();
-            const playlistItems = getPlaylistItems();
-            stopCurrentPlayer();
-            if (currentIndex < playlistItems.length - 1) {
-                const nextItem = playlistItems[currentIndex + 1];
-                nextItem.element.click();
-            } else {
-                playlistItems[0].element.click();
-            }
-        }
-
-        quickSearchButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                if (searchInput.value.includes(button.textContent)) {
-                    searchInput.value = '';
-                } else {
-                    searchInput.value = button.textContent + ' ';
-                }
-
-                searchInput.dispatchEvent(new Event('input', { bubbles: true }));
-                searchInput.dispatchEvent(new Event('change', { bubbles: true }));
-            });
-        });
-
-        document.getElementById('clear-search-input').addEventListener('click', () => {
-            searchInput.value = '';
-            searchInput.dispatchEvent(new Event('input', { bubbles: true }));
-            searchInput.dispatchEvent(new Event('change', { bubbles: true }));
-        });
-
         const hamburgerMenu = document.getElementById('hamburger-menu');
         const navDrawer = document.getElementById('nav-drawer');
+        let touchStartX = 0;
 
-        hamburgerMenu.addEventListener('click', (e) => {
-            e.stopPropagation();
-            navDrawer.classList.toggle('show');
+        document.getElementById('playlist').addEventListener('touchstart', function (event) {
+            touchStartX = event.touches[0].clientX;
         });
+
+        document.getElementById('playlist').addEventListener('touchend', function (event) {
+            const touchEndX = event.changedTouches[0].clientX;
+            const swipeDistance = touchStartX - touchEndX;
+
+            if (Math.abs(swipeDistance) > 50) { // Adjust the swipe distance threshold
+                if (swipeDistance > 0) {
+                    playPreviousItem();
+                } else {
+                    playNextItem();
+                }
+            }
+        });
+
+
+        setInterval(loadChannels, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
 
         document.addEventListener('click', (e) => {
             if (!navDrawer.contains(e.target) && !hamburgerMenu.contains(e.target)) {
@@ -411,42 +336,6 @@
 
         navDrawer.addEventListener('click', (e) => {
             e.stopPropagation();
-        });
-
-        setInterval(loadChannels, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
-
-        document.getElementById('refresh-button').addEventListener('click', () => {
-            if (!confirm("Are you sure you want to refresh channels from source?")) {
-                return;
-            }
-
-            loadChannels();
-            loadPlaylist();
-            alert("Media Refreshed from sources");
-        });
-
-        document.getElementById('about-button').addEventListener('click', () => {
-
-        });
-
-        document.getElementById('clear-storage-button').addEventListener('click', () => {
-            if (!confirm("Are you sure you want to clear channels from this app?")) {
-                return;
-            }
-            let jsonUrl = localStorage.getItem('jsonUrl');
-            localStorage.clear();
-            if (jsonUrl) {
-                localStorage.setItem('jsonUrl', jsonUrl);
-            }
-        });
-
-        document.getElementById('load-json-button').addEventListener('click', () => {
-            let jsonUrl = localStorage.getItem('jsonUrl');
-            jsonUrl = prompt("Enter JSON URL:");
-            if (jsonUrl) {
-                localStorage.setItem('jsonUrl', jsonUrl);
-            }
-
         });
 
         document.getElementById('search-input').addEventListener('input', () => {
@@ -501,20 +390,10 @@
                 const playlistItems = playlistElement.children;
                 switch (e.key) {
                     case 'MediaTrackPrevious':
-                        // Play previous item
-                        if (currentIndex > 0) {
-                            const previousItem = document.getElementById('playlist').children[currentIndex - 1];
-                            const previousItemData = { name: previousItem.textContent, url: channels[previousItem.textContent] };
-                            playItem(previousItemData, previousItem, currentIndex - 1);
-                        }
+                        playPreviousItem();
                         break;
                     case 'MediaTrackNext':
-                        // Play next item
-                        if (currentIndex < playlistItems.length - 1) {
-                            const nextItem = playlistItems[currentIndex + 1];
-                            const nextItemData = { name: nextItem.textContent, url: channels[nextItem.textContent] };
-                            playItem(nextItemData, nextItem, currentIndex + 1);
-                        }
+                        playNextItem();
                         break;
                     case 'MediaPlayPause':
                         if (currentPlayer) {
@@ -525,9 +404,16 @@
                             }
                         }
                         break;
+                    case 'Escape':
+                        stopPlayback();
+                        break;
                 }
             }
         });
+
+
+
+
 
         screen.orientation.addEventListener('change', function () {
             if (currentPlayer && (currentPlayer.tagName === 'VIDEO'
@@ -551,6 +437,126 @@
             }
         });
 
+        quickSearchButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                if (searchInput.value.includes(button.textContent)) {
+                    searchInput.value = '';
+                } else {
+                    searchInput.value = button.textContent + ' ';
+                }
+
+                searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+                searchInput.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+        });
+
+        document.getElementById('clear-search-input').addEventListener('click', () => {
+            searchInput.value = '';
+            searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+            searchInput.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+
+        document.getElementById('refresh-button').addEventListener('click', () => {
+            if (!confirm("Are you sure you want to refresh channels from source?")) {
+                return;
+            }
+
+            loadChannels();
+            loadPlaylist();
+            alert("Media Refreshed from sources");
+        });
+
+        document.getElementById('about-button').addEventListener('click', () => {
+
+        });
+
+        document.getElementById('clear-storage-button').addEventListener('click', () => {
+            if (!confirm("Are you sure you want to clear channels from this app?")) {
+                return;
+            }
+            let jsonUrl = localStorage.getItem('jsonUrl');
+            localStorage.clear();
+            if (jsonUrl) {
+                localStorage.setItem('jsonUrl', jsonUrl);
+            }
+        });
+
+        document.getElementById('load-json-button').addEventListener('click', () => {
+            let jsonUrl = localStorage.getItem('jsonUrl');
+            jsonUrl = prompt("Enter JSON URL:");
+            if (jsonUrl) {
+                localStorage.setItem('jsonUrl', jsonUrl);
+            }
+
+        });
+
+        document.addEventListener('backbutton', function (event) {
+            stopPlayback();
+        }, false);
+
+        document.getElementById('loadSingleURL').addEventListener('click', () => {
+            loadSingleURL();
+        });
+
+        document.getElementById('prev-button').addEventListener('click', () => {
+            playPreviousItem();
+        });
+
+        document.getElementById('next-button').addEventListener('click', () => {
+            playNextItem();
+        });
+
+        hamburgerMenu.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navDrawer.classList.toggle('show');
+        });
+
+        function getPlaylistItems() {
+            const playlistElement = document.getElementById('playlist');
+            const playlistItemElements = playlistElement.children;
+            const playlistItems = [];
+            for (let i = 0; i < playlistItemElements.length; i++) {
+                const itemElement = playlistItemElements[i];
+                playlistItems.push({
+                    name: itemElement.textContent,
+                    element: itemElement,
+                });
+            }
+            return playlistItems;
+        }
+
+        function getCurrentIndex() {
+            if (!currentChannelName) return 0;
+            const playlistItems = getPlaylistItems();
+            const currentItem = playlistItems.find((item) => item.name === currentChannelName);
+            return currentItem ? playlistItems.indexOf(currentItem) : 0;
+        }
+
+        function playPreviousItem() {
+            const currentIndex = getCurrentIndex();
+            const playlistItems = getPlaylistItems();
+            stopPlayback();
+            if (currentIndex > 0) {
+                const previousItem = playlistItems[currentIndex - 1];
+                previousItem.element.click();
+            } else {
+                playlistItems[0].element.click();
+            }
+        }
+
+        function playNextItem() {
+            const currentIndex = getCurrentIndex();
+            const playlistItems = getPlaylistItems();
+
+            stopPlayback();
+            if (currentIndex < playlistItems.length - 1) {
+                const nextItem = playlistItems[currentIndex + 1];
+                nextItem.element.click();
+            } else {
+                playlistItems[0].element.click();
+            }
+        }
+
         function loadSingleURL() {
             let url = prompt("Enter Single Video / Audio / Youtube URL:");
             let name = prompt("Enter name:");
@@ -571,8 +577,6 @@
                     .then(response => response.json())
                     .then(data => {
                         data.forEach(channel => {
-                            //if (channel.language != "eng" && channel.language != "hin" && channel.language != "mar" && channel.country != "in" && channel.country != "us" && channel.country != "uk")
-                            //return;
                             let url = '';
                             let name = '';
                             if (channel.iptv_urls && channel.iptv_urls.length > 0) {
@@ -673,6 +677,7 @@
         }
 
         function playItem(item, element, index) {
+            stopPlayback();
             if (currentItem) {
                 currentItem.classList.remove('selected');
             }
@@ -692,12 +697,6 @@
                     // album: 'Album Name',
                     // artwork: [{ src: 'cover.jpg' }]
                 });
-            }
-
-            if (currentPlayer) {
-                document.getElementById('player-container').removeChild(currentPlayer);
-                currentPlayer = null;
-                if (hls) hls.destroy();
             }
 
             if (item.url.endsWith('.m3u8')) {
@@ -767,6 +766,23 @@
 
         }
 
+        function stopPlayback() {
+            if (currentPlayer) {
+                if (currentPlayer.pause) {
+                    currentPlayer.pause();
+                }
+                document.getElementById('player-container').innerHTML = '';
+
+                if (hls) {
+                    hls.destroy();
+                    hls.detachMedia();
+                    hls = null;
+                }
+                document.getElementById('current-media').textContent = '';
+                currentPlayer = null;
+            }
+        }
+
         function getYoutubeEmbedUrl(url) {
             const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
             const match = url.match(regExp);
@@ -834,14 +850,12 @@
             searchInput.setAttribute('list', 'search-options');
         }
 
-
         function populateDataListForSearchInput() {
             const words = getWordsFromLocalStorage();
             const wordCount = countWordOccurrences(words);
             const repeatingWords = getRepeatingWords(wordCount);
             addDatalist(repeatingWords);
         }
-
 
         initializePlaylist();
         loadPlaylist();
