@@ -275,6 +275,8 @@
                 style="font-size: 24px; text-decoration: none; cursor: pointer; color: white;">➡️ Clear Storage</a><br>
             <a id="refresh-button" style="font-size: 24px; text-decoration: none; cursor: pointer; color: white;">➡️
                 Refresh Storage</a><br>
+            <a id="force-update-btn" style="font-size: 24px; text-decoration: none; cursor: pointer; color: white;">➡️
+                Update App</a><br>
             <a id="about-button" style="font-size: 24px; text-decoration: none; cursor: pointer; color: white;">➡️
                 About</a><br>
 
@@ -297,6 +299,10 @@
         const hamburgerMenu = document.getElementById('hamburger-menu');
         const navDrawer = document.getElementById('nav-drawer');
         let touchStartX = 0;
+
+        document.getElementById('force-update-btn').addEventListener('click', function () {
+            window.location.reload(true);
+        });
 
         document.getElementById('playlist').addEventListener('touchstart', function (event) {
             touchStartX = event.touches[0].clientX;
