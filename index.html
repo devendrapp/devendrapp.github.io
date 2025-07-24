@@ -699,7 +699,10 @@
                 });
             }
 
-            if (item.url.endsWith('.m3u8')) {
+            if (item.url.endsWith('.json')) {
+                localStorage.setItem('jsonUrl', item.url);
+                loadChannels();
+            } else if (item.url.endsWith('.m3u8')) {
                 const video = document.createElement('video');
                 video.controls = true;
                 document.getElementById('player-container').appendChild(video);
