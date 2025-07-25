@@ -844,6 +844,12 @@
                         video.play();
                     });
                 }
+
+                //Auto play next when current one is ended.
+                video.addEventListener('ended', () => {
+                    // Video has ended
+                    playNextItem();
+                });
             } else if (item.url.endsWith('.mp4')) {
                 const video = document.createElement('video');
                 if (data) {
@@ -855,6 +861,12 @@
                 document.getElementById('player-container').appendChild(video);
                 currentPlayer = video;
                 video.play();
+
+                //Auto play next when current one is ended.
+                video.addEventListener('ended', () => {
+                    // Video has ended
+                    playNextItem();
+                });
             } else if (item.url.includes('youtube')) {
                 const youtubeUrl = item.url.includes('embed') ? item.url : getYoutubeEmbedUrl(item.url);
                 const iframe = document.createElement('iframe');
@@ -873,8 +885,10 @@
                 } else {
                     img.src = item.url;
                 }
-                document.getElementById('player-container').appendChild(img);
-                currentPlayer = img;
+
+                imgDialog(img);
+                //document.getElementById('player-container').appendChild(img);
+                //currentPlayer = img;
             } else if (item.url.endsWith('.pdf') || item.name.toLowerCase().includes('pdf')) {
                 const iframe = document.createElement('iframe');
                 iframe.src = item.url;
@@ -897,13 +911,49 @@
                 document.getElementById('player-container').appendChild(audio);
                 currentPlayer = audio;
                 audio.play();
-            }
 
-            //Auto play next when current audio / video is ended.
-            currentPlayer.addEventListener('ended', () => {
-                // Video has ended
-                playNextItem();
-            });
+                //Auto play next when current one is ended.
+                audio.addEventListener('ended', () => {
+                    // Video has ended
+                    playNextItem();
+                });
+            }
+        }
+
+        function imgDialog(img) {
+            // Create a modal dialog box
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.background = 'rgba(0, 0, 0, 0.5)';
+            modal.style.display = 'flex';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
+
+            // Add the image to the modal dialog box
+            modal.appendChild(img);
+            img.style.width = '100vw';
+            img.style.height = '100vh';
+            img.style.objectFit = 'contain';
+
+            // Add a close button to the modal dialog box
+            const closeButton = document.createElement('button');
+            closeButton.textContent = 'Close';
+            closeButton.style.position = 'absolute';
+            closeButton.style.fontSize = '24px'; // Increase font size
+            closeButton.style.top = '20px';
+            closeButton.style.right = '20px';
+            closeButton.style.zIndex = '1';
+            closeButton.style.pointerEvents = 'auto';
+            closeButton.onclick = () => {
+                modal.parentNode.removeChild(modal);
+            };
+            modal.appendChild(closeButton);
+
+            document.body.appendChild(modal);
         }
 
         function stopPlayback() {
