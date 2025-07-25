@@ -306,6 +306,8 @@
         const statusBar = document.getElementById("status-bar");
         let touchStartX = 0;
 
+        setInterval(loadChannels, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
+
         document.getElementById('force-update-btn').addEventListener('click', function () {
             window.location.reload(true);
         });
@@ -326,9 +328,6 @@
                 }
             }
         });
-
-
-        setInterval(loadChannels, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
 
         document.addEventListener('click', (e) => {
             if (!navDrawer.contains(e.target) && !hamburgerMenu.contains(e.target)) {
@@ -899,6 +898,12 @@
                 currentPlayer = audio;
                 audio.play();
             }
+
+            //Auto play next when current audio / video is ended.
+            currentPlayer.addEventListener('ended', () => {
+                // Video has ended
+                playNextItem();
+            });
         }
 
         function stopPlayback() {
