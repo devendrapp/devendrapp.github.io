@@ -254,9 +254,12 @@
                 <button class="quick-search-button" style="flex: 1; margin-right: 4px; font-size: 24px;">📻</button>
                 <button class="quick-search-button" style="flex: 1; margin-right: 4px; font-size: 24px;">🖥️</button>
                 <button class="quick-search-button" style="flex: 1; margin-right: 4px; font-size: 24px;">🎬</button>
-                <button class="quick-search-button" style="flex: 1; margin-right: 4px; font-size: 24px;">▶️</button>
+                <button class="quick-search-button" style="flex: 1; margin-right: 4px; font-size: 24px;">💾</button>
             </div>
             <div id="playlist"></div>
+            <div id="status-bar" style="color: white; background-color: gray;" padding: 10px; align="center">
+                Welcome</div>
+
 
         </div>
         <div id="nav-drawer">
@@ -300,6 +303,7 @@
         const quickSearchButtons = document.querySelectorAll('.quick-search-button');
         const hamburgerMenu = document.getElementById('hamburger-menu');
         const navDrawer = document.getElementById('nav-drawer');
+        const statusBar = document.getElementById("status-bar");
         let touchStartX = 0;
 
         document.getElementById('force-update-btn').addEventListener('click', function () {
@@ -471,7 +475,7 @@
 
             loadChannels();
             loadPlaylist();
-            alert("Media Refreshed from sources");
+            status("Media Refreshed from sources");
         });
 
         document.getElementById('about-button').addEventListener('click', () => {
@@ -684,6 +688,97 @@
             });
         }
 
+        let db;
+        const dbName = 'cacheDB';
+        const storeName = 'cacheStore';
+
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = window.indexedDB.open(dbName, 1);
+                request.onupgradeneeded = (event) => {
+                    db = event.target.result;
+                    db.createObjectStore(storeName, { keyPath: 'name' });
+                };
+                request.onsuccess = (event) => {
+                    db = event.target.result;
+                    resolve(db);
+                };
+                request.onerror = (event) => {
+                    reject(event.target.error);
+                };
+            });
+        }
+
+        // Store item in IndexedDB
+        function storeItem(item, data) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject('DB not initialized');
+                    return;
+                }
+                const transaction = db.transaction(storeName, 'readwrite');
+                const store = transaction.objectStore(storeName);
+                const request = store.put({ name: item.name, url: item.url, data: data });
+                request.onsuccess = () => {
+                    resolve();
+                };
+                request.onerror = (event) => {
+                    reject(event.target.error);
+                };
+            });
+        }
+
+        // Initialize IndexedDB
+        initDB().then(() => {
+            console.log('IndexedDB initialized');
+        }).catch((error) => {
+            console.error('Error initializing IndexedDB:', error);
+        });
+
+        function status(msg) {
+            statusBar.innerText = msg;
+            statusBar.focus();
+            statusBar.blur();
+        }
+
+        // Cache item asynchronously if item.name contains '💾'
+        function cacheItem(item) {
+            if (item.name.includes('💾') && !item.url.includes('youtube') && !item.url.includes('file://')) {
+                status('Caching started for:' + item.name);
+                fetch(item.url)
+                    .then(response => response.blob())
+                    .then(data => {
+                        storeItem(item, data).then(() => {
+                            status(`Cached Item: ${item.name}`);
+                        }).catch((error) => {
+                            console.error('Error caching item:', error);
+                        });
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching item:', error);
+                    });
+            }
+        }
+
+        // Get item from IndexedDB
+        function getItem(name) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject('DB not initialized');
+                    return;
+                }
+                const transaction = db.transaction(storeName, 'readonly');
+                const store = transaction.objectStore(storeName);
+                const request = store.get(name);
+                request.onsuccess = (event) => {
+                    resolve(event.target.result);
+                };
+                request.onerror = (event) => {
+                    reject(event.target.error);
+                };
+            });
+        }
+
         function playItem(item, element, index) {
             stopPlayback();
             if (currentItem) {
@@ -697,16 +792,37 @@
             //remove icon suffix from name
             splitChlName = item.name.split(';')[1] || item.name;
 
-            if ('mediaSession' in navigator) {
-
-                navigator.mediaSession.metadata = new MediaMetadata({
-                    title: splitChlName
-                    // artist: 'Artist Name',
-                    // album: 'Album Name',
-                    // artwork: [{ src: 'cover.jpg' }]
+            if (item.name.includes('💾')) {
+                // Check if item is cached in IndexedDB
+                getItem(item.name).then((cachedItem) => {
+                    if (cachedItem && cachedItem.data) {
+                        status(`Using cached item ${item.name}`);
+                        loadItem(item, cachedItem.data);
+                    } else {
+                        status(`No cached item found for ${item.name}`);
+                        // Cache item asynchronously
+                        setTimeout(() => {
+                            cacheItem(item);
+                        }, 10000);
+                        loadItem(item);
+                    }
+                }).catch((error) => {
+                    console.error('Error getting cached item:', error);
+                    loadItem(item);
                 });
+            } else {
+                loadItem(item);
             }
 
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: splitChlName
+                });
+            }
+            document.getElementById('current-media').textContent = splitChlName;
+        }
+
+        function loadItem(item, data) {
             if (item.url.endsWith('.json')) {
                 localStorage.setItem('jsonUrl', item.url);
                 loadChannels();
@@ -731,7 +847,11 @@
                 }
             } else if (item.url.endsWith('.mp4')) {
                 const video = document.createElement('video');
-                video.src = item.url;
+                if (data) {
+                    video.src = URL.createObjectURL(data);
+                } else {
+                    video.src = item.url;
+                }
                 video.controls = true;
                 document.getElementById('player-container').appendChild(video);
                 currentPlayer = video;
@@ -746,14 +866,16 @@
                 document.getElementById('player-container').appendChild(iframe);
                 currentPlayer = iframe;
             } else if (item.url.endsWith('.jpg') || item.url.endsWith('.png') || item.url.endsWith('.jpeg') || item.name.toLowerCase().includes("jpg")) {
-                if (navigator.userAgent.match(/Android/i)) {
-                    window.location.href = item.url;
+                const img = document.createElement('img');
+                img.style.touchAction = 'manipulation';
+
+                if (data) {
+                    img.src = URL.createObjectURL(data);
                 } else {
-                    const img = document.createElement('img');
                     img.src = item.url;
-                    document.getElementById('player-container').appendChild(img);
-                    currentPlayer = img;
                 }
+                document.getElementById('player-container').appendChild(img);
+                currentPlayer = img;
             } else if (item.url.endsWith('.pdf') || item.name.toLowerCase().includes('pdf')) {
                 const iframe = document.createElement('iframe');
                 iframe.src = item.url;
@@ -768,13 +890,15 @@
             } else {
                 const audio = document.createElement('audio');
                 audio.controls = true;
-                audio.src = item.url;
+                if (data) {
+                    audio.src = URL.createObjectURL(data);
+                } else {
+                    audio.src = item.url;
+                }
                 document.getElementById('player-container').appendChild(audio);
                 currentPlayer = audio;
                 audio.play();
             }
-            document.getElementById('current-media').textContent = splitChlName;
-
         }
 
         function stopPlayback() {
