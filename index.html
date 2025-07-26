@@ -761,7 +761,7 @@
         // Cache item asynchronously if item.name contains '💾'
         function cacheItem(item) {
             if (item.name.includes('💾') && !item.url.includes('youtube') && !item.url.includes('file://')) {
-                status('Caching started for:' + item.name);
+                status('Saving now:' + item.name);
                 fetch(item.url)
                     .then(response => response.blob())
                     .then(data => {
