@@ -639,9 +639,6 @@
                                 } else if (channel.country) {
                                     name += ` (${channel.country})`;
                                 }
-                                if (channel.name.includes('TV9 Marathi') || channel.name.includes('Saam TV') || channel.name.includes('Zee 24 Taas')) {
-                                    name = '📰 ' + channel.name + staticChannelSuffix;
-                                }
 
                                 if (url.includes("youtube-nocookie")) {
                                     url = url.replace("-nocookie", "");
