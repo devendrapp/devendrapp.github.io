@@ -320,6 +320,16 @@
             }
         }
 
+        function checkAndRunDailyFunction() {
+            const today = new Date().toISOString().split('T')[0];
+            const lastRunDate = localStorage.getItem('lastRunDate');
+
+            if (lastRunDate !== today) {
+                deleteCache();
+                localStorage.setItem('lastRunDate', today);
+            }
+        }
+
         document.getElementById('playlist').addEventListener('touchstart', function (event) {
             touchStartX = event.touches[0].clientX;
         });
@@ -1070,6 +1080,7 @@
         loadPlaylist();
         populateDataListForSearchInput();
         status('Total Playlist Items: ' + localStorage.length);
+        checkAndRunDailyFunction();
 
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
