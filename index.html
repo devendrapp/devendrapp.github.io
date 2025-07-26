@@ -853,7 +853,6 @@
         }
 
         function loadItem(item, data) {
-            status('Total Playlist Items: ' + localStorage.length);
             if (item.url.endsWith('.json')) {
                 localStorage.setItem('jsonUrl', item.url);
                 loadChannels();
