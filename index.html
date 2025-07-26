@@ -304,7 +304,10 @@
     </dialog>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-
+    <script src="scripts/util.js"></script>
+    <script src="scripts/indexedDB.js"></script>
+    <script src="scripts/searchDatalist.js"></script>
+    <script src="scripts/staticAppFeatures.js"></script>
     <script>
         let currentPlayer = null;
         let hls = null;
@@ -326,6 +329,25 @@
 
         setInterval(loadChannels, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
 
+        // Cache item asynchronously if item.name contains '💾'
+        function cacheItem(item) {
+            if (item.name.includes('💾') && !item.url.includes('youtube') && !item.url.includes('file://') && !item.url.includes('m3u8')) {
+                status('Saving now:' + item.name);
+                fetch(item.url)
+                    .then(response => response.blob())
+                    .then(data => {
+                        storeItem(item, data).then(() => {
+                            status(`saved for next use: ${item.name}`);
+                        }).catch((error) => {
+                            console.error('Error caching item:', error);
+                        });
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching item:', error);
+                    });
+            }
+        }
+
         closeDialogBtn.addEventListener('click', () => {
             aboutDialog.close();
         });
@@ -334,23 +356,6 @@
             deleteCache();
             window.location.reload(true);
         });
-
-        async function deleteCache() {
-            const cacheNames = await caches.keys();
-            for (const name of cacheNames) {
-                await caches.delete(name);
-            }
-        }
-
-        function checkAndRunDailyFunction() {
-            const today = new Date().toISOString().split('T')[0];
-            const lastRunDate = localStorage.getItem('lastRunDate');
-
-            if (lastRunDate !== today) {
-                deleteCache();
-                localStorage.setItem('lastRunDate', today);
-            }
-        }
 
         document.getElementById('playlist').addEventListener('touchstart', function (event) {
             touchStartX = event.touches[0].clientX;
@@ -601,12 +606,6 @@
             }
         }
 
-        function loadSingleURL() {
-            let url = prompt("Enter Single Video / Audio / Youtube URL:");
-            let name = prompt("Enter name:");
-            localStorage.setItem(name, url);
-        }
-
         function loadChannels() {
             let jsonUrl = localStorage.getItem('jsonUrl');
             if (!jsonUrl) {
@@ -674,138 +673,6 @@
             } else {
                 return name;
             }
-        }
-
-        function renderPlaylist(playlistToRender) {
-            // Create a new map to store items with number suffix as key
-            const orderedPlaylist = new Map();
-            const otherItems = [];
-            const playlistElement = document.getElementById('playlist');
-            playlistElement.innerHTML = '';
-
-            // Populate the new map and otherItems array
-            playlistToRender.forEach((item) => {
-                const match = item.name.match(/\d+$/);
-                if (match) {
-                    const key = parseInt(match[0]);
-                    orderedPlaylist.set(key, item);
-                } else {
-                    otherItems.push(item);
-                }
-            });
-
-            // Render the playlist using the new map with keys in order
-            const sortedKeys = Array.from(orderedPlaylist.keys()).sort((a, b) => a - b);
-            let index = 0;
-            sortedKeys.forEach((key) => {
-                const item = orderedPlaylist.get(key);
-                const element = document.createElement('div');
-                element.className = 'playlist-item';
-                element.innerHTML = item.name;
-                element.onclick = () => playItem(item, element, index);
-                playlistElement.appendChild(element);
-                index++;
-            });
-
-            otherItems.forEach((item) => {
-                const element = document.createElement('div');
-                element.className = 'playlist-item';
-                element.innerHTML = item.name;
-                element.onclick = () => playItem(item, element, index);
-                playlistElement.appendChild(element);
-                index++;
-            });
-        }
-
-        let db;
-        const dbName = 'doorChitraVaniDB';
-        const storeName = 'doorChitraVaniStore';
-
-        function initDB() {
-            return new Promise((resolve, reject) => {
-                const request = window.indexedDB.open(dbName, 1);
-                request.onupgradeneeded = (event) => {
-                    db = event.target.result;
-                    db.createObjectStore(storeName, { keyPath: 'name' });
-                };
-                request.onsuccess = (event) => {
-                    db = event.target.result;
-                    resolve(db);
-                };
-                request.onerror = (event) => {
-                    reject(event.target.error);
-                };
-            });
-        }
-
-        // Store item in IndexedDB
-        function storeItem(item, data) {
-            return new Promise((resolve, reject) => {
-                if (!db) {
-                    reject('DB not initialized');
-                    return;
-                }
-                const transaction = db.transaction(storeName, 'readwrite');
-                const store = transaction.objectStore(storeName);
-                const request = store.put({ name: item.name, url: item.url, data: data });
-                request.onsuccess = () => {
-                    resolve();
-                };
-                request.onerror = (event) => {
-                    reject(event.target.error);
-                };
-            });
-        }
-
-        // Initialize IndexedDB
-        initDB().then(() => {
-            console.log('IndexedDB initialized');
-        }).catch((error) => {
-            console.error('Error initializing IndexedDB:', error);
-        });
-
-        function status(msg) {
-            statusBar.innerText = msg;
-            statusBar.focus();
-            statusBar.blur();
-        }
-
-        // Cache item asynchronously if item.name contains '💾'
-        function cacheItem(item) {
-            if (item.name.includes('💾') && !item.url.includes('youtube') && !item.url.includes('file://')) {
-                status('Saving now:' + item.name);
-                fetch(item.url)
-                    .then(response => response.blob())
-                    .then(data => {
-                        storeItem(item, data).then(() => {
-                            status(`saved for next use: ${item.name}`);
-                        }).catch((error) => {
-                            console.error('Error caching item:', error);
-                        });
-                    })
-                    .catch((error) => {
-                        console.error('Error fetching item:', error);
-                    });
-            }
-        }
-
-        // Get item from IndexedDB
-        function getItem(name) {
-            return new Promise((resolve, reject) => {
-                if (!db) {
-                    reject('DB not initialized');
-                    return;
-                }
-                const transaction = db.transaction(storeName, 'readonly');
-                const store = transaction.objectStore(storeName);
-                const request = store.get(name);
-                request.onsuccess = (event) => {
-                    resolve(event.target.result);
-                };
-                request.onerror = (event) => {
-                    reject(event.target.error);
-                };
-            });
         }
 
         function playItem(item, element, index) {
@@ -972,7 +839,7 @@
 
             // Add a close button to the modal dialog box
             const closeButton = document.createElement('button');
-            closeButton.textContent = 'X';
+            closeButton.textContent = ' X ';
             closeButton.style.position = 'absolute';
             closeButton.style.fontSize = '24px'; // Increase font size
             closeButton.style.bottom = '10px';
@@ -1004,11 +871,45 @@
             }
         }
 
-        function getYoutubeEmbedUrl(url) {
-            const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-            const match = url.match(regExp);
-            const videoId = (match && match[7].length == 11) ? match[7] : false;
-            return `https://www.youtube.com/embed/${videoId}`;
+        function renderPlaylist(playlistToRender) {
+            // Create a new map to store items with number suffix as key
+            const orderedPlaylist = new Map();
+            const otherItems = [];
+            const playlistElement = document.getElementById('playlist');
+            playlistElement.innerHTML = '';
+
+            // Populate the new map and otherItems array
+            playlistToRender.forEach((item) => {
+                const match = item.name.match(/\d+$/);
+                if (match) {
+                    const key = parseInt(match[0]);
+                    orderedPlaylist.set(key, item);
+                } else {
+                    otherItems.push(item);
+                }
+            });
+
+            // Render the playlist using the new map with keys in order
+            const sortedKeys = Array.from(orderedPlaylist.keys()).sort((a, b) => a - b);
+            let index = 0;
+            sortedKeys.forEach((key) => {
+                const item = orderedPlaylist.get(key);
+                const element = document.createElement('div');
+                element.className = 'playlist-item';
+                element.innerHTML = item.name;
+                element.onclick = () => playItem(item, element, index);
+                playlistElement.appendChild(element);
+                index++;
+            });
+
+            otherItems.forEach((item) => {
+                const element = document.createElement('div');
+                element.className = 'playlist-item';
+                element.innerHTML = item.name;
+                element.onclick = () => playItem(item, element, index);
+                playlistElement.appendChild(element);
+                index++;
+            });
         }
 
         function loadPlaylist() {
@@ -1025,70 +926,9 @@
             renderPlaylist(channelsToLoad);
         }
 
-        // Function to get words from local storage keys
-        function getWordsFromLocalStorage() {
-            const words = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                const wordArray = key.split(/[\s_]+/); // Split key into words
-                words.push(...wordArray.filter(word => word.length >= 7)); // Filter words with length >= 4
-            }
-            return words;
-        }
-
-        // Function to count occurrences of each word
-        function countWordOccurrences(words) {
-            const wordCount = {};
-            words.forEach(word => {
-                const lowerCaseWord = word.toLowerCase(); // Convert to lowercase for case-insensitive comparison
-                if (lowerCaseWord == "channel" || lowerCaseWord == "network" || lowerCaseWord == "television"
-                    || lowerCaseWord == "community" || lowerCaseWord.includes("nation") || lowerCaseWord == "blessing"
-                    || lowerCaseWord == "telemundo" || lowerCaseWord.includes("america") || lowerCaseWord == "univers"
-                    || lowerCaseWord == "country" || lowerCaseWord == "committee" || lowerCaseWord.includes("educat") || lowerCaseWord.includes("english")
-                    || lowerCaseWord.includes("news") || lowerCaseWord.includes("shopping") || lowerCaseWord.includes("business") || lowerCaseWord.includes("govern")
-                    || lowerCaseWord == "intern" || lowerCaseWord == "legisla" || lowerCaseWord == "assemb")
-                    return;
-                wordCount[lowerCaseWord] = (wordCount[lowerCaseWord] || 0) + 1;
-            });
-            return wordCount;
-        }
-
-        // Function to get repeating words
-        function getRepeatingWords(wordCount) {
-            const repeatingWords = Object.keys(wordCount).filter(word => wordCount[word] >= 5);
-            return repeatingWords.sort((a, b) => wordCount[b] - wordCount[a]); // Sort in descending order of occurrences
-        }
-
-        // Function to add datalist to search input
-        function addDatalist(repeatingWords) {
-            const datalist = document.createElement('datalist');
-            datalist.id = 'search-options';
-            repeatingWords.forEach(word => {
-                const option = document.createElement('option');
-                option.value = word;
-                datalist.appendChild(option);
-            });
-            document.body.appendChild(datalist);
-            const searchInput = document.getElementById('search-input');
-            searchInput.setAttribute('list', 'search-options');
-        }
-
-        function populateDataListForSearchInput() {
-            const words = getWordsFromLocalStorage();
-            const wordCount = countWordOccurrences(words);
-            const repeatingWords = getRepeatingWords(wordCount);
-            addDatalist(repeatingWords);
-        }
-
-        function deleteAllCookies() {
-            document.cookie.split(";").forEach(function (cookie) {
-                var eqPos = cookie.indexOf("=");
-                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
-            });
-        }
-
         //On every page load
+
+
         deleteAllCookies();
         initializePlaylist();
         loadPlaylist();
