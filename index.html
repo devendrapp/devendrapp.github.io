@@ -288,6 +288,20 @@
     </div>
 
     </div>
+    <dialog id="about-dialog">
+        <h2>About DoorChitraVani</h2>
+        <p>Welcome to DoorChitraVani, an open-source static app designed for fun, study, research, and learning. This
+            app is completely free to use and doesn't intend any copyright or violation. We prioritize user privacy and
+            comply with GDPR regulations, ensuring that no user data is sent or stored on our servers.</p>
+        <p>DoorChitraVani provides a versatile interface to play various media formats, including HLS, audio, video,
+            MP3, MP4, OGG, display images, and open PDFs. However, please note that this app doesn't host or provide any
+            content itself. It's up to the users to ensure they have the necessary permissions or rights to access the
+            content they use within the app.</p>
+        <p>By using DoorChitraVani, you acknowledge that the developer is not responsible for any misuse or potential
+            issues that may arise. We're committed to providing a useful tool while respecting user privacy and adhering
+            to applicable laws.</p>
+        <button id="close-dialog-btn">Close</button>
+    </dialog>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
@@ -304,9 +318,17 @@
         const hamburgerMenu = document.getElementById('hamburger-menu');
         const navDrawer = document.getElementById('nav-drawer');
         const statusBar = document.getElementById("status-bar");
+
+        const aboutDialog = document.getElementById('about-dialog');
+        const closeDialogBtn = document.getElementById('close-dialog-btn');
+
         let touchStartX = 0;
 
         setInterval(loadChannels, 6 * 60 * 60 * 1000); // 6 hours in milliseconds
+
+        closeDialogBtn.addEventListener('click', () => {
+            aboutDialog.close();
+        });
 
         document.getElementById('force-update-btn').addEventListener('click', function () {
             deleteCache();
@@ -492,7 +514,7 @@
         });
 
         document.getElementById('about-button').addEventListener('click', () => {
-
+            aboutDialog.showModal();
         });
 
         document.getElementById('clear-storage-button').addEventListener('click', () => {
