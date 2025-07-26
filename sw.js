@@ -1,4 +1,4 @@
-const CACHE_NAME = 'door-chitra-vani-cache-070725'; // Update the version number
+const CACHE_NAME = 'doorchitravani-cache'; // Update the version number
 const urlsToCache = [
   '/',
   '/tracker.html',
