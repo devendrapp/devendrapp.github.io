@@ -518,14 +518,11 @@
         });
 
         document.getElementById('clear-storage-button').addEventListener('click', () => {
-            if (!confirm("Are you sure you want to clear channels from this app?")) {
+            if (!confirm("Are you sure you want to clear media sources and offline storage from this app?")) {
                 return;
             }
-            let jsonUrl = localStorage.getItem('jsonUrl');
             localStorage.clear();
-            if (jsonUrl) {
-                localStorage.setItem('jsonUrl', jsonUrl);
-            }
+            indexedDB.deleteDatabase('doorchitravani-cache');
         });
 
         document.getElementById('load-json-button').addEventListener('click', () => {
