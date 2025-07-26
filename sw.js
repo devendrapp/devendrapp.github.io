@@ -1,4 +1,4 @@
-const CACHE_NAME = 'doorchitravani-cache-v1'; // Update the version number
+const CACHE_NAME = 'doorchitravani-cache'; // Update the version number
 const urlsToCache = [
   '/',
   '/scripts/indexedDB.js',
