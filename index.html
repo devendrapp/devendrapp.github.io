@@ -937,7 +937,7 @@
             modal.style.left = '0';
             modal.style.width = '100%';
             modal.style.height = '100%';
-            modal.style.background = 'rgba(0, 0, 0, 0.5)';
+            modal.style.background = 'rgba(0, 0, 0, 0.8)';
             modal.style.display = 'flex';
             modal.style.justifyContent = 'center';
             modal.style.alignItems = 'center';
@@ -950,11 +950,11 @@
 
             // Add a close button to the modal dialog box
             const closeButton = document.createElement('button');
-            closeButton.textContent = 'Close';
+            closeButton.textContent = 'X';
             closeButton.style.position = 'absolute';
             closeButton.style.fontSize = '24px'; // Increase font size
-            closeButton.style.top = '20px';
-            closeButton.style.right = '20px';
+            closeButton.style.top = '10px';
+            closeButton.style.right = '10px';
             closeButton.style.zIndex = '1';
             closeButton.style.pointerEvents = 'auto';
             closeButton.onclick = () => {
