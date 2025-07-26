@@ -1043,8 +1043,10 @@
                 const lowerCaseWord = word.toLowerCase(); // Convert to lowercase for case-insensitive comparison
                 if (lowerCaseWord == "channel" || lowerCaseWord == "network" || lowerCaseWord == "television"
                     || lowerCaseWord == "community" || lowerCaseWord.includes("nation") || lowerCaseWord == "blessing"
-                    || lowerCaseWord == "telemundo" || lowerCaseWord.includes("america") || lowerCaseWord == "universal"
-                    || lowerCaseWord == "country" || lowerCaseWord == "committee" || lowerCaseWord.includes("educat"))
+                    || lowerCaseWord == "telemundo" || lowerCaseWord.includes("america") || lowerCaseWord == "univers"
+                    || lowerCaseWord == "country" || lowerCaseWord == "committee" || lowerCaseWord.includes("educat") || lowerCaseWord.includes("english")
+                    || lowerCaseWord.includes("news") || lowerCaseWord.includes("shopping") || lowerCaseWord.includes("business") || lowerCaseWord.includes("govern")
+                    || lowerCaseWord == "intern" || lowerCaseWord == "legisla" || lowerCaseWord == "assemb")
                     return;
                 wordCount[lowerCaseWord] = (wordCount[lowerCaseWord] || 0) + 1;
             });
