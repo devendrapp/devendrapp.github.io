@@ -766,7 +766,7 @@
                     .then(response => response.blob())
                     .then(data => {
                         storeItem(item, data).then(() => {
-                            status(`Cached Item: ${item.name}`);
+                            status(`saved for next use: ${item.name}`);
                         }).catch((error) => {
                             console.error('Error caching item:', error);
                         });
@@ -813,10 +813,10 @@
                 // Check if item is cached in IndexedDB
                 getItem(item.name).then((cachedItem) => {
                     if (cachedItem && cachedItem.data) {
-                        status(`Using cached item ${item.name}`);
+                        status(`Not using Internet for: ${item.name}`);
                         loadItem(item, cachedItem.data);
                     } else {
-                        status(`No cached item found for ${item.name}`);
+                        status(`Loading from internet: ${item.name}`);
                         // Cache item asynchronously
                         //Delayed caching to allow immediate playback on first use.
                         setTimeout(() => {
