@@ -808,9 +808,10 @@
                     } else {
                         status(`No cached item found for ${item.name}`);
                         // Cache item asynchronously
+                        //Delayed caching to allow immediate playback on first use.
                         setTimeout(() => {
                             cacheItem(item);
-                        }, 10000);
+                        }, 5000);
                         loadItem(item);
                     }
                 }).catch((error) => {
