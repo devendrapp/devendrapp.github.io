@@ -110,13 +110,6 @@ function updateStatusBar(msg) {
 
 function loadChannels() {
     let jsonUrl = localStorage.getItem('jsonUrl');
-    if (!jsonUrl) {
-        jsonUrl = prompt("Enter JSON URL:");
-        if (jsonUrl) {
-            localStorage.setItem('jsonUrl', jsonUrl);
-        }
-    }
-
     if (jsonUrl) {
         fetch(jsonUrl)
             .then(response => response.json())
@@ -147,6 +140,7 @@ function loadChannels() {
                 });
             })
             .catch(error => console.error('Error:', error));
+            updateStatusBar('New items loaded, refresh or restart app.');
     }
 }
 
@@ -206,11 +200,12 @@ function updateApp() {
 
 }
 
-
 function clearStorage() {
     //Local Storage and offline storage in Indexed DB specific to 'DoorChitraVani'
-    localStorage.clear();
+    deleteCache();
     deleteIndexedDB('doorchitravani-cache');
+    localStorage.clear();
+    deleteAllCookies();
 }
 
 function getPlaylistItems() {
@@ -698,6 +693,7 @@ document.getElementById('load-static-button').addEventListener('click', () => {
                     }
                 }
             });
+            updateStatusBar('New items loaded, refresh or restart app.');
         };
         reader.readAsText(file);
     });
@@ -772,16 +768,6 @@ document.getElementById('clear-search-input').addEventListener('click', () => {
     searchInput.dispatchEvent(new Event('change', { bubbles: true }));
 });
 
-document.getElementById('refresh-button').addEventListener('click', () => {
-    if (!confirm("Are you sure you want to refresh channels from source?")) {
-        return;
-    }
-
-    loadChannels();
-    loadPlaylist();
-    updateStatusBar("Media Refreshed from sources");
-});
-
 document.getElementById('about-button').addEventListener('click', () => {
     aboutDialog.showModal();
 });
@@ -791,15 +777,6 @@ document.getElementById('clear-storage-button').addEventListener('click', () => 
         return;
     }
     clearStorage();
-});
-
-document.getElementById('load-json-button').addEventListener('click', () => {
-    let jsonUrl = localStorage.getItem('jsonUrl');
-    jsonUrl = prompt("Enter JSON URL:");
-    if (jsonUrl) {
-        localStorage.setItem('jsonUrl', jsonUrl);
-    }
-
 });
 
 document.addEventListener('backbutton', function (event) {
