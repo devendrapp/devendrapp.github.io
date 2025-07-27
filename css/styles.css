@@ -1,0 +1,202 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background-color: #000000;
+}
+
+#main-container {
+    display: flex;
+    flex-grow: 1;
+    overflow: hidden;
+    background-color: #000000;
+}
+
+.left-pane {
+    display: flex;
+    flex-direction: column;
+    background-color: #000000;
+    border-right: 1px solid #ddd;
+}
+
+.right-pane {
+    flex-grow: 1;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #000;
+}
+
+#player-container {
+    flex-grow: 1;
+    display: flex;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+}
+
+#player-container video,
+#player-container iframe {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+video::-webkit-media-controls-volume-slider,
+video::-webkit-media-controls-mute-button {
+    display: none;
+}
+
+#search-container {
+    padding: 2px;
+    border-bottom: 1px solid #ddd;
+    flex-shrink: 0;
+    background-color: #000;
+}
+
+.search-bar-container {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #000;
+}
+
+#search-input {
+    width: 100%;
+    font-size: 20px;
+    box-sizing: border-box;
+    padding: 10px;
+    color: #ccc;
+    /*border: 1px solid #ccc;
+            border-radius: 5px; */
+    background-color: #000;
+    border: none;
+    flex-grow: 1;
+}
+
+.search-controls {
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+}
+
+.search-controls button {
+    padding: 5px;
+    margin: 0 8px;
+    font-size: 15px;
+}
+
+
+#playlist {
+    flex-grow: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 10px;
+}
+
+.playlist-item {
+    cursor: pointer;
+    margin-bottom: 13px;
+    display: block;
+    padding: 5px;
+    font-size: 20px;
+}
+
+/* Alternate background color theme with inverse text color */
+.playlist-item:nth-child(even) {
+    background-color: #272727;
+    /* Black */
+    color: #ffffff;
+    /* White text */
+}
+
+.playlist-item:nth-child(odd) {
+    background-color: #000000;
+    /* White */
+    color: #ffffff;
+    /* Black text */
+}
+
+
+.playlist-item.selected {
+    background-color: #0b07ff;
+    color: #ffffff;
+}
+
+.playlist-item:focus {
+    background-color: #06b300;
+    outline: none;
+}
+
+#search-input:focus {
+    outline: none;
+
+    /*border-color: #aaa;*/
+}
+
+#hamburger-menu {
+    font-size: 24px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+#nav-drawer {
+    position: fixed;
+    top: 60px;
+    /* adjust this value based on your app bar height */
+    bottom: 0;
+    left: 0;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    display: none;
+    flex-direction: column;
+    width: 200px;
+    /* adjust this value based on your desired width */
+}
+
+#nav-drawer.show {
+    display: flex;
+}
+
+@media only screen and (orientation: portrait) {
+    #main-container {
+        flex-direction: column;
+    }
+
+    .left-pane {
+        /*height: 30vh;*/
+        height: 65%;
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .right-pane {
+        flex-grow: 1;
+    }
+}
+
+@media only screen and (orientation: landscape) {
+    #main-container {
+        flex-direction: row;
+    }
+
+    .left-pane {
+        width: 250px;
+        height: 100%;
+        border-right: 1px solid #ddd;
+    }
+
+    .right-pane {
+        flex-grow: 1;
+    }
+}
