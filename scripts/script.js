@@ -8,6 +8,17 @@ let staticChannelSuffix = ' ▪️';
 let touchStartX = 0;
 let db;
 const CACHE_NAME = 'doorchitravani-cache';
+const urlsToCache = [
+  '/',
+  '/css/styles.css',
+  '/scripts/script.js',
+  '/tracker.html',
+  '/index.html',
+  '/android-chrome-192x192.png',
+  '/android-chrome-512x512.png',
+  '/apple-touch-icon.png',
+  'favicon.ico',
+];
 
 const dbName = 'doorChitraVaniDB';
 const storeName = 'doorChitraVaniStore';
@@ -187,15 +198,12 @@ function deleteAllCookies() {
 async function deleteCache() {
     const cacheNames = await caches.keys();
     for (const name of cacheNames) {
-        if(CACHE_NAME===name)
-            continue;
         await caches.delete(name);
     }
     updateCache();
 }
 
 async function updateCache() {
-  await caches.delete(CACHE_NAME);
   const cache = await caches.open(CACHE_NAME);
   await cache.addAll(urlsToCache);
 }

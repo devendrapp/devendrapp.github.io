@@ -1,3 +1,5 @@
+
+//Below constants are duplicated in script.js. Maintain accordingly for a while
 const CACHE_NAME = 'doorchitravani-cache'; // Update the version number
 const urlsToCache = [
   '/',
