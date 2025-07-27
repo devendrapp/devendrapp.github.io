@@ -7,20 +7,6 @@ let currentChannelName = '';
 let staticChannelSuffix = ' ▪️';
 let touchStartX = 0;
 let db;
-const CACHE_NAME = 'doorchitravani-cache';
-const urlsToCache = [
-  
-  '/css/styles.css',
-  '/scripts/script.js',
-  '/tracker.html',
-  '/index.html',
-  '/android-chrome-192x192.png',
-  '/android-chrome-512x512.png',
-  '/apple-touch-icon.png',
-  'favicon.ico',
-  '/',
-];
-
 const dbName = 'doorChitraVaniDB';
 const storeName = 'doorChitraVaniStore';
 const searchInput = document.getElementById('search-input');
@@ -204,15 +190,14 @@ async function deleteCache() {
     updateCache();
 }
 
-async function updateCache() {
-  const cache = await caches.open(CACHE_NAME);
-  for (const url of urlsToCache) {
-    try {
-      await cache.add(url);
-      console.log(`Cached ${url}`);
-    } catch (error) {
-      console.error(`Error caching ${url}:`, error);
-    }
+// Function to update cache
+function updateCache() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistration().then((registration) => {
+      if (registration && registration.active) {
+        registration.active.postMessage('update-cache');
+      }
+    });
   }
 }
 
@@ -220,7 +205,7 @@ function updateApp() {
     if (!confirm("Are you connected to Internet? Do you want to check for update to this application?")) {
         return;
     }
-    deleteCache();
+    updateCache();
     localStorage.setItem("lastAppUpdateOn", new Date().toISOString());
     updateStatusBar('Update requested, refresh or restart the app.');
 

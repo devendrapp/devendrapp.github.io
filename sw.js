@@ -11,7 +11,6 @@ const urlsToCache = [
   '/android-chrome-512x512.png',
   '/apple-touch-icon.png',
   'favicon.ico',
-  
 ];
 
 self.addEventListener('install', (event) => {
@@ -47,4 +46,18 @@ self.addEventListener('activate', (event) => {
     })
   );
   self.clients.claim(); // Take control of all pages under its scope
+});
+
+// Listen for update request
+self.addEventListener('message', (event) => {
+  if (event.data === 'update-cache') {
+    event.waitUntil(
+      caches.open(CACHE_NAME).then((cache) => {
+        return cache.addAll(urlsToCache.map((asset) => {
+          // Add a cache-busting query parameter to ensure the latest version is fetched
+          return `${asset}?${Date.now()}`;
+        }));
+      })
+    );
+  }
 });
