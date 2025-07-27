@@ -193,12 +193,10 @@ async function deleteCache() {
     updateCache();
 }
 
-function updateCache() {
-  caches.delete(CACHE_NAME).then(() => {
-    caches.open(CACHE_NAME).then((cache) => {
-      cache.addAll(urlsToCache);
-    });
-  });
+async function updateCache() {
+  await caches.delete(CACHE_NAME);
+  const cache = await caches.open(CACHE_NAME);
+  await cache.addAll(urlsToCache);
 }
 
 function updateApp() {
