@@ -205,7 +205,14 @@ async function deleteCache() {
 
 async function updateCache() {
   const cache = await caches.open(CACHE_NAME);
-  await cache.addAll(urlsToCache);
+  for (const url of urlsToCache) {
+    try {
+      await cache.add(url);
+      console.log(`Cached ${url}`);
+    } catch (error) {
+      console.error(`Error caching ${url}:`, error);
+    }
+  }
 }
 
 function updateApp() {
