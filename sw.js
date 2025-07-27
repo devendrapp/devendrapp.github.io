@@ -2,6 +2,7 @@
 //Below constants are duplicated in script.js. Maintain accordingly for a while
 const CACHE_NAME = 'doorchitravani-cache'; // Update the version number
 const urlsToCache = [
+  '/',
   '/css/styles.css',
   '/scripts/script.js',
   '/tracker.html',
@@ -10,7 +11,7 @@ const urlsToCache = [
   '/android-chrome-512x512.png',
   '/apple-touch-icon.png',
   'favicon.ico',
-  '/',
+  
 ];
 
 self.addEventListener('install', (event) => {
