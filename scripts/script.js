@@ -7,6 +7,7 @@ let currentChannelName = '';
 let staticChannelSuffix = ' ▪️';
 let touchStartX = 0;
 let db;
+const CACHE_NAME = 'doorchitravani-cache';
 
 const dbName = 'doorChitraVaniDB';
 const storeName = 'doorChitraVaniStore';
