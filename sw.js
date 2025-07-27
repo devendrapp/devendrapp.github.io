@@ -9,8 +9,6 @@ const urlsToCache = [
   '/android-chrome-512x512.png',
   '/apple-touch-icon.png',
   'favicon.ico',
-  'favicon-16x16.ico',
-  'favicon-32x32.ico',
 ];
 
 self.addEventListener('install', (event) => {
