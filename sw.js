@@ -25,12 +25,6 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', event => {
-  if (event.request.cache === 'reload') {
-    console.log('Bypassing cache for:', event.request.url);
-    event.respondWith(fetch(event.request));
-    return;
-  }
-
   event.respondWith(
     caches.match(event.request).then(response => {
       return response || fetch(event.request).catch(() => {
