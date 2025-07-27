@@ -186,8 +186,19 @@ function deleteAllCookies() {
 async function deleteCache() {
     const cacheNames = await caches.keys();
     for (const name of cacheNames) {
+        if(CACHE_NAME===name)
+            continue;
         await caches.delete(name);
     }
+    updateCache();
+}
+
+function updateCache() {
+  caches.delete(CACHE_NAME).then(() => {
+    caches.open(CACHE_NAME).then((cache) => {
+      cache.addAll(urlsToCache);
+    });
+  });
 }
 
 function updateApp() {
