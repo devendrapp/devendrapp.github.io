@@ -26,9 +26,8 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then(response => {
+    caches.match(event.request, { ignoreVary: true }).then(response => {
       return response || fetch(event.request).catch(() => {
-        // Consider serving a fallback or cached response here
         console.log('Fetch failed for:', event.request.url);
       });
     })
