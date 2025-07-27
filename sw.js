@@ -16,9 +16,12 @@ const urlsToCache = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(urlsToCache).catch((error) => {
-        console.error('Failed to cache resources:', error);
+      const promises = urlsToCache.map((url) => {
+        return cache.add(url).catch((error) => {
+          console.error(`Failed to cache ${url}:`, error);
+        });
       });
+      return Promise.all(promises);
     })
   );
   self.skipWaiting(); // Take control of the page immediately
