@@ -54,7 +54,7 @@ self.addEventListener('message', (event) => {
     event.waitUntil(
       caches.open(CACHE_NAME).then((cache) => {
         return cache.addAll(urlsToCache.map((asset) => {
-          // Add a cache-busting query parameter to ensure the latest version is fetched
+          // Add a cache-busting query parameter to ensure the latest version is fetched          
           return `${asset}?${Date.now()}`;
         }));
       })

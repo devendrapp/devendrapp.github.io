@@ -187,24 +187,24 @@ async function deleteCache() {
     for (const name of cacheNames) {
         await caches.delete(name);
     }
-    updateCache();
 }
 
 // Function to update cache
 function updateCache() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistration().then((registration) => {
-      if (registration && registration.active) {
-        registration.active.postMessage('update-cache');
-      }
-    });
-  }
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistration().then((registration) => {
+        if (registration && registration.active) {
+            registration.active.postMessage('update-cache');
+        }
+        });
+    }
 }
 
 function updateApp() {
     if (!confirm("Are you connected to Internet? Do you want to check for update to this application?")) {
         return;
     }
+    deleteCache();
     updateCache();
     localStorage.setItem("lastAppUpdateOn", new Date().toISOString());
     updateStatusBar('Update requested, refresh or restart the app.');
@@ -217,6 +217,7 @@ function clearStorage() {
     deleteIndexedDB('doorchitravani-cache');
     localStorage.clear();
     deleteAllCookies();
+    updateCache();
 }
 
 function getPlaylistItems() {
