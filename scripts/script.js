@@ -311,10 +311,10 @@ function playItem(item, element, index) {
         // Check if item is cached in IndexedDB
         getItem(item.name).then((cachedItem) => {
             if (cachedItem && cachedItem.data) {
-                updateStatusBar(`Not using Internet for: ${item.name}`);
+                updateStatusBar(`offline`);
                 loadItem(item, cachedItem.data);
             } else {
-                updateStatusBar(`Loading from internet: ${item.name}`);
+                updateStatusBar(`online`);
                 // Cache item asynchronously
                 //Delayed caching to allow immediate playback on first use.
                 setTimeout(() => {
@@ -548,12 +548,10 @@ function loadPlaylist() {
 // Cache item asynchronously if item.name contains '💾'
 function cacheItem(item) {
     if (item.name.includes('💾') && !item.url.includes('youtube') && !item.url.includes('file://') && !item.url.includes('m3u8')) {
-        updateStatusBar('Saving now:' + item.name);
         fetch(item.url)
             .then(response => response.blob())
             .then(data => {
                 storeItem(item, data).then(() => {
-                    updateStatusBar(`saved for next use: ${item.name}`);
                 }).catch((error) => {
                     console.error('Error caching item:', error);
                 });
