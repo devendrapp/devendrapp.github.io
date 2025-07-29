@@ -423,7 +423,6 @@ function loadItem(item, data) {
         window.location.href = intentUrl;
     } else {
         const audio = document.createElement('audio');
-        audio.controls = true;
         if (data) {
             audio.src = URL.createObjectURL(data);
         } else {
@@ -431,7 +430,8 @@ function loadItem(item, data) {
         }
         document.getElementById('player-container').appendChild(audio);
         currentPlayer = audio;
-        audio.play();
+        audio.autoplay = true;
+        audio.controls = true;
 
         //Auto play next when current one is ended.
         audio.addEventListener('ended', () => {
