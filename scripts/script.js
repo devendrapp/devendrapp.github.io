@@ -702,7 +702,12 @@ document.getElementById('load-static-button').addEventListener('click', () => {
                     channelName = line.split(',')[1].trim();
                 } else if (line.startsWith('http') || line.startsWith('file')) {
                     if (channelName) {
-                        localStorage.setItem(channelName + staticChannelSuffix + ' ' + (++i), encodeUrl(line.trim()));                        
+                        if(line.toLowerCase().includes('youtube')){
+                            localStorage.setItem(channelName + staticChannelSuffix + ' ' + (++i), line.trim());
+                        }else{
+                            localStorage.setItem(channelName + staticChannelSuffix + ' ' + (++i), encodeUrl(line.trim()));
+                        }
+                                             
                         channelName = null;
                     }
                 }
