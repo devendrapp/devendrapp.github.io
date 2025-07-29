@@ -347,98 +347,126 @@ function loadItem(item, data) {
         localStorage.setItem('jsonUrl', item.url);
         loadChannels();
     } else if (item.url.endsWith('.m3u8')) {
-        const video = document.createElement('video');
-        video.controls = true;
-        document.getElementById('player-container').appendChild(video);
-        currentPlayer = video;
-
-        if (Hls.isSupported()) {
-            hls = new Hls();
-            hls.loadSource(item.url);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_LOADED, function () {
-                video.play();
-            });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = item.url;
-            video.addEventListener('loadedmetadata', function () {
-                video.play();
-            });
-        }
-
-        //Auto play next when current one is ended.
-        video.addEventListener('ended', () => {
-            // Video has ended
-            playNextItem();
-        });
+        playM3U8(item);
     } else if (item.url.endsWith('.mp4')) {
-        const video = document.createElement('video');
-        if (data) {
-            video.src = URL.createObjectURL(data);
-        } else {
-            video.src = item.url;
-        }
-        video.controls = true;
-        document.getElementById('player-container').appendChild(video);
-        currentPlayer = video;
-        video.play();
-
-        //Auto play next when current one is ended.
-        video.addEventListener('ended', () => {
-            // Video has ended
-            playNextItem();
-        });
+        playVideo(item);
     } else if (item.url.includes('youtube')) {
-        const youtubeUrl = item.url.includes('embed') ? item.url : getYoutubeEmbedUrl(item.url);
-        const iframe = document.createElement('iframe');
-        iframe.src = youtubeUrl + '?autoplay=1&fs=0';
-        iframe.frameBorder = 0;
-        iframe.allowFullScreen = true;
-        iframe.allow = 'autoplay';
-        document.getElementById('player-container').appendChild(iframe);
-        currentPlayer = iframe;
+        playYoutubeVideo(item);
     } else if (item.url.endsWith('.jpg') || item.url.endsWith('.png') || item.url.endsWith('.jpeg') || item.name.toLowerCase().includes("jpg")) {
-        const img = document.createElement('img');
-        img.style.touchAction = 'manipulation';
-
-        if (data) {
-            img.src = URL.createObjectURL(data);
-        } else {
-            img.src = item.url;
-        }
-
-        imgDialog(img);
-        //document.getElementById('player-container').appendChild(img);
-        //currentPlayer = img;
+        showImage(item,data);        
     } else if (item.url.endsWith('.pdf') || item.name.toLowerCase().includes('pdf')) {
-        const iframe = document.createElement('iframe');
-        iframe.src = item.url;
-        iframe.frameBorder = 0;
-        iframe.width = '100%';
-        iframe.height = '100%';
-        document.getElementById('player-container').appendChild(iframe);
-        currentPlayer = iframe;
+        openPDF(item);        
     } else if (item.url.startsWith('file://')) {
-        const intentUrl = `intent://${item.url.substring(7)}#Intent;action=android.intent.action.VIEW;type=audio/mpeg;end`;
-        window.location.href = intentUrl;
+        playLocalFileAsAudio();
     } else {
-        const audio = document.createElement('audio');
-        if (data) {
-            audio.src = URL.createObjectURL(data);
-        } else {
-            audio.src = item.url;
-        }
-        document.getElementById('player-container').appendChild(audio);
-        currentPlayer = audio;
-        audio.autoplay = true;
-        audio.controls = true;
+        playAudio(item,data);
+    }
+}
 
-        //Auto play next when current one is ended.
-        audio.addEventListener('ended', () => {
-            // Video has ended
-            playNextItem();
+function openPDF(item){
+    const iframe = document.createElement('iframe');
+    iframe.src = item.url;
+    iframe.frameBorder = 0;
+    iframe.width = '100%';
+    iframe.height = '100%';
+    iframe.style.overflowY = 'auto'; // Add scrollbar if content exceeds iframe height
+    document.getElementById('player-container').appendChild(iframe);
+    currentPlayer = iframe;
+}
+
+function showImage(item,data){
+    const img = document.createElement('img');
+    img.style.touchAction = 'manipulation';
+
+    if (data) {
+        img.src = URL.createObjectURL(data);
+    } else {
+        img.src = item.url;
+    }
+
+    imgDialog(img);
+    
+}
+
+function playVideo(item){
+    const video = document.createElement('video');
+    if (data) {
+        video.src = URL.createObjectURL(data);
+    } else {
+        video.src = item.url;
+    }
+    video.controls = true;
+    document.getElementById('player-container').appendChild(video);
+    currentPlayer = video;
+    video.play();
+
+    //Auto play next when current one is ended.
+    video.addEventListener('ended', () => {
+        // Video has ended
+        playNextItem();
+    });
+}
+
+function playM3U8(item){
+    const video = document.createElement('video');
+    video.controls = true;
+    document.getElementById('player-container').appendChild(video);
+    currentPlayer = video;
+
+    if (Hls.isSupported()) {
+        hls = new Hls();
+        hls.loadSource(item.url);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_LOADED, function () {
+            video.play();
+        });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = item.url;
+        video.addEventListener('loadedmetadata', function () {
+            video.play();
         });
     }
+
+    //Auto play next when current one is ended.
+    video.addEventListener('ended', () => {
+        // Video has ended
+        playNextItem();
+    });
+}
+
+function playYoutubeVideo(item){
+    const youtubeUrl = item.url.includes('embed') ? item.url : getYoutubeEmbedUrl(item.url);
+    const iframe = document.createElement('iframe');
+    iframe.src = youtubeUrl + '?autoplay=1&fs=0';
+    iframe.frameBorder = 0;
+    iframe.allowFullScreen = true;
+    iframe.allow = 'autoplay';
+    document.getElementById('player-container').appendChild(iframe);
+    currentPlayer = iframe;
+}
+
+function playLocalFileAsAudio(){
+    const intentUrl = `intent://${item.url.substring(7)}#Intent;action=android.intent.action.VIEW;type=audio/mpeg;end`;
+    window.location.href = intentUrl;
+}
+
+function playAudio(item,data){
+    const audio = document.createElement('audio');
+    if (data) {
+        audio.src = URL.createObjectURL(data);
+    } else {
+        audio.src = item.url;
+    }
+    document.getElementById('player-container').appendChild(audio);
+    currentPlayer = audio;
+    audio.autoplay = true;
+    audio.controls = true;
+
+    //Auto play next when current one is ended.
+    audio.addEventListener('ended', () => {
+        // Video has ended
+        playNextItem();
+    });
 }
 
 function imgDialog(img) {
