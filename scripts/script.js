@@ -338,6 +338,10 @@ function playItem(item, element, index) {
     document.getElementById('current-media').textContent = splitChlName;
 }
 
+function encodeUrl(url) {
+  return encodeURIComponent(url).replace(/%3A/g, ':').replace(/%2F/g, '/');
+}
+
 function loadItem(item, data) {
     if (item.url.endsWith('.json')) {
         localStorage.setItem('jsonUrl', item.url);
@@ -537,7 +541,7 @@ function loadPlaylist() {
     const channelsToLoad = [];
     searchTerms.forEach(term => {
         Object.keys(channels).forEach(channel => {
-            if (channel.toLowerCase().includes(term.toLowerCase()) && !channelsToLoad.find(c => c.name === channel)) {
+            if (!channel.includes('🎶') && channel.toLowerCase().includes(term.toLowerCase()) && !channelsToLoad.find(c => c.name === channel)) {
                 channelsToLoad.push({ name: channel, url: channels[channel] });
             }
         });
@@ -698,7 +702,7 @@ document.getElementById('load-static-button').addEventListener('click', () => {
                     channelName = line.split(',')[1].trim();
                 } else if (line.startsWith('http') || line.startsWith('file')) {
                     if (channelName) {
-                        localStorage.setItem(channelName + staticChannelSuffix + ' ' + (++i), line.trim());
+                        localStorage.setItem(channelName + staticChannelSuffix + ' ' + (++i), encodeUrl(line.trim()));                        
                         channelName = null;
                     }
                 }
