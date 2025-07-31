@@ -349,7 +349,7 @@ function loadItem(item, data) {
     } else if (item.url.endsWith('.m3u8')) {
         playM3U8(item);
     } else if (item.url.endsWith('.mp4')) {
-        playVideo(item);
+        playVideo(item,data);
     } else if (item.url.includes('youtube')) {
         playYoutubeVideo(item);
     } else if (item.url.endsWith('.jpg') || item.url.endsWith('.png') || item.url.endsWith('.jpeg') || item.name.toLowerCase().includes("jpg")) {
@@ -388,7 +388,7 @@ function showImage(item,data){
     
 }
 
-function playVideo(item){
+function playVideo(item,data){
     const video = document.createElement('video');
     if (data) {
         video.src = URL.createObjectURL(data);
