@@ -307,7 +307,9 @@ function playItem(item, element, index) {
     //remove icon suffix from name
     splitChlName = item.name.split(';')[1] || item.name;
 
-    if (item.name.includes('💾')) {
+    if (item.name.includes('💾') && !item.url.toLowerCase().endsWith('m3u8')
+        && !item.url.toLowerCase().endsWith('mp4') && item.url.toLowerCase().includes('youtube')
+    ) {
         // Check if item is cached in IndexedDB
         getItem(item.name).then((cachedItem) => {
             if (cachedItem && cachedItem.data) {
@@ -349,7 +351,7 @@ function loadItem(item, data) {
     } else if (item.url.endsWith('.m3u8')) {
         playM3U8(item);
     } else if (item.url.endsWith('.mp4')) {
-        playVideo(item,data);
+        playVideo(item);
     } else if (item.url.includes('youtube')) {
         playYoutubeVideo(item);
     } else if (item.url.endsWith('.jpg') || item.url.endsWith('.png') || item.url.endsWith('.jpeg') || item.name.toLowerCase().includes("jpg")) {
@@ -357,7 +359,7 @@ function loadItem(item, data) {
     } else if (item.url.endsWith('.pdf') || item.name.toLowerCase().includes('pdf')) {
         openPDF(item);        
     } else if (item.url.startsWith('file://')) {
-        playLocalFileAsAudio();
+        playLocalFileAsAudio(item);
     } else {
         playAudio(item,data);
     }
@@ -388,13 +390,9 @@ function showImage(item,data){
     
 }
 
-function playVideo(item,data){
-    const video = document.createElement('video');
-    if (data) {
-        video.src = URL.createObjectURL(data);
-    } else {
-        video.src = item.url;
-    }
+function playVideo(item){
+    const video = document.createElement('video');    
+    video.src = item.url;
     video.controls = true;
     document.getElementById('player-container').appendChild(video);
     currentPlayer = video;
@@ -445,7 +443,7 @@ function playYoutubeVideo(item){
     currentPlayer = iframe;
 }
 
-function playLocalFileAsAudio(){
+function playLocalFileAsAudio(item){
     const intentUrl = `intent://${item.url.substring(7)}#Intent;action=android.intent.action.VIEW;type=audio/mpeg;end`;
     window.location.href = intentUrl;
 }
