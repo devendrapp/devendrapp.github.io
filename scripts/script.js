@@ -797,19 +797,6 @@ screen.orientation.addEventListener('change', function () {
     }
 });
 
-quickSearchButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        if (searchInput.value.includes(button.textContent)) {
-            searchInput.value = '';
-        } else {
-            searchInput.value = button.textContent + ' ';
-        }
-
-        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
-        searchInput.dispatchEvent(new Event('change', { bubbles: true }));
-    });
-});
-
 document.getElementById('clear-search-input').addEventListener('click', () => {
     searchInput.value = '';
     searchInput.dispatchEvent(new Event('input', { bubbles: true }));
@@ -886,6 +873,16 @@ function generateQuickSearchButtons() {
     button.style.marginRight = "4px";
     button.style.fontSize = "24px";
     button.textContent = buttons[i];
+
+    button.addEventListener('click', () => {
+        if (searchInput.value.includes(button.textContent)) {
+            searchInput.value = '';
+        } else {
+            searchInput.value = button.textContent + ' ';
+        }
+        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+        searchInput.dispatchEvent(new Event('change', { bubbles: true }));
+    });
 
     row.appendChild(button);
   }
