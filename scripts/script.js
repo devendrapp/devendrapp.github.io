@@ -308,7 +308,7 @@ function playItem(item, element, index) {
     splitChlName = item.name.split(';')[1] || item.name;
 
     if (item.name.includes('💾') && !item.url.toLowerCase().endsWith('m3u8')
-        && !item.url.toLowerCase().endsWith('mp4') && item.url.toLowerCase().includes('youtube')
+        && !item.url.toLowerCase().endsWith('mp4') && !item.url.toLowerCase().includes('youtube')
     ) {
         // Check if item is cached in IndexedDB
         getItem(item.name).then((cachedItem) => {
