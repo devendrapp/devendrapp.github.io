@@ -730,7 +730,7 @@ document.getElementById('load-static-button').addEventListener('click', () => {
                     if (channelName) {
                         if(line.toLowerCase().includes('youtube')){
                             localStorage.setItem(channelName + staticChannelSuffix + ' ' + (++i), line.trim());
-                        }else if(line.includes('📰') || line.endsWith('json')){
+                        }else if(line.includes('📰') || line.endsWith('json') || channelName==='💾'){
                             localStorage.setItem(channelName, line.trim());
                         }else{
                             localStorage.setItem(channelName + staticChannelSuffix + ' ' + (++i), encodeUrl(line.trim()));
@@ -889,6 +889,20 @@ function generateQuickSearchButtons() {
   container.appendChild(row);
 }
 
+function defaultContent(){
+    const img = document.createElement('img');
+    if(!localStorage.getItem('💾'))
+        return;
+    const date = new Date();
+    const yearMonth = `${date.getFullYear()}${date.getMonth() + 1}`;
+    img.src=localStorage.getItem('💾')+'?v='+yearMonth;
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'contain';
+    document.getElementById('player-container').appendChild(img);
+    currentPlayer=img;
+}
+
 deleteThirdPartyIndexedDBOnLoad();
 deleteAllCookies();
 DailyMediaSourceRefresh();
@@ -897,6 +911,7 @@ loadPlaylist();
 populateDataListForSearchInput();
 generateQuickSearchButtons();
 updateStatusBar('Total Playlist Items: ' + localStorage.length);
+defaultContent();
 
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js')
