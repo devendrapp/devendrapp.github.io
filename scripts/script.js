@@ -732,8 +732,10 @@ document.getElementById('load-static-button').addEventListener('click', () => {
                             localStorage.setItem(channelName + staticChannelSuffix + ' ' + (++i), line.trim());
                         }else if(line.includes('📰') || line.endsWith('json') || channelName==='💾'){
                             localStorage.setItem(channelName, line.trim());
-                        }else{
+                        }else if(line.includes(' ')){
                             localStorage.setItem(channelName + staticChannelSuffix + ' ' + (++i), encodeUrl(line.trim()));
+                        }else{
+                            localStorage.setItem(channelName + staticChannelSuffix + ' ' + (++i), line.trim());
                         }
                         channelName = null;
                     }
