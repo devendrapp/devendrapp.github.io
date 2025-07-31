@@ -505,7 +505,7 @@ function imgDialog(img) {
 
 function stopPlayback() {
     if (currentPlayer) {
-        if (currentPlayer.pause) {
+        if ((currentPlayer=='video' || currentPlayer=='audio' || currentPlayer=='iframe') && currentPlayer.pause) {
             currentPlayer.pause();
         }
         document.getElementById('player-container').innerHTML = '';
