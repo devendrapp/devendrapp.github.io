@@ -728,14 +728,15 @@ document.getElementById('load-static-button').addEventListener('click', () => {
             lines.forEach(line => {
                 if (line.startsWith('#EXTINF:')) {
                     channelName = line.split(',')[1].trim();
-                } else if (line.startsWith('http') || line.startsWith('file')) {
+                } else if (line.startsWith('http') || line.startsWith('file') || line.includes('📰')) {
                     if (channelName) {
                         if(line.toLowerCase().includes('youtube')){
                             localStorage.setItem(channelName + staticChannelSuffix + ' ' + (++i), line.trim());
+                        }else if(line.includes('📰') || line.endsWith('json')){
+                            localStorage.setItem(channelName, line.trim());
                         }else{
                             localStorage.setItem(channelName + staticChannelSuffix + ' ' + (++i), encodeUrl(line.trim()));
                         }
-                                             
                         channelName = null;
                     }
                 }
@@ -856,12 +857,50 @@ initDB().then(() => {
     console.error('Error initializing IndexedDB:', error);
 });
 
+// Function to generate quick search buttons
+function generateQuickSearchButtons() {
+
+  const quickSearchButtons=localStorage.getItem('0000_quick_search_buttons');
+  if(!quickSearchButtons)
+    return;
+  buttons=quickSearchButtons.split(",");
+  const rowLength=5;
+  const container = document.getElementById("quick-search-container");
+  let row = document.createElement("div");
+  row.style.padding = "5px";
+  row.style.display = "flex";
+  row.style.flexWrap = "wrap";
+
+  for (let i = 0; i < buttons.length; i++) {
+    if (i % rowLength === 0 && i !== 0) {
+      container.appendChild(row);
+      row = document.createElement("div");
+      row.style.padding = "5px";
+      row.style.display = "flex";
+      row.style.flexWrap = "wrap";
+    }
+
+    const button = document.createElement("button");
+    button.className = "quick-search-button";
+    button.style.flex = "1";
+    button.style.marginRight = "4px";
+    button.style.fontSize = "24px";
+    button.textContent = buttons[i];
+
+    row.appendChild(button);
+  }
+
+  // Append the last row
+  container.appendChild(row);
+}
+
 deleteThirdPartyIndexedDBOnLoad();
 deleteAllCookies();
 DailyMediaSourceRefresh();
 initializePlaylist();
 loadPlaylist();
 populateDataListForSearchInput();
+generateQuickSearchButtons();
 updateStatusBar('Total Playlist Items: ' + localStorage.length);
 
 if ('serviceWorker' in navigator) {
