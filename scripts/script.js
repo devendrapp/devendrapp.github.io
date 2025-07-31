@@ -890,11 +890,11 @@ function generateQuickSearchButtons() {
 }
 
 function defaultContent(){
-    const img = document.createElement('img');
     if(!localStorage.getItem('💾'))
         return;
     const date = new Date();
     const yearMonth = `${date.getFullYear()}${date.getMonth() + 1}`;
+    const img = document.createElement('img');
     img.src=localStorage.getItem('💾')+'?v='+yearMonth;
     img.style.width = '100%';
     img.style.height = '100%';
