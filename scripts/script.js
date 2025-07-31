@@ -851,7 +851,7 @@ function generateQuickSearchButtons() {
   if(!quickSearchButtons)
     return;
   buttons=quickSearchButtons.split(",");
-  const rowLength=5;
+  const rowLength=6;
   const container = document.getElementById("quick-search-container");
   let row = document.createElement("div");
   row.style.padding = "5px";
