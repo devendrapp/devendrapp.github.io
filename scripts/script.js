@@ -345,6 +345,7 @@ function encodeUrl(url) {
 }
 
 function loadItem(item, data) {
+    document.querySelector('.left-pane').style.height = '65%';
     if (item.url.endsWith('.json')) {
         localStorage.setItem('jsonUrl', item.url);
         loadChannels();
@@ -362,6 +363,7 @@ function loadItem(item, data) {
         playLocalFileAsAudio(item);
     } else {
         playAudio(item,data);
+        document.querySelector('.left-pane').style.height = '90%';
     }
 }
 
@@ -726,7 +728,9 @@ document.getElementById('load-static-button').addEventListener('click', () => {
             lines.forEach(line => {
                 if (line.startsWith('#EXTINF:')) {
                     channelName = line.split(',')[1].trim();
-                } else if (line.startsWith('http') || line.startsWith('file') || line.includes('📰')) {
+                }else if(line.startsWith('#EXTRGRP:')){
+                    ;
+                }else if (line.startsWith('http') || line.startsWith('file') || line.includes('📰')) {
                     if (channelName) {
                         if(line.toLowerCase().includes('youtube')){
                             localStorage.setItem(channelName + staticChannelSuffix + ' ' + (++i), line.trim());
