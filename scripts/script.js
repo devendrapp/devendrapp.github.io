@@ -368,14 +368,7 @@ function loadItem(item, data) {
 }
 
 function openPDF(item){
-    const iframe = document.createElement('iframe');
-    iframe.src = item.url;
-    iframe.frameBorder = 0;
-    iframe.width = '100%';
-    iframe.height = '100%';
-    iframe.style.overflowY = 'auto'; // Add scrollbar if content exceeds iframe height
-    document.getElementById('player-container').appendChild(iframe);
-    currentPlayer = iframe;
+    window.open(item.url, '_blank');
 }
 
 function showImage(item,data){
