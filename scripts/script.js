@@ -837,6 +837,10 @@ document.getElementById('prev-button').addEventListener('click', () => {
     playPreviousItem();
 });
 
+document.getElementById('stop-button').addEventListener('click', () => {
+    stopPlayback();
+});
+
 document.getElementById('next-button').addEventListener('click', () => {
     playNextItem();
 });
