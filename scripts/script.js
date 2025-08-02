@@ -344,6 +344,10 @@ function playItem(item, element, index) {
         navigator.mediaSession.setActionHandler('nexttrack', () => {
             playNextItem();
         });
+
+         navigator.mediaSession.setActionHandler('stop', () => {
+            stopPlayback();
+        });
     }
     document.getElementById('current-media').textContent = splitChlName;
 }
