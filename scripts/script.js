@@ -336,6 +336,14 @@ function playItem(item, element, index) {
         navigator.mediaSession.metadata = new MediaMetadata({
             title: splitChlName
         });
+
+        navigator.mediaSession.setActionHandler('previoustrack', () => {
+            playPreviousItem();
+        });
+
+        navigator.mediaSession.setActionHandler('nexttrack', () => {
+            playNextItem();
+        });
     }
     document.getElementById('current-media').textContent = splitChlName;
 }
