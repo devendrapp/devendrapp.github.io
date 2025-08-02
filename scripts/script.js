@@ -363,7 +363,9 @@ function loadItem(item, data) {
         playLocalFileAsAudio(item);
     } else {
         playAudio(item,data);
-        document.querySelector('.left-pane').style.height = '90%';
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            document.querySelector('.left-pane').style.height = '90%';
+        }
     }
 }
 
