@@ -705,7 +705,6 @@ function addRepeatingWordCategoriesToNavDrawer(repeatingWords){
         // Insert the link before the hr element
         navDrawer.insertBefore(link, hr);
         navDrawer.insertBefore(document.createElement('br'), hr);
-        navDrawer.insertBefore(document.createElement('br'), hr);
     });
 }
 

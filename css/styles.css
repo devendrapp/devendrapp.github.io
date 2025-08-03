@@ -159,7 +159,7 @@ video::-webkit-media-controls-mute-button {
     padding: 10px;
     display: none;
     flex-direction: column;
-    width: 200px;
+    width: 250px;
     /* adjust this value based on your desired width */
 }
 
