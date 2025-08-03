@@ -335,7 +335,9 @@ function playItem(item, element, index) {
 
     if ('mediaSession' in navigator) {
         navigator.mediaSession.metadata = new MediaMetadata({
-            title: splitChlName
+            title: splitChlName,
+            artist: '',
+            album: ''
         });
 
         navigator.mediaSession.setActionHandler('previoustrack', () => {
