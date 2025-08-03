@@ -4,6 +4,7 @@ let currentItem = null;
 let currentIndex = 0;
 let channels = {};
 let currentChannelName = '';
+let currentUrl = '';
 let staticChannelSuffix = ' ▪️';
 let touchStartX = 0;
 let db;
@@ -303,6 +304,7 @@ function playItem(item, element, index) {
     currentItem = element;
     currentIndex = index;
     currentChannelName = item.name;
+    currentUrl = item.url;
 
     //remove icon suffix from name
     splitChlName = item.name.split(';')[1] || item.name;
@@ -514,7 +516,7 @@ function imgDialog(img) {
 
 function stopPlayback() {
     if (currentPlayer) {
-        if ((currentPlayer=='video' || currentPlayer=='audio' || currentPlayer=='iframe') && currentPlayer.pause) {
+        if ((currentPlayer.tagName=='video' || currentPlayer.tagName=='audio' || currentPlayer.tagName=='iframe') && currentPlayer.pause) {
             currentPlayer.pause();
         }
         document.getElementById('player-container').innerHTML = '';
@@ -526,6 +528,14 @@ function stopPlayback() {
         }
         document.getElementById('current-media').textContent = '';
         currentPlayer = null;
+    }
+}
+
+function pausePlayback(){
+    if (currentPlayer.paused) {        
+        currentPlayer.play();
+    } else {
+        currentPlayer.pause();
     }
 }
 
@@ -884,8 +894,16 @@ document.getElementById('stop-button').addEventListener('click', () => {
     stopPlayback();
 });
 
+document.getElementById('pause-button').addEventListener('click', () => {
+    pausePlayback();
+});
+
 document.getElementById('next-button').addEventListener('click', () => {
     playNextItem();
+});
+
+document.getElementById('copy-button').addEventListener('click', () => {
+    copyItemUrl();
 });
 
 hamburgerMenu.addEventListener('click', (e) => {
@@ -902,6 +920,16 @@ initDB().then(() => {
 }).catch((error) => {
     console.error('Error initializing IndexedDB:', error);
 });
+
+function copyItemUrl(){
+    navigator.clipboard.writeText(currentUrl).then(() => {
+    updateStatusBar('URL copied to clipboard.');
+  }).catch((error) => {
+    console.error('Error copying URL to clipboard:', error);
+    updateStatusBar(`Failed to copy URL`);
+  });
+}
+
 
 // Function to generate quick search buttons
 function generateQuickSearchButtons() {
