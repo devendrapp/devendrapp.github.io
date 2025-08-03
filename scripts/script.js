@@ -568,6 +568,7 @@ function renderPlaylist(playlistToRender) {
         playlistElement.appendChild(element);
         index++;
     });
+    playlistElement.scrollTop = 0;
 }
 
 function loadPlaylist() {
@@ -654,6 +655,48 @@ function populateDataListForSearchInput() {
     const wordCount = countWordOccurrences(words);
     const repeatingWords = getRepeatingWords(wordCount);
     addDatalist(repeatingWords);
+    addRepeatingWordCategoriesToNavDrawer(repeatingWords);
+}
+
+function addRepeatingWordCategoriesToNavDrawer(repeatingWords){
+    // Add links to nav-drawer
+    const navDrawer = document.getElementById('nav-drawer');
+    const hr = navDrawer.querySelector('hr'); // Get the existing hr element    
+
+  // Create a new hr element for repeating words
+    const repeatingWordsHr = document.createElement('hr');
+    repeatingWordsHr.style.border = '1px solid #ffffff';
+    repeatingWordsHr.style.width = '100%';
+
+    // Insert the new hr element before the existing hr element
+    navDrawer.insertBefore(repeatingWordsHr, hr);
+
+    repeatingWords.forEach((word) => {
+        const link = document.createElement('a');
+        link.className='quick-search-button';
+        link.textContent = `${word}`;
+        link.href = '#'; // You can set the href attribute as needed
+        link.style.fontSize = '24px';
+        link.style.textDecoration = 'none';
+        link.style.cursor = 'pointer';
+        link.style.color = 'white';
+
+        link.addEventListener('click', () => {
+        if (searchInput.value.includes(link.textContent)) {
+            searchInput.value = '';
+        } else {
+            searchInput.value = link.textContent + ' ';
+        }
+        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+        searchInput.dispatchEvent(new Event('change', { bubbles: true }));
+        navDrawer.classList.toggle('show');
+    });
+
+        // Insert the link before the hr element
+        navDrawer.insertBefore(link, hr);
+        navDrawer.insertBefore(document.createElement('br'), hr);
+        navDrawer.insertBefore(document.createElement('br'), hr);
+    });
 }
 
 closeDialogBtn.addEventListener('click', () => {
@@ -848,6 +891,7 @@ document.getElementById('next-button').addEventListener('click', () => {
 hamburgerMenu.addEventListener('click', (e) => {
     e.stopPropagation();
     navDrawer.classList.toggle('show');
+    navDrawer.scrollTop = 0;
 });
 
 //On every page load

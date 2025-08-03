@@ -165,6 +165,7 @@ video::-webkit-media-controls-mute-button {
 
 #nav-drawer.show {
     display: flex;
+    overflow-y: auto;
 }
 
 @media only screen and (orientation: portrait) {
