@@ -297,6 +297,7 @@ function formatChannelName(name, url) {
 
 function playItem(item, element, index) {
     stopPlayback();
+    updateStatusBar(item.name);
     if (currentItem) {
         currentItem.classList.remove('selected');
     }
@@ -315,10 +316,8 @@ function playItem(item, element, index) {
         // Check if item is cached in IndexedDB
         getItem(item.name).then((cachedItem) => {
             if (cachedItem && cachedItem.data) {
-                updateStatusBar(`offline`);
                 loadItem(item, cachedItem.data);
-            } else {
-                updateStatusBar(`online`);
+            } else {                
                 // Cache item asynchronously
                 //Delayed caching to allow immediate playback on first use.
                 setTimeout(() => {
@@ -351,7 +350,7 @@ function playItem(item, element, index) {
             stopPlayback();
         });
     }
-    document.getElementById('current-media').textContent = splitChlName;
+    updateStatusBar(splitChlName);    
 }
 
 function encodeUrl(url) {
@@ -525,8 +524,8 @@ function stopPlayback() {
             hls.destroy();
             hls.detachMedia();
             hls = null;
-        }
-        document.getElementById('current-media').textContent = '';
+        }        
+        updateStatusBar('');
         currentPlayer = null;
     }
 }
@@ -581,8 +580,8 @@ function renderPlaylist(playlistToRender) {
     playlistElement.scrollTop = 0;
 }
 
-function loadPlaylist() {
-    document.getElementById('current-media').textContent = '';
+function loadPlaylist() {    
+    updateStatusBar('');
     const searchTerms = [staticChannelSuffix];
     const channelsToLoad = [];
     searchTerms.forEach(term => {
@@ -865,6 +864,11 @@ document.getElementById('clear-search-input').addEventListener('click', () => {
     searchInput.dispatchEvent(new Event('input', { bubbles: true }));
     searchInput.dispatchEvent(new Event('change', { bubbles: true }));
 });
+
+document.getElementById('refresh-button').addEventListener('click', () => {
+    window.location.reload();
+});
+
 
 document.getElementById('about-button').addEventListener('click', () => {
     aboutDialog.showModal();
