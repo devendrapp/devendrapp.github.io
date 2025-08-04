@@ -529,7 +529,7 @@ function stopPlayback() {
             hls.detachMedia();
             hls = null;
         }        
-        updateStatusBar('');
+        updateStatusBar('Choose playlist item to play...');
         currentPlayer = null;
     }
 }
