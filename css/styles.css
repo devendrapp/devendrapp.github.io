@@ -168,6 +168,15 @@ video::-webkit-media-controls-mute-button {
     overflow-y: auto;
 }
 
+#edit-button,
+#copy-button,
+#prev-button,
+#pause-button,
+#next-button,
+#stop-button {
+    cursor: pointer;
+}
+
 @media only screen and (orientation: portrait) {
     #main-container {
         flex-direction: column;

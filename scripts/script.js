@@ -360,7 +360,9 @@ function encodeUrl(url) {
 }
 
 function loadItem(item, data) {
-    document.querySelector('.left-pane').style.height = '65%';
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        document.querySelector('.left-pane').style.height = '65%';
+    }
     if (item.url.endsWith('.json')) {
         localStorage.setItem('jsonUrl', item.url);
         loadChannels();
@@ -619,7 +621,7 @@ function getWordsFromLocalStorage() {
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         const wordArray = key.split(/[\s_]+/); // Split key into words
-        words.push(...wordArray.filter(word => word.length >= 7)); // Filter words with length >= 4
+        words.push(...wordArray.filter(word => word.length >= 6)); // Filter words with length >= 4
     }
     return words;
 }
@@ -956,7 +958,7 @@ function generateQuickSearchButtons() {
       row = document.createElement("div");
       row.style.padding = "5px";
       row.style.display = "flex";
-      row.style.flexWrap = "wrap";
+      row.style.flexWrap = "wrap";      
     }
 
     const button = document.createElement("button");
@@ -964,6 +966,7 @@ function generateQuickSearchButtons() {
     button.style.flex = "1";
     button.style.marginRight = "4px";
     button.style.fontSize = "24px";
+    button.style.cursor = 'pointer';
     button.textContent = buttons[i];
 
     button.addEventListener('click', () => {
