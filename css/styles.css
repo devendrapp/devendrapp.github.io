@@ -207,6 +207,10 @@ video::-webkit-media-controls-mute-button {
     margin-left: 24px;
 }
 
+#quick-search-container {
+    border-bottom: 1px solid #ddd;
+}
+
 @media only screen and (orientation: portrait) {
     #main-container {
         flex-direction: column;

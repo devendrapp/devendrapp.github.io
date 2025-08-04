@@ -967,6 +967,8 @@ function generateQuickSearchButtons() {
     button.style.marginRight = "4px";
     button.style.fontSize = "24px";
     button.style.cursor = 'pointer';
+    button.style.backgroundColor = 'black';
+    button.style.color = 'white';
     button.textContent = buttons[i];
 
     button.addEventListener('click', () => {
