@@ -194,6 +194,7 @@ video::-webkit-media-controls-mute-button {
 #nav-drawer.show {
     display: flex;
     overflow-y: auto;
+    background-color: #000000;
 }
 
 #edit-button,
