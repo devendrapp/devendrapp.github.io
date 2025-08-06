@@ -714,6 +714,102 @@ function addRepeatingWordCategoriesToNavDrawer(repeatingWords){
     });
 }
 
+function copyItemUrl(){
+    navigator.clipboard.writeText(currentUrl).then(() => {
+    updateStatusBar('URL copied to clipboard.');
+  }).catch((error) => {
+    console.error('Error copying URL to clipboard:', error);
+    updateStatusBar(`Failed to copy URL`);
+  });
+}
+
+
+// Function to generate quick search buttons
+function generateQuickSearchButtons() {
+
+  const quickSearchButtons=localStorage.getItem('0000_quick_search_buttons');
+  if(!quickSearchButtons)
+    return;
+  buttons=quickSearchButtons.split(",");
+  const rowLength=6;
+  const container = document.getElementById("quick-search-container");
+  let row = document.createElement("div");
+  row.style.padding = "5px";
+  row.style.display = "flex";
+  row.style.flexWrap = "wrap";
+
+  for (let i = 0; i < buttons.length; i++) {
+    if (i % rowLength === 0 && i !== 0) {
+      container.appendChild(row);
+      row = document.createElement("div");
+      row.style.padding = "5px";
+      row.style.display = "flex";
+      row.style.flexWrap = "wrap";      
+    }
+
+    const button = document.createElement("button");
+    button.className = "quick-search-button";
+    button.style.flex = "1";
+    button.style.marginRight = "4px";
+    button.style.fontSize = "24px";
+    button.style.cursor = 'pointer';
+    button.style.backgroundColor = 'black';
+    button.style.color = 'white';
+    button.textContent = buttons[i];
+
+    button.addEventListener('click', () => {
+        if (searchInput.value.includes(button.textContent)) {
+            searchInput.value = '';
+        } else {
+            searchInput.value = button.textContent + ' ';
+        }
+        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+        searchInput.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    row.appendChild(button);
+  }
+
+  // Append the last row
+  container.appendChild(row);
+}
+
+function defaultContent(){
+    if(!localStorage.getItem('💾'))
+        return;
+    const date = new Date();
+    const yearMonth = `${date.getFullYear()}${date.getMonth() + 1}`;
+    const img = document.createElement('img');
+    img.src=localStorage.getItem('💾')+'?v='+yearMonth;
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'contain';
+    document.getElementById('player-container').appendChild(img);
+    currentPlayer=img;
+}
+
+function runOnLoad(){
+    deleteThirdPartyIndexedDB();
+    deleteAllCookies();
+
+    //On every page load
+    weeklyAppUpdate();
+    // Initialize IndexedDB
+    initDB().then(() => {
+        console.log('IndexedDB initialized');
+    }).catch((error) => {
+        console.error('Error initializing IndexedDB:', error);
+    });
+
+    DailyMediaSourceRefresh();
+    initializePlaylist();
+    loadPlaylist();
+    populateDataListForSearchInput();
+    generateQuickSearchButtons();
+    updateStatusBar('Total Playlist Items: ' + localStorage.length);
+    defaultContent();
+}
+
 closeDialogBtn.addEventListener('click', () => {
     aboutDialog.close();
 });
@@ -922,100 +1018,6 @@ hamburgerMenu.addEventListener('click', (e) => {
     navDrawer.scrollTop = 0;
 });
 
-//On every page load
-weeklyAppUpdate();
-// Initialize IndexedDB
-initDB().then(() => {
-    console.log('IndexedDB initialized');
-}).catch((error) => {
-    console.error('Error initializing IndexedDB:', error);
-});
-
-function copyItemUrl(){
-    navigator.clipboard.writeText(currentUrl).then(() => {
-    updateStatusBar('URL copied to clipboard.');
-  }).catch((error) => {
-    console.error('Error copying URL to clipboard:', error);
-    updateStatusBar(`Failed to copy URL`);
-  });
-}
-
-
-// Function to generate quick search buttons
-function generateQuickSearchButtons() {
-
-  const quickSearchButtons=localStorage.getItem('0000_quick_search_buttons');
-  if(!quickSearchButtons)
-    return;
-  buttons=quickSearchButtons.split(",");
-  const rowLength=6;
-  const container = document.getElementById("quick-search-container");
-  let row = document.createElement("div");
-  row.style.padding = "5px";
-  row.style.display = "flex";
-  row.style.flexWrap = "wrap";
-
-  for (let i = 0; i < buttons.length; i++) {
-    if (i % rowLength === 0 && i !== 0) {
-      container.appendChild(row);
-      row = document.createElement("div");
-      row.style.padding = "5px";
-      row.style.display = "flex";
-      row.style.flexWrap = "wrap";      
-    }
-
-    const button = document.createElement("button");
-    button.className = "quick-search-button";
-    button.style.flex = "1";
-    button.style.marginRight = "4px";
-    button.style.fontSize = "24px";
-    button.style.cursor = 'pointer';
-    button.style.backgroundColor = 'black';
-    button.style.color = 'white';
-    button.textContent = buttons[i];
-
-    button.addEventListener('click', () => {
-        if (searchInput.value.includes(button.textContent)) {
-            searchInput.value = '';
-        } else {
-            searchInput.value = button.textContent + ' ';
-        }
-        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
-        searchInput.dispatchEvent(new Event('change', { bubbles: true }));
-    });
-
-    row.appendChild(button);
-  }
-
-  // Append the last row
-  container.appendChild(row);
-}
-
-function defaultContent(){
-    if(!localStorage.getItem('💾'))
-        return;
-    const date = new Date();
-    const yearMonth = `${date.getFullYear()}${date.getMonth() + 1}`;
-    const img = document.createElement('img');
-    img.src=localStorage.getItem('💾')+'?v='+yearMonth;
-    img.style.width = '100%';
-    img.style.height = '100%';
-    img.style.objectFit = 'contain';
-    document.getElementById('player-container').appendChild(img);
-    currentPlayer=img;
-}
-
-function runOnLoad(){
-    deleteThirdPartyIndexedDB();
-    deleteAllCookies();
-    DailyMediaSourceRefresh();
-    initializePlaylist();
-    loadPlaylist();
-    populateDataListForSearchInput();
-    generateQuickSearchButtons();
-    updateStatusBar('Total Playlist Items: ' + localStorage.length);
-    defaultContent();
-}
 
 runOnLoad();
 
