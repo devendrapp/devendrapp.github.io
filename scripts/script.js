@@ -630,7 +630,8 @@ function loadPlaylist() {
 
 // Cache item asynchronously if item.name contains '💾'
 function cacheItem(item) {
-    if (item.name.includes('💾') && !item.url.includes('youtube') && !item.url.includes('file://') && !item.url.includes('m3u8')) {
+     if (item.name.includes('💾') || item.url.toLowerCase().endsWith('.mp3') || item.url.toLowerCase().endsWith('.ogg')
+    || item.url.toLowerCase().endsWith('.jpg') || item.url.toLowerCase().endsWith('.jpeg') || item.url.toLowerCase().endsWith('.png'){
         fetch(item.url)
             .then(response => response.blob())
             .then(data => {
