@@ -73,7 +73,7 @@ function getItem(name) {
     });
 }
 
-function deleteThirdPartyIndexedDBOnLoad() {
+function deleteThirdPartyIndexedDB() {
     indexedDB.databases().then((databases) => {
         databases.forEach((database) => {
             if (database.name.toLowerCase().includes('doorchitravani') || database.name.toLowerCase().includes('notesdb')) {
@@ -213,9 +213,9 @@ function updateApp() {
 }
 
 function clearStorage() {
-    //Local Storage and offline storage in Indexed DB specific to 'DoorChitraVani'
     deleteCache();
-    deleteIndexedDB('doorchitravani-cache');
+    deleteThirdPartyIndexedDB();
+    deleteIndexedDB(dbName);
     localStorage.clear();
     deleteAllCookies();
     updateCache();
@@ -1002,15 +1002,19 @@ function defaultContent(){
     currentPlayer=img;
 }
 
-deleteThirdPartyIndexedDBOnLoad();
-deleteAllCookies();
-DailyMediaSourceRefresh();
-initializePlaylist();
-loadPlaylist();
-populateDataListForSearchInput();
-generateQuickSearchButtons();
-updateStatusBar('Total Playlist Items: ' + localStorage.length);
-defaultContent();
+function runOnLoad(){
+    deleteThirdPartyIndexedDB();
+    deleteAllCookies();
+    DailyMediaSourceRefresh();
+    initializePlaylist();
+    loadPlaylist();
+    populateDataListForSearchInput();
+    generateQuickSearchButtons();
+    updateStatusBar('Total Playlist Items: ' + localStorage.length);
+    defaultContent();
+}
+
+runOnLoad();
 
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js')
