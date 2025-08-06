@@ -213,6 +213,9 @@ function updateApp() {
 }
 
 function clearStorage() {
+    if(db){
+        db.close();
+    }
     deleteCache();
     deleteThirdPartyIndexedDB();
     deleteIndexedDB(dbName);
