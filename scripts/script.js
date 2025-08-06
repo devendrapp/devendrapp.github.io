@@ -921,7 +921,7 @@ document.getElementById('load-static-button').addEventListener('click', () => {
                     if (channelName) {
                         if(line.toLowerCase().includes('youtube')){
                             localStorage.setItem(channelName + staticChannelSuffix + ' ' + (++i), line.trim());
-                        }else if(line.includes('📰') || line.endsWith('json') || channelName==='💾'){
+                        }else if(line.includes('📰') || line.endsWith('json') || channelName==='श्री'){
                             localStorage.setItem(channelName, line.trim());
                         }else if(line.includes(' ')){
                             localStorage.setItem(channelName + staticChannelSuffix + ' ' + (++i), encodeUrl(line.trim()));
