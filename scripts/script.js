@@ -802,12 +802,12 @@ function generateQuickSearchButtons() {
 }
 
 function defaultContent(){
-    if(!localStorage.getItem('💾'))
+    if(!localStorage.getItem('श्री'))
         return;
     const date = new Date();
     const yearMonth = `${date.getFullYear()}${date.getMonth() + 1}`;
     const img = document.createElement('img');
-    img.src=localStorage.getItem('💾')+'?v='+yearMonth;
+    img.src=localStorage.getItem('श्री')+'?v='+yearMonth;
     img.style.width = '100%';
     img.style.height = '100%';
     img.style.objectFit = 'contain';
