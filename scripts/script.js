@@ -17,6 +17,8 @@ const navDrawer = document.getElementById('nav-drawer');
 const statusBar = document.getElementById("status-bar");
 const aboutDialog = document.getElementById('about-dialog');
 const closeDialogBtn = document.getElementById('close-dialog-btn');
+const offlineSupportedExtensions = ['.mp3', '.ogg', '.jpg', '.jpeg', '.png'];
+const cacheDelay = 5000; // 5 seconds
 
 function initDB() {
     return new Promise((resolve, reject) => {
@@ -47,6 +49,7 @@ function storeItem(item, data) {
         const request = store.put({ name: item.name, url: item.url, data: data });
         request.onsuccess = () => {
             resolve();
+            updateStatusBar(`<i class="material-icons">offline_pin</i> ${item.name}`);
         };
         request.onerror = (event) => {
             reject(event.target.error);
