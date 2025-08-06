@@ -73,6 +73,22 @@ function getItem(name) {
     });
 }
 
+function deleteAllOfflineStoredItems() {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(storeName, 'readwrite');
+        const store = transaction.objectStore(storeName);
+        const request = store.clear();
+
+        request.onsuccess = function() {
+            console.log('All items deleted successfully');
+        };
+
+        request.onerror = function(event) {
+            console.log('Error deleting items:', event.target.error);
+        };
+    });
+}
+
 function deleteThirdPartyIndexedDB() {
     indexedDB.databases().then((databases) => {
         databases.forEach((database) => {
@@ -84,7 +100,6 @@ function deleteThirdPartyIndexedDB() {
 
         });
     });
-    updateStatusBar('Offline Storage deleted.');
 }
 
 function deleteIndexedDB(dbname) {
@@ -213,14 +228,14 @@ function updateApp() {
 }
 
 function clearStorage() {
+    localStorage.clear();
+    deleteAllCookies();
+    deleteCache();
+    deleteAllOfflineStoredItems();
     if(db){
         db.close();
     }
-    deleteCache();
     deleteThirdPartyIndexedDB();
-    deleteIndexedDB(dbName);
-    localStorage.clear();
-    deleteAllCookies();
     updateCache();
 }
 
@@ -571,6 +586,12 @@ function renderPlaylist(playlistToRender) {
         const element = document.createElement('div');
         element.className = 'playlist-item';
         element.innerHTML = item.name;
+        getItem(item.name).then((storedItem) => {
+            if (storedItem  && storedItem.data) {
+                element.innerHTML = `<i class="material-icons">offline_pin</i> ${item.name}`;
+            }
+        });
+
         element.onclick = () => playItem(item, element, index);
         playlistElement.appendChild(element);
         index++;
@@ -580,6 +601,12 @@ function renderPlaylist(playlistToRender) {
         const element = document.createElement('div');
         element.className = 'playlist-item';
         element.innerHTML = item.name;
+        getItem(item.name).then((storedItem) => {
+            if (storedItem  && storedItem.data) {
+                element.innerHTML = `<i class="material-icons">offline_pin</i> ${item.name}`;
+            }
+        });
+
         element.onclick = () => playItem(item, element, index);
         playlistElement.appendChild(element);
         index++;
@@ -788,26 +815,25 @@ function defaultContent(){
     currentPlayer=img;
 }
 
-function runOnLoad(){
+async function runOnLoad(){
     deleteThirdPartyIndexedDB();
     deleteAllCookies();
 
     //On every page load
+    defaultContent();
     weeklyAppUpdate();
+    DailyMediaSourceRefresh();
+    generateQuickSearchButtons();    
     // Initialize IndexedDB
-    initDB().then(() => {
+    await initDB().then(() => {
         console.log('IndexedDB initialized');
     }).catch((error) => {
         console.error('Error initializing IndexedDB:', error);
     });
-
-    DailyMediaSourceRefresh();
     initializePlaylist();
     loadPlaylist();
     populateDataListForSearchInput();
-    generateQuickSearchButtons();
     updateStatusBar('Total Playlist Items: ' + localStorage.length);
-    defaultContent();
 }
 
 closeDialogBtn.addEventListener('click', () => {
