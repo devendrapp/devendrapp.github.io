@@ -328,8 +328,8 @@ function playItem(item, element, index) {
     //remove icon suffix from name
     splitChlName = item.name.split(';')[1] || item.name;
 
-    if (item.name.includes('💾') && !item.url.toLowerCase().endsWith('m3u8')
-        && !item.url.toLowerCase().endsWith('mp4') && !item.url.toLowerCase().includes('youtube')
+    if (item.name.includes('💾') || item.url.toLowerCase().endsWith('.mp3') || item.url.toLowerCase().endsWith('.ogg')
+    || item.url.toLowerCase().endsWith('.jpg') || item.url.toLowerCase().endsWith('.jpeg') || item.url.toLowerCase().endsWith('.png')
     ) {
         // Check if item is cached in IndexedDB
         getItem(item.name).then((cachedItem) => {
