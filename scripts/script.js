@@ -8,6 +8,7 @@ let currentUrl = '';
 let staticChannelSuffix = ' ▪️';
 let touchStartX = 0;
 let db;
+const defaultCategoriesKey='0000_default_categories';
 const dbName = 'doorChitraVaniDB';
 const storeName = 'doorChitraVaniStore';
 const searchInput = document.getElementById('search-input');
@@ -618,10 +619,13 @@ function renderPlaylist(playlistToRender) {
 }
 
 function loadPlaylist() {    
-    updateStatusBar('');
-    const searchTerms = [staticChannelSuffix];
+    let defaultCategories = [staticChannelSuffix];    
+    if(localStorage.getItem(defaultCategoriesKey)){
+        defaultCategories=localStorage.getItem(defaultCategoriesKey).split(',');
+    }
+        
     const channelsToLoad = [];
-    searchTerms.forEach(term => {
+    defaultCategories.forEach(term => {
         Object.keys(channels).forEach(channel => {
             if (!channel.includes('🎶') && channel.toLowerCase().includes(term.toLowerCase()) && !channelsToLoad.find(c => c.name === channel)) {
                 channelsToLoad.push({ name: channel, url: channels[channel] });
