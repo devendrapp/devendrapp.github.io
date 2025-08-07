@@ -694,7 +694,8 @@ function countWordOccurrences(words) {
 // Function to get repeating words
 function getRepeatingWords(wordCount) {
     const repeatingWords = Object.keys(wordCount).filter(word => wordCount[word] >= 5);
-    return repeatingWords.sort((a, b) => wordCount[b] - wordCount[a]); // Sort in descending order of occurrences
+    //return repeatingWords.sort((a, b) => wordCount[b] - wordCount[a]); // Sort in descending order of occurrences
+    return repeatingWords.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 }
 
 // Function to add datalist to search input
