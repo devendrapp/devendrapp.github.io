@@ -211,6 +211,9 @@ video::-webkit-media-controls-mute-button {
 
 #quick-search-container {
     border-bottom: 1px solid #ddd;
+    flex-shrink: 0;
+    overflow-y: scroll;
+    height: 120px;
 }
 
 @media only screen and (orientation: portrait) {
