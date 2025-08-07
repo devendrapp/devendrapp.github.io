@@ -9,6 +9,7 @@ let staticChannelSuffix = ' ▪️';
 let touchStartX = 0;
 let db;
 const defaultCategoriesKey='0000_default_categories';
+const skipCategoriesKey='0000_skip_categories_from_datalist';
 const dbName = 'doorChitraVaniDB';
 const storeName = 'doorChitraVaniStore';
 const searchInput = document.getElementById('search-input');
@@ -722,6 +723,10 @@ function populateDataListForSearchInput() {
         const words = getWordsFromLocalStorage();
         const wordCount = countWordOccurrences(words);
         repeatingWords = getRepeatingWords(wordCount);
+        if(localStorage.getItem(skipCategoriesKey)){
+            skipWords=localStorage.getItem(skipCategoriesKey).split(',');
+            repeatingWords = repeatingWords.filter(word => !skipWords.includes(word));
+        }
         localStorage.setItem(categoriesKey,repeatingWords);
         localStorage.setItem(localStorageCountKey,localStorage.length);
     }    
@@ -945,11 +950,11 @@ document.getElementById('load-static-button').addEventListener('click', () => {
                     channelName = line.split(',')[1].trim();
                 }else if(line.startsWith('#EXTRGRP:')){
                     ;
-                }else if (line.startsWith('http') || line.startsWith('file') || line.includes('📰')) {
+                }else if (line.startsWith('http') || line.startsWith('file') || line.includes('📰') || line.startsWith('0000')) {
                     if (channelName) {
                         if(line.toLowerCase().includes('youtube')){
                             localStorage.setItem(channelName + staticChannelSuffix + ' ' + (++i), line.trim());
-                        }else if(line.includes('📰') || line.endsWith('json') || channelName==='श्री'){
+                        }else if(line.includes('📰') || line.endsWith('json') || channelName==='श्री' || line.startsWith('0000')){
                             localStorage.setItem(channelName, line.trim());
                         }else if(line.includes(' ')){
                             localStorage.setItem(channelName + staticChannelSuffix + ' ' + (++i), encodeUrl(line.trim()));
