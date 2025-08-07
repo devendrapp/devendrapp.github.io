@@ -451,6 +451,15 @@ function playM3U8(item){
         hls = new Hls();
         hls.loadSource(item.url);
         hls.attachMedia(video);
+
+        video.addEventListener('pause', () => {
+            hls.stopLoad();
+        });
+        video.addEventListener('play', () => {
+            //video.currentTime = video.seekable.end(video.seekable.length - 1);            
+            hls.startLoad();
+        });
+
         hls.on(Hls.Events.MANIFEST_LOADED, function () {
             video.play();
         });
