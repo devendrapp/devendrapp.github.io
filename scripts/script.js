@@ -698,9 +698,14 @@ function addDatalist(repeatingWords) {
 }
 
 function populateDataListForSearchInput() {
-    const words = getWordsFromLocalStorage();
-    const wordCount = countWordOccurrences(words);
-    const repeatingWords = getRepeatingWords(wordCount);
+    const categoriesKey='0000_categories'
+    let repeatingWords=(localStorage.getItem(categoriesKey)?localStorage.getItem(categoriesKey).split(','):false);
+    if(!repeatingWords){
+        const words = getWordsFromLocalStorage();
+        const wordCount = countWordOccurrences(words);
+        repeatingWords = getRepeatingWords(wordCount);
+        localStorage.setItem(categoriesKey,repeatingWords);
+    }    
     addDatalist(repeatingWords);
     addRepeatingWordCategoriesToNavDrawer(repeatingWords);
 }
