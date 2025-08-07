@@ -123,7 +123,7 @@ function deleteIndexedDB(dbname) {
 }
 
 function updateStatusBar(msg) {
-    statusBar.innerText = msg;
+    statusBar.innerHTML = msg;
     statusBar.focus();
     statusBar.blur();
 }
