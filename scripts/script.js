@@ -698,13 +698,19 @@ function addDatalist(repeatingWords) {
 }
 
 function populateDataListForSearchInput() {
-    const categoriesKey='0000_categories'
-    let repeatingWords=(localStorage.getItem(categoriesKey)?localStorage.getItem(categoriesKey).split(','):false);
+    const categoriesKey='0000_categories';
+    const localStorageCountKey='0000_localStorageCount';
+    let repeatingWords=false;
+    if(localStorage.getItem(localStorageCountKey) && localStorage.length==localStorage.getItem(localStorageCountKey)){
+        repeatingWords=(localStorage.getItem(categoriesKey)?localStorage.getItem(categoriesKey).split(','):false);
+    }
+
     if(!repeatingWords){
         const words = getWordsFromLocalStorage();
         const wordCount = countWordOccurrences(words);
         repeatingWords = getRepeatingWords(wordCount);
         localStorage.setItem(categoriesKey,repeatingWords);
+        localStorage.setItem(localStorageCountKey,localStorage.length);
     }    
     addDatalist(repeatingWords);
     addRepeatingWordCategoriesToNavDrawer(repeatingWords);
