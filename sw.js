@@ -1,19 +1,19 @@
-
 //Below constants are duplicated in script.js. Maintain accordingly for a while
-const CACHE_NAME = 'doorchitravani-cache'; // Update the version number
+const CACHE_NAME = "doorchitravani-cache"; // Update the version number
 const urlsToCache = [
-  '/',
-  '/css/styles.css',
-  '/scripts/script.js',
-  '/tracker.html',
-  '/index.html',
-  '/android-chrome-192x192.png',
-  '/android-chrome-512x512.png',
-  '/apple-touch-icon.png',
-  'favicon.ico',
+  "/",
+  "/css/styles.css",
+  "/scripts/scriptModular.js",
+  "/scripts/script.js",
+  "/tracker.html",
+  "/index.html",
+  "/android-chrome-192x192.png",
+  "/android-chrome-512x512.png",
+  "/apple-touch-icon.png",
+  "favicon.ico",
 ];
 
-self.addEventListener('install', (event) => {
+self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       const promises = urlsToCache.map((url) => {
@@ -27,21 +27,26 @@ self.addEventListener('install', (event) => {
   self.skipWaiting(); // Take control of the page immediately
 });
 
-self.addEventListener('fetch', event => {
+self.addEventListener("fetch", (event) => {
   event.respondWith(
-    caches.match(event.request, { ignoreVary: true }).then(response => {
-      return response || fetch(event.request).catch(() => {
-        console.log('Fetch failed for:', event.request.url);
-      });
+    caches.match(event.request, { ignoreVary: true }).then((response) => {
+      return (
+        response ||
+        fetch(event.request).catch(() => {
+          console.log("Fetch failed for:", event.request.url);
+        })
+      );
     })
   );
 });
 
-self.addEventListener('activate', (event) => {
+self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
-        cacheNames.filter((cacheName) => cacheName !== CACHE_NAME).map((cacheName) => caches.delete(cacheName))
+        cacheNames
+          .filter((cacheName) => cacheName !== CACHE_NAME)
+          .map((cacheName) => caches.delete(cacheName))
       );
     })
   );
@@ -49,14 +54,16 @@ self.addEventListener('activate', (event) => {
 });
 
 // Listen for update request
-self.addEventListener('message', (event) => {
-  if (event.data === 'update-cache') {
+self.addEventListener("message", (event) => {
+  if (event.data === "update-cache") {
     event.waitUntil(
       caches.open(CACHE_NAME).then((cache) => {
-        return cache.addAll(urlsToCache.map((asset) => {
-          // Add a cache-busting query parameter to ensure the latest version is fetched          
-          return `${asset}?${Date.now()}`;
-        }));
+        return cache.addAll(
+          urlsToCache.map((asset) => {
+            // Add a cache-busting query parameter to ensure the latest version is fetched
+            return `${asset}?${Date.now()}`;
+          })
+        );
       })
     );
   }
