@@ -336,6 +336,9 @@ class MediaManager {
       this.appState.hls.loadSource(item.url);
       this.appState.hls.attachMedia(video);
       video.addEventListener("play", () => this.appState.hls.startLoad());
+      video.addEventListener("pause", () => {
+        this.appState.hls.stopLoad();
+      });
       this.appState.hls.on(Hls.Events.MANIFEST_LOADED, () => video.play());
     } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
       video.src = item.url;
