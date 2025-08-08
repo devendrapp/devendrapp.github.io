@@ -689,6 +689,13 @@ class UIManager {
         }
       });
 
+    document
+      .getElementById("force-update-btn")
+      .addEventListener("click", () => {
+        this.app.updateApp();
+        window.location.reload(true);
+      });
+
     // Touch and keyboard controls
     // document.getElementById("playlist").addEventListener(
     //   "touchstart",
