@@ -1038,6 +1038,21 @@ document.getElementById("search-input").addEventListener("input", () => {
   }
 });
 
+function loadM3u_url() {
+  let url = prompt("Enter M3U URL:");
+  fetch(url)
+    .then((response) => response.text())
+    .then((data) => {
+      const lines = data.split("\n");
+      console.log(lines[5]);
+      lines.forEach((line) => {
+        //console.log(line);
+        // Process each line here
+      });
+    })
+    .catch((error) => console.error("Error fetching file:", error));
+}
+
 document.getElementById("load-static-button").addEventListener("click", () => {
   const fileInput = document.createElement("input");
   fileInput.type = "file";
@@ -1184,6 +1199,10 @@ document.addEventListener(
 
 document.getElementById("loadSingleURL").addEventListener("click", () => {
   loadSingleURL();
+});
+
+document.getElementById("loadM3UURL").addEventListener("click", () => {
+  loadM3u_url();
 });
 
 document.getElementById("prev-button").addEventListener("click", () => {
