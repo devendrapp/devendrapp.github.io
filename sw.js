@@ -3,7 +3,6 @@ const CACHE_NAME = "doorchitravani-cache"; // Update the version number
 const urlsToCache = [
   "/",
   "/css/styles.css",
-  "/scripts/scriptModular.js",
   "/scripts/script.js",
   "/tracker.html",
   "/index.html",
