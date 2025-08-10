@@ -1044,7 +1044,6 @@ function loadM3u_url() {
     .then((response) => response.text())
     .then((data) => {
       const lines = data.split("\n");
-      console.log(lines[5]);
       lines.forEach((line) => {
         //console.log(line);
         // Process each line here
