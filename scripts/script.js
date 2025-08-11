@@ -1196,14 +1196,6 @@ document.addEventListener(
   false
 );
 
-document.getElementById("loadSingleURL").addEventListener("click", () => {
-  loadSingleURL();
-});
-
-document.getElementById("loadM3UURL").addEventListener("click", () => {
-  loadM3u_url();
-});
-
 document.getElementById("prev-button").addEventListener("click", () => {
   playPreviousItem();
 });
