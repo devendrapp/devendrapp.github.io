@@ -6,10 +6,10 @@ const urlsToCache = [
   "/scripts/script.js",
   "/tracker.html",
   "/index.html",
-  "/android-chrome-192x192.png",
-  "/android-chrome-512x512.png",
-  "/apple-touch-icon.png",
-  "favicon.ico",
+  "/icons/android-chrome-192x192.png",
+  "/icons/android-chrome-512x512.png",
+  "/icons/apple-touch-icon.png",
+  "/icons/favicon.ico",
 ];
 
 self.addEventListener("install", (event) => {
