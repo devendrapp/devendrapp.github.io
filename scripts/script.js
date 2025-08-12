@@ -240,6 +240,7 @@ function updateApp() {
   }
   deleteCache();
   updateCache();
+  loadDefaultItems();
   localStorage.setItem("lastAppUpdateOn", new Date().toISOString());
   updateStatusBar("Update requested, refresh or restart the app.");
 }
@@ -949,7 +950,6 @@ async function runOnLoad() {
   deleteThirdPartyIndexedDB();
   deleteAllCookies();
   defaultContent();
-  loadDefaultItems();
   weeklyAppUpdate();
   DailyMediaSourceRefresh();
   generateQuickSearchButtons();

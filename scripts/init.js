@@ -1,6 +1,4 @@
 function loadDefaultItems() {
-  if (localStorage.length > 20) return;
-
   localStorage.setItem(
     "0000_default_categories",
     "श्री,🕉,🙏,🚩,🏵️,🌼,🌺,📰,📻"
