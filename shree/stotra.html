@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
     <title>Zoomable Content</title>
     <style>
         body {
@@ -34,6 +35,22 @@
         #text-content {
             text-align: center;
         }
+
+        #back-link {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        #back-link:hover {
+            background-color: #444;
+        }
     </style>
 </head>
 
@@ -41,6 +58,7 @@
     <div id="text-container">
         <div id="text-content"></div>
     </div>
+    <a id="back-link" href="#" onclick="history.back(); return false;">Back</a>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
