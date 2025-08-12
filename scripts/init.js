@@ -54,6 +54,11 @@ function loadDefaultItems() {
   );
 
   localStorage.setItem(
+    "🌺 श्री खंडेरायाची आरती | Khandoba Aarti",
+    "shree/stotra.html?id=KhandobaAarti"
+  );
+
+  localStorage.setItem(
     "🌺 घालीन लोटांगण | Ghalin Lotangan (Aarti)",
     "shree/stotra.html?id=GhalinLotangan"
   );
