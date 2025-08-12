@@ -44,4 +44,14 @@ function loadDefaultItems() {
     "🌺 श्री दत्ताची आरती | Dattachi Aarti",
     "shree/stotra.html?id=DattachiAarti"
   );
+
+  localStorage.setItem(
+    "🌺 श्री विठोबाची आरती | Vithoba Aarti",
+    "shree/stotra.html?id=VithobaAarti"
+  );
+
+  localStorage.setItem(
+    "🌺 श्री गजानन महाराजांची आरती | Gajanan Maharaj Aarti",
+    "shree/stotra.html?id=VithobaAarti"
+  );
 }
