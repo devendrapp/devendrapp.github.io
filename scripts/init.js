@@ -1,7 +1,7 @@
 function loadDefaultItems() {
   localStorage.setItem(
     "0000_default_categories",
-    "श्री,🕉,🙏,🚩,🏵️,🌼,🌺,📰,📻"
+    "श्री,🕉,🏵️,🌼,🌺,🙏,🚩,📰,📻"
   );
 
   localStorage.setItem(
