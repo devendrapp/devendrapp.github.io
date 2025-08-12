@@ -4,12 +4,12 @@ const urlsToCache = [
   "/",
   "/css/styles.css",
   "/scripts/script.js",
-  "/tracker.html",
   "/index.html",
   "/icons/android-chrome-192x192.png",
   "/icons/android-chrome-512x512.png",
   "/icons/apple-touch-icon.png",
   "/icons/favicon.ico",
+  "/about.txt",
   "/manifest.json",
 ];
 

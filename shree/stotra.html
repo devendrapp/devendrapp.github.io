@@ -10,147 +10,40 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-        }
-
-        .container {
-            width: 80%;
-            margin: 40px auto;
-            position: relative;
-        }
-
-        .zoom-buttons {
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
-
-        .zoom-buttons button {
-            margin-left: 10px;
-            padding: 5px 10px;
-            cursor: pointer;
+            height: 100vh;
         }
 
         .content {
+            width: 100%;
+            height: 100%;
             overflow: auto;
-            padding: 20px;
+            text-align: center;
             border: 1px solid #ddd;
-            margin-top: 40px;
             /* To make space for the buttons */
-            text-align: center;
+            padding-left: 20px;
             color: white;
-            font-size: 24px;
-        }
+            font-size: 30px !important;
+            white-space: pre-line;
 
-        .title {
-            text-align: center;
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: white;
         }
     </style>
 </head>
 
 <body bgcolor="black">
 
-    <div class="container">
-        <div class="zoom-buttons">
-            <button onclick="zoomIn()">Zoom In</button>
-            <button onclick="zoomOut()">Zoom Out</button>
-        </div>
-        <div class="title">Centered Title</div>
-        <pre class="content" id="content">
-श्री रामरक्षा स्तोत्र
-ॐ अस्य श्रीरामरक्षास्तोत्रमन्त्रस्य |
-बुधकौशिक ऋषिः |
-श्रीसीतारामचंद्रो देवता |
-अनुष्टुप् छंदः |
-सीता शक्ति |
-हनुमान् कीलकम् |
-श्रीरामचंद्रप्रीत्यर्थे जपे विनियोगः ||
-ध्यानम्
-ध्यायेदाजानुबाहुं धृतशरधनुषं बद्धपद्मासनस्थं |
-पीतं वासो वसानं नवकमलदलस्पर्धिनेत्रं प्रसन्नम् |
-वामाङ्कारूढसीता मुखकमलमिलल्लोचनं नीरदाभं |
-नानालङ्कारदीप्तं दधतमुरुजटामण्डनं रामचंद्रम् ||
-स्तोत्रम्
-चरितं रघुनाथस्य शतकोटि प्रविस्तरम् |
-एकैकमक्षरं पुंसां महापातकनाशनम् || १ ||
-ध्यात्वा नीलोत्पलश्यामं रामं राजीवलोचनम् |
-जानकीलक्ष्मणोपेतं जटामुकुटमण्डितम् || २ ||
-सासितूणधनुर्बाणपाणिं नक्तंचरान्तकम् |
-स्वलीलया जगत्त्रातुमाविर्भूतमजं विभुम् || ३ ||
-रामरक्षां पठेत्प्राज्ञः पापघ्नीं सर्वकामदाम् |
-शिरो मे राघवः पातु भालं दशरथात्मजः || ४ ||
-कौसल्येयो दृशौ पातु विश्वामित्रप्रियः श्रुति |
-घ्राणं पातु मखत्राता मुखं सौमित्रिवत्सलः || ५ ||
-जिह्वां विद्यानिधिः पातु कण्ठं भरतवंदितः |
-स्कंधौ दिव्यायुधः पातु भुजौ भग्नेशकार्मुकः || ६ ||
-करौ सीतापतिः पातु हृदयं जामदग्न्यजित् |
-जानुनी सेतुकृत्पातु जङ्घे दशमुखान्तकः || ७ ||
-पादौ बिभीषणश्रीदः पातु रामोSखिलं वपुः |
-एतां रामबलोपेतां रक्षां यः सुकृती पठेत || ८ ||
-स चिरायुः सुखी पुत्री विजयी विनयी भवेत् |
-कामार्थी लभते कामान् रोगार्ती रोगमुक्तभाक् || ९ ||
-शोकार्ती मुच्यते शोकात् रामो हि परिरक्षकः |
-प्रभुं राममनुस्मृत्वा सुग्रीवो वचनं ददौ || १० ||
-तथा मयापि रामचंद्रस्य वशिष्ठोपदिष्टः |
-श्रीमद्रामरक्षां पठितवान् स्मरामि ||
-सदा रामं भजामि च || ११ ||
-रामो राजमणिः सदा विजयते रामं रमेशं भजे |
-रामेणाभिहता निशाचरचमू रामाय तस्मै नमः || १२ ||
-रामान्नास्ति परायणं परतरं रामस्य दासोस्म्यहम् |
-रामे चित्तलयः सदा भवतु मे भो राम मामुद्धर || १३ ||
-राम रामेति रामेति रमे रामे मनोरमे |
-सहस्रनाम तत्तुल्यं रामनाम वरानने || १४ ||
-फलश्रुति
-इति श्रीबुधकौशिकविरचितं रामरक्षास्तोत्रं संपूर्णम् |
-श्री राम जय राम जय जय राम ||
-            </pre>
-    </div>
 
+    <iframe class="content" id="stotra" src=""></iframe>
+
+    </div>
     <script>
         let content = document.getElementById('content');
         let fontSize = 24; // Initial font size
-
-        function zoomIn() {
-            fontSize += 2;
-            content.style.fontSize = fontSize + 'px';
-        }
-
-        function zoomOut() {
-            if (fontSize > 8) { // Minimum font size
-                fontSize -= 2;
-                content.style.fontSize = fontSize + 'px';
-            }
-        }
-
-        let initialDistance = 0;
-        let initialFontSize = fontSize;
-
-        function getDistance(touches) {
-            return Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY);
-        }
-
-        function handleTouchStart(e) {
-            if (e.touches.length === 2) {
-                initialDistance = getDistance(e.touches);
-                initialFontSize = fontSize;
-            }
-        }
-
-        function handleTouchMove(e) {
-            if (e.touches.length === 2) {
-                e.preventDefault(); // Prevent scrolling
-                const currentDistance = getDistance(e.touches);
-                const distanceDiff = currentDistance - initialDistance;
-                fontSize = initialFontSize + distanceDiff / 5; // Adjust font size based on pinch distance
-                fontSize = Math.max(8, fontSize); // Minimum font size
-                content.style.fontSize = fontSize + 'px';
-            }
-        }
-
-        document.addEventListener('touchstart', handleTouchStart);
-        document.addEventListener('touchmove', handleTouchMove);
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        document.getElementById('stotra').setAttribute('src', id + '.shree');
+        const iframe = document.getElementById('stotra');
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        iframeDoc.body.style.fontSize = '36px';
     </script>
 
 </body>

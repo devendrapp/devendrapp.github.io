@@ -418,7 +418,10 @@ function loadItem(item, data) {
   ) {
     document.querySelector(".left-pane").style.height = "65%";
   }
-  if (item.url.endsWith(".json")) {
+  if (item.name.startsWith("🏵️")) {
+    console.log(item.url);
+    window.location.href = item.url;
+  } else if (item.url.endsWith(".json")) {
     localStorage.setItem("jsonUrl", item.url);
     loadChannels();
   } else if (item.url.endsWith(".m3u8")) {
@@ -941,9 +944,8 @@ function defaultContent() {
 async function runOnLoad() {
   deleteThirdPartyIndexedDB();
   deleteAllCookies();
-
-  //On every page load
   defaultContent();
+  loadDefaultItems();
   weeklyAppUpdate();
   DailyMediaSourceRefresh();
   generateQuickSearchButtons();
@@ -1002,15 +1004,15 @@ document.addEventListener("click", (e) => {
   }
 });
 
-document.getElementById("player-container").addEventListener("click", () => {
-  if (currentPlayer) {
-    if (currentPlayer.paused) {
-      currentPlayer.play();
-    } else {
-      currentPlayer.pause();
-    }
-  }
-});
+// document.getElementById("player-container").addEventListener("click", () => {
+//   if (currentPlayer) {
+//     if (currentPlayer.paused) {
+//       currentPlayer.play();
+//     } else {
+//       currentPlayer.pause();
+//     }
+//   }
+// });
 
 navDrawer.addEventListener("click", (e) => {
   e.stopPropagation();
