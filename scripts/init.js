@@ -67,4 +67,9 @@ function loadDefaultItems() {
     "🌺 मंत्र पुष्पांजलि| Mantra Pushpanjali (Aarti)",
     "shree/stotra.html?id=MantraPushpanjali"
   );
+
+  localStorage.setItem(
+    "🏵️ श्री स्वामी समर्थ तारक मंत्र | Swami Samarth Tarak Mantra",
+    "shree/stotra.html?id=SwamiSamarthTarakMantra"
+  );
 }
