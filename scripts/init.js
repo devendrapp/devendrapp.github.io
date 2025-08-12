@@ -24,4 +24,24 @@ function loadDefaultItems() {
     "🌺 ​गणपती आरती | Ganapati Aarti",
     "shree/stotra.html?id=GanapatiAarti"
   );
+
+  localStorage.setItem(
+    "🌺 श्री दुर्गादेवीची आरती | Durga Devi Aarti",
+    "shree/stotra.html?id=DurgaAarti"
+  );
+
+  localStorage.setItem(
+    "🌺 श्री शंकराची आरती | Shankar Aarti",
+    "shree/stotra.html?id=ShankarAarti"
+  );
+
+  localStorage.setItem(
+    "🌺 श्री महालक्ष्मीची आरती | Mahalaxmi Aarti",
+    "shree/stotra.html?id=MahalaxmiAarti"
+  );
+
+  localStorage.setItem(
+    "🌺 श्री दत्ताची आरती | Dattachi Aarti",
+    "shree/stotra.html?id=DattachiAarti"
+  );
 }
