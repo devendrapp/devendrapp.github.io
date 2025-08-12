@@ -418,7 +418,11 @@ function loadItem(item, data) {
   ) {
     document.querySelector(".left-pane").style.height = "65%";
   }
-  if (item.name.startsWith("🏵️")) {
+  if (
+    item.name.startsWith("🏵️") ||
+    item.name.startsWith("🌼") ||
+    item.name.startsWith("🌺")
+  ) {
     console.log(item.url);
     window.location.href = item.url;
   } else if (item.url.endsWith(".json")) {
