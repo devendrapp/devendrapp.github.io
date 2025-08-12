@@ -15,10 +15,12 @@ function loadDefaultItems() {
   localStorage.setItem("🌺 श्री गजानन महाराजांची आरती | Gajanan Maharaj Aarti","shree/stotra.html?id=GajananMaharajAarti");
   localStorage.setItem("🌺 श्री खंडेरायाची आरती | Khandoba Aarti","shree/stotra.html?id=KhandobaAarti");
   localStorage.setItem("🌺 घालीन लोटांगण | Ghalin Lotangan (Aarti)","shree/stotra.html?id=GhalinLotangan");
-  localStorage.setItem("🌺 मंत्र पुष्पांजलि| Mantra Pushpanjali (Aarti)","shree/stotra.html?id=MantraPushpanjali");
+  localStorage.setItem("🌺 मंत्र पुष्पांजलि | Mantra Pushpanjali (Aarti)","shree/stotra.html?id=MantraPushpanjali");
 
   localStorage.setItem("🌼 राम रक्षा स्तोत्र | Shree Ram Raksha","shree/stotra.html?id=RamRaksha");
   localStorage.setItem("🌼 मारुती स्तोत्र | Maruti Stotra","shree/stotra.html?id=MarutiStotra");
+  localStorage.setItem("🌼 शुभं करोति कल्याणम स्तोत्र | Shubham Karoti Stotra","shree/stotra.html?id=ShubhamKaroti");
+  localStorage.setItem("🌼 गणपती स्तोत्र | Ganapati Stotra","shree/stotra.html?id=GanapatiStotra");
   
   localStorage.setItem("🏵️ श्री स्वामी समर्थ तारक मंत्र | Swami Samarth Tarak Mantra","shree/stotra.html?id=SwamiSamarthTarakMantra");
   
