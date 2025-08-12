@@ -19,7 +19,7 @@ function loadDefaultItems() {
   );
 
   localStorage.setItem(
-    "🌺 ​गणपती आरती | Ganapati Aarti",
+    "🌺 श्री ​गणपती आरती | Ganapati Aarti",
     "shree/stotra.html?id=GanapatiAarti"
   );
 
@@ -50,6 +50,16 @@ function loadDefaultItems() {
 
   localStorage.setItem(
     "🌺 श्री गजानन महाराजांची आरती | Gajanan Maharaj Aarti",
-    "shree/stotra.html?id=VithobaAarti"
+    "shree/stotra.html?id=GajananMaharajAarti"
+  );
+
+  localStorage.setItem(
+    "🌺 घालीन लोटांगण | Ghalin Lotangan (Aarti)",
+    "shree/stotra.html?id=GhalinLotangan"
+  );
+
+  localStorage.setItem(
+    "🌺 मंत्र पुष्पांजलि| Mantra Pushpanjali (Aarti)",
+    "shree/stotra.html?id=MantraPushpanjali"
   );
 }
