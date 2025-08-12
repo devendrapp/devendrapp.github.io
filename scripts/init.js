@@ -6,7 +6,7 @@ function loadDefaultItems() {
 
   localStorage.setItem(
     "0000_quick_search_buttons",
-    "श्री,🕉,🙏,🚩,🏵️,🌼,🌺,📰,📻,🖥️,🎙️,🎤,🐤,🎬,📀,🤣,🎵,✈️,🌧️,🎧,❤️,💔,🎶,🎸,🐅"
+    "🌺,🏵️,🌼,श्री,🕉,🙏,🚩,📰,📻,🖥️,🎙️,🎤,🐤,🎬,📀,🤣,🎵,✈️,🌧️,🎧,❤️,💔,🎶,🎸,🐅"
   );
 
   localStorage.setItem(
