@@ -40,7 +40,7 @@
         let fontSize = 24; // Initial font size
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
-        document.getElementById('stotra').setAttribute('src', id + '.shree');
+        document.getElementById('stotra').setAttribute('src', id + '.txt');
         const iframe = document.getElementById('stotra');
         const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
         iframeDoc.body.style.fontSize = '36px';
