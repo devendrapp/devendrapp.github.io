@@ -21,6 +21,8 @@ function loadDefaultItems() {
   localStorage.setItem("🌼 मारुती स्तोत्र | Maruti Stotra","shree/stotra.html?id=MarutiStotra");
   localStorage.setItem("🌼 शुभं करोति कल्याणम स्तोत्र | Shubham Karoti Stotra","shree/stotra.html?id=ShubhamKaroti");
   localStorage.setItem("🌼 गणपती स्तोत्र | Ganapati Stotra","shree/stotra.html?id=GanapatiStotra");
+  localStorage.setItem("🌼 श्री अन्नपूर्णा स्तोत्र | Annapurna Stotra","shree/stotra.html?id=AnnapurnaStotra");
+  localStorage.setItem("🌼 श्री व्यंकटेश स्तोत्र | Vyankatesh Stotra","shree/stotra.html?id=VyankateshStotra");
   
   localStorage.setItem("🏵️ श्री स्वामी समर्थ तारक मंत्र | Swami Samarth Tarak Mantra","shree/stotra.html?id=SwamiSamarthTarakMantra");
   
