@@ -31,6 +31,7 @@ function loadDefaultItems() {
   localStorage.setItem("🌼 श्री महालक्ष्मी स्तोत्र | श्री महालक्ष्मी अष्टक | Mahalaxmi Stotra / Ashtak","shree/stotra.html?id=MahalaxmiStotra");
   localStorage.setItem("🌼 श्री ​गणपती अथर्वशीर्ष | Ganapati Atharvashirsh","shree/stotra.html?id=GanapatiAtharvashirsh");
   localStorage.setItem("🌼 श्री विष्णु सहस्रनाम स्तोत्रम् | Vishnu Sahastranam","shree/stotra.html?id=VishnuSahastranam");
+  localStorage.setItem("🌼 श्री सत्यनारायण कथा | Satyanarayan Katha","shree/stotra.html?id=SatyanarayanKatha");
   
 
   localStorage.setItem("🌼 श्री महालक्ष्मी कवच | Mahalaxmi Kavach","shree/stotra.html?id=MahalaxmiKavach");
