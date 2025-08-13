@@ -20,7 +20,7 @@ function loadDefaultItems() {
   localStorage.setItem("🌼 श्री राम रक्षा स्तोत्र | Shree Ram Raksha","shree/stotra.html?id=rr");
   localStorage.setItem("🌼 मारुती स्तोत्र | Maruti Stotra","shree/stotra.html?id=ms");
   localStorage.setItem("🌼 शुभं करोति कल्याणम स्तोत्र | Shubham Karoti Stotra","shree/stotra.html?id=sk");
-  localStorage.setItem("🌼 श्री गणपती स्तोत्र | Ganapati Stotra","shree/stotra.html?id=GanapatiStotra");
+  localStorage.setItem("🌼 श्री गणपती स्तोत्र | Ganapati Stotra","shree/stotra.html?id=gs");
   localStorage.setItem("🌼 श्री अन्नपूर्णा स्तोत्र | Annapurna Stotra","shree/stotra.html?id=as");
   localStorage.setItem("🌼 श्री व्यंकटेश स्तोत्र | Vyankatesh Stotra","shree/stotra.html?id=vys");
   localStorage.setItem("🌼 श्री नवग्रह स्तोत्र | Navgrah Stotra","shree/stotra.html?id=ns");
