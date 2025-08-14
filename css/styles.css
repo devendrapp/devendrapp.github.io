@@ -203,6 +203,7 @@ video::-webkit-media-controls-mute-button {
 #prev-button,
 #pause-button,
 #next-button,
+#cast-button,
 #stop-button {
     cursor: pointer;
     margin-left: 28px;
