@@ -1205,7 +1205,7 @@ document.getElementById("next-button").addEventListener("click", () => {
 });
 
 document.getElementById("copy-button").addEventListener("click", () => {
-  copyItemUrl();
+  //copyItemUrl();
 });
 
 hamburgerMenu.addEventListener("click", (e) => {
