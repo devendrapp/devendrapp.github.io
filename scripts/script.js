@@ -413,13 +413,6 @@ function encodeUrl(url) {
 
 function loadItem(item, data) {
   if (
-    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    )
-  ) {
-    document.querySelector(".left-pane").style.height = "65%";
-  }
-  if (
     item.name.startsWith("🏵️") ||
     item.name.startsWith("🌼") ||
     item.name.startsWith("🌺")
@@ -451,13 +444,6 @@ function loadItem(item, data) {
     playLocalFileAsAudio(item);
   } else {
     playAudio(item, data);
-    if (
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      )
-    ) {
-      document.querySelector(".left-pane").style.height = "90%";
-    }
   }
 }
 
