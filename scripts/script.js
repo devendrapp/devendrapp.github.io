@@ -620,7 +620,7 @@ function pausePlayback() {
   }
 }
 
-function renderPlaylist(playlistToRender) {
+function renderPlaylist2(playlistToRender) {
   // Create a new map to store items with number suffix as key
   const orderedPlaylist = new Map();
   const otherItems = [];
@@ -671,6 +671,52 @@ function renderPlaylist(playlistToRender) {
     playlistElement.appendChild(element);
     index++;
   });
+  playlistElement.scrollTop = 0;
+}
+
+function renderPlaylist(playlistToRender) {
+  // Create a new map to store items with number suffix as key
+  const orderedPlaylist = new Map();
+  const otherItems = [];
+  const playlistElement = document.getElementById("playlist");
+  playlistElement.innerHTML = "";
+  playlistElement.style.display = "grid";
+  playlistElement.style.gridTemplateColumns = "1fr 1fr";
+  playlistElement.style.gap = "10px";
+
+  // Populate the new map and otherItems array
+  playlistToRender.forEach((item) => {
+    const match = item.name.match(/\d+$/);
+    if (match) {
+      const key = parseInt(match[0]);
+      orderedPlaylist.set(key, item);
+    } else {
+      otherItems.push(item);
+    }
+  });
+
+  // Render the playlist using the new map with keys in order
+  const sortedKeys = Array.from(orderedPlaylist.keys()).sort((a, b) => a - b);
+  const allItems = sortedKeys.map(key => orderedPlaylist.get(key)).concat(otherItems);
+  for (let i = 0; i < allItems.length; i += 2) {
+    const row = document.createElement("div");
+    row.style.display = "contents";
+    for (let j = i; j < i + 2 && j < allItems.length; j++) {
+      const item = allItems[j];
+      const element = document.createElement("div");
+      element.className = "playlist-item";
+      element.innerHTML = item.name;
+      getItem(item.name).then((storedItem) => {
+        if (storedItem && storedItem.data) {
+          element.innerHTML = `<i class="material-icons">offline_pin</i> ${item.name}`;
+        }
+      });
+
+      element.onclick = () => playItem(item, element, j);
+      row.appendChild(element);
+    }
+    playlistElement.appendChild(row);
+  }
   playlistElement.scrollTop = 0;
 }
 
