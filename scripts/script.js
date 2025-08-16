@@ -7,6 +7,7 @@ let currentChannelName = "";
 let currentUrl = "";
 let staticChannelSuffix = " ▪️";
 let touchStartX = 0;
+let currentPlaylistItems = [];
 
 const defaultCategoriesKey = "0000_default_categories";
 const skipCategoriesKey = "0000_skip_categories_from_datalist";
@@ -280,7 +281,7 @@ function getCurrentIndex() {
   return currentItem ? playlistItems.indexOf(currentItem) : 0;
 }
 
-function playPreviousItem() {
+function playPreviousItem2() {
   const currentIndex = getCurrentIndex();
   const playlistItems = getPlaylistItems();
   stopPlayback();
@@ -292,7 +293,7 @@ function playPreviousItem() {
   }
 }
 
-function playNextItem() {
+function playNextItem2() {
   const currentIndex = getCurrentIndex();
   const playlistItems = getPlaylistItems();
 
@@ -303,6 +304,30 @@ function playNextItem() {
   } else {
     playlistItems[0].element.click();
   }
+}
+
+function playPreviousItem() {
+  stopPlayback();
+  if (currentIndex > 0) {
+    currentIndex--;
+  } else {
+    currentIndex = currentPlaylistItems.length - 1;
+  }
+  const previousItem = currentPlaylistItems[currentIndex];
+  const element = document.querySelectorAll(".playlist-item")[currentIndex];
+  playItem(previousItem, element, currentIndex);
+}
+
+function playNextItem() {
+  stopPlayback();
+  if (currentIndex < currentPlaylistItems.length - 1) {
+    currentIndex++;
+  } else {
+    currentIndex = 0;
+  }
+  const nextItem = currentPlaylistItems[currentIndex];
+  const element = document.querySelectorAll(".playlist-item")[currentIndex];
+  playItem(nextItem, element, currentIndex);
 }
 
 function initializePlaylist() {
@@ -697,12 +722,13 @@ function renderPlaylist(playlistToRender) {
 
   // Render the playlist using the new map with keys in order
   const sortedKeys = Array.from(orderedPlaylist.keys()).sort((a, b) => a - b);
-  const allItems = sortedKeys.map(key => orderedPlaylist.get(key)).concat(otherItems);
-  for (let i = 0; i < allItems.length; i += 2) {
+  currentPlaylistItems = sortedKeys.map(key => orderedPlaylist.get(key)).concat(otherItems);
+  //const allItems = sortedKeys.map(key => orderedPlaylist.get(key)).concat(otherItems);
+  for (let i = 0; i < currentPlaylistItems.length; i += 2) {
     const row = document.createElement("div");
     row.style.display = "contents";
-    for (let j = i; j < i + 2 && j < allItems.length; j++) {
-      const item = allItems[j];
+    for (let j = i; j < i + 2 && j < currentPlaylistItems.length; j++) {
+      const item = currentPlaylistItems[j];
       const element = document.createElement("div");
       element.className = "playlist-item";
       element.innerHTML = item.name;
@@ -718,6 +744,7 @@ function renderPlaylist(playlistToRender) {
     playlistElement.appendChild(row);
   }
   playlistElement.scrollTop = 0;
+  currentIndex = 0;
 }
 
 function loadPlaylist() {

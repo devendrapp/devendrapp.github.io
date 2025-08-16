@@ -140,18 +140,16 @@ video::-webkit-media-controls-mute-button {
 }
 
 /* Alternate background color theme with inverse text color */
-.playlist-item:nth-child(even) {
-    background-color: #272727;
-    /* Black */
-    color: #ffffff;
-    /* White text */
+
+
+#playlist > div:nth-child(odd) > .playlist-item {
+  background-color: #272727; /* Dark Gray */
+  color: #ffffff; /* White text */
 }
 
-.playlist-item:nth-child(odd) {
-    background-color: #000000;
-    /* White */
-    color: #ffffff;
-    /* Black text */
+#playlist > div:nth-child(even) > .playlist-item {
+  background-color: #000000; /* Black */
+  color: #ffffff; /* White text */
 }
 
 
