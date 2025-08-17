@@ -15,11 +15,8 @@ body {
     flex-grow: 1;
     overflow: hidden;
     background-color: #000000;
+    border: 1px solid #ddd;
 }
-
-
-
-
 
 #player-container {
     min-height: 0;
@@ -43,7 +40,6 @@ body {
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid #ddd;
-    border-radius: 5px;
     background-color: #000;
     color: white;
     flex-shrink: 0;
@@ -53,13 +49,12 @@ body {
 #status-bar {
     display: flex;
     padding: 3px;
-    border-bottom: 1px solid #ccc;
-    background-color: #000;
-    border-radius: 20px;
+    border-bottom: 1px solid #ddd;
+    background-color: #ffffff;
     justify-content: center;
     align-items: center;
     font-size: 16px;
-    color: white;
+    color: #000000;
     flex-shrink: 0;
     height: 20px;
 }
@@ -94,8 +89,6 @@ body {
     box-sizing: border-box;
     padding: 10px;
     color: #ccc;
-    /*border: 1px solid #ccc;
-            border-radius: 5px; */
     background-color: #000;
     border: none;
     flex-grow: 1;
