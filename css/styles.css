@@ -15,7 +15,7 @@ body {
     flex-grow: 1;
     overflow: hidden;
     background-color: #000000;
-    border: 1px solid #ddd;
+    
 }
 
 #player-container {
