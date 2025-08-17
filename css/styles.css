@@ -70,7 +70,7 @@ video::-webkit-media-controls-mute-button {
 }
 
 #action-container {
-    display: flex;
+    display: none;
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid #ddd;

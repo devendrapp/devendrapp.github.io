@@ -377,8 +377,15 @@ function formatChannelName(name, url) {
   }
 }
 
+function showActionContainer(isVisible) {
+  const actionContainer = document.getElementById('action-container');
+  actionContainer.style.display = isVisible ? 'flex' : 'none';
+}
+
 function playItem(item, element, index) {
+
   stopPlayback();
+  showActionContainer(true);
   updateStatusBar(item.name);
   if (currentItem) {
     currentItem.classList.remove("selected");
@@ -437,7 +444,7 @@ function playItem(item, element, index) {
       playNextItem();
     });
 
-    navigator.mediaSession.setActionHandler("stop", () => {
+    navigator.mediaSession.setActionHandler("stop", () => {      
       stopPlayback();
     });
   }
@@ -1279,6 +1286,8 @@ document.getElementById("prev-button").addEventListener("click", () => {
 
 document.getElementById("stop-button").addEventListener("click", () => {
   stopPlayback();
+  showActionContainer(false);
+  defaultContent();
 });
 
 document.getElementById("pause-button").addEventListener("click", () => {
