@@ -222,7 +222,7 @@ video::-webkit-media-controls-mute-button {
 
     .left-pane {
         /*height: 30vh;*/
-        height: 65%;
+        height: 60%;
         width: 100%;
         border-right: none;
         border-bottom: 1px solid #ddd;
