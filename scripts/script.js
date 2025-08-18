@@ -352,41 +352,32 @@ function initializePlaylist() {
 }
 
 function formatChannelName(name, url) {
-  let lName = name.toLowerCase();
-  if (url.includes("m3u8")) {
-    if (
-      lName.includes("movi") ||
-      lName.includes("film") ||
-      lName.includes("cine") ||
-      lName.includes("myster") ||
-      lName.includes("romanc") ||
-      lName.includes("thrill") ||
-      lName.includes("sci-fi") ||
-      lName.includes("trail")
-    ) {
-      return "🖥️ 🎬 " + name;
-    } else if (
-      lName.includes("wild") ||
-      lName.includes("nature") ||
-      lName.includes("earth") ||
-      lName.includes("food") ||
-      lName.includes("recip") ||
-      lName.includes("cuisi") ||
-      lName.includes("document") ||
-      lName.includes("outdoor") ||
-      lName.includes("geog")
-    ) {
-      return "🖥️ 🐘 " + name;
-    }else if(lName.includes("series")){
-      return "🖥️ " + name;
-    } else {
-      return name;
-    }
-  } else if (url.includes("youtube")) {
-    return "▶️ " + name;
-  } else {
-    return name;
-  }
+  let formattedName=name.replace("Mystery","🕵️")
+                  .replace("Romance","❤️")
+                  .replace("Horror","👻")
+                  .replace("Thrillers","😱")
+                  .replace("Thriller","😱")
+                  .replace("Movies","🎬")
+                  .replace("Cinema","🎬")
+                  .replace("Films","🎬")
+                  .replace("Series","📀")
+                  //.replace(" TV","🖥️")
+                  .replace("Hot ","🔥")
+                  .replace("Wild","🐘")
+                  .replace("Nature","🍁")
+                  .replace("Earth","🌍")
+                  .replace("Outdoor","🌍")
+                  .replace("Geographic","🌍")
+                  .replace("Food","🥗")
+                  .replace("Recipe","🥗")
+                  .replace("Sci-Fi","👽")
+                  .replace("Crime","🕵🏾‍♀️");    
+    
+    if (url.includes("youtube")) 
+      return "▶️ " + formattedName;
+
+    return formattedName;
+  
 }
 
 function showActionContainer(isVisible) {
@@ -460,7 +451,7 @@ function playItem(item, element, index) {
       stopPlayback();
     });
   }
-  showToast(splitChlName);
+  //showToast(splitChlName);
 }
 
 function encodeUrl(url) {
