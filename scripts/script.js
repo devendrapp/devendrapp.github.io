@@ -1020,6 +1020,7 @@ function generateQuickSearchButtons() {
             link.style.marginRight = '10px';
             link.style.marginLeft = '10px';
             link.style.fontSize = '24px';
+            link.style.textDecoration = 'none';
             link.onclick = () => {
               searchInput.value = subCategory.trim();
               searchInput.dispatchEvent(new Event("input", { bubbles: true }));              
