@@ -25,7 +25,6 @@ const searchInput = document.getElementById("search-input");
 const quickSearchButtons = document.querySelectorAll(".quick-search-button");
 const hamburgerMenu = document.getElementById("hamburger-menu");
 const navDrawer = document.getElementById("nav-drawer");
-const statusBar = document.getElementById("status-bar");
 const aboutDialog = document.getElementById("about-dialog");
 const closeDialogBtn = document.getElementById("close-dialog-btn");
 
@@ -58,7 +57,7 @@ function storeItem(item, data) {
     const request = store.put({ name: item.name, url: item.url, data: data });
     request.onsuccess = () => {
       resolve();
-      updateStatusBar(`<i class="material-icons">offline_pin</i> ${item.name}`);
+      showToast(`<i class="material-icons">offline_pin</i> ${item.name}`);
     };
     request.onerror = (event) => {
       reject(event.target.error);
@@ -131,10 +130,23 @@ function deleteIndexedDB(dbname) {
   };
 }
 
-function updateStatusBar(msg) {
-  statusBar.innerHTML = msg;
-  statusBar.focus();
-  statusBar.blur();
+function showToast(message, duration = 3000) {
+  const toast = document.createElement('div');
+  toast.innerHTML = message;
+  toast.style.position = 'fixed';
+  toast.style.top = '30px'; // Changed from bottom to top
+  toast.style.left = '50%';
+  toast.style.transform = 'translateX(-50%)';
+  toast.style.backgroundColor = 'beige';
+  toast.style.color = 'red';
+  toast.style.padding = '10px 20px';
+  toast.style.borderRadius = '5px';
+  toast.style.zIndex = '1000';
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, duration);
 }
 
 function loadChannels() {
@@ -169,7 +181,7 @@ function loadChannels() {
         });
       })
       .catch((error) => console.error("Error:", error));
-    updateStatusBar("New items loaded, refresh or restart app.");
+    showToast("New items loaded, refresh or restart app.");
   }
 }
 
@@ -243,7 +255,7 @@ function updateApp() {
   updateCache();
   loadDefaultItems();
   localStorage.setItem("lastAppUpdateOn", new Date().toISOString());
-  updateStatusBar("Update requested, refresh or restart the app.");
+  showToast("Update requested, refresh or restart the app.");
 }
 
 function clearStorage() {
@@ -386,7 +398,7 @@ function playItem(item, element, index) {
 
   stopPlayback();
   showActionContainer(true);
-  updateStatusBar(item.name);
+  showToast(item.name);
   if (currentItem) {
     currentItem.classList.remove("selected");
   }
@@ -448,7 +460,7 @@ function playItem(item, element, index) {
       stopPlayback();
     });
   }
-  updateStatusBar(splitChlName);
+  showToast(splitChlName);
 }
 
 function encodeUrl(url) {
@@ -651,7 +663,7 @@ function stopPlayback() {
       hls.detachMedia();
       hls = null;
     }
-    updateStatusBar("Choose playlist item to play...");
+    showToast("Choose playlist item to play...");
     currentPlayer = null;
   }
 }
@@ -750,10 +762,11 @@ function renderPlaylist(playlistToRender) {
       const item = currentPlaylistItems[j];
       const element = document.createElement("div");
       element.className = "playlist-item";
-      element.innerHTML = item.name;
+      let playListElementtitle= item.name.replace(/ ▪️ \d+$/, '');
+      element.innerHTML = playListElementtitle;
       getItem(item.name).then((storedItem) => {
         if (storedItem && storedItem.data) {
-          element.innerHTML = `<i class="material-icons">offline_pin</i> ${item.name}`;
+          element.innerHTML = `<i class="material-icons">offline_pin</i> ${playListElementtitle}`;
         }
       });
 
@@ -955,11 +968,11 @@ function copyItemUrl() {
   navigator.clipboard
     .writeText(currentUrl)
     .then(() => {
-      updateStatusBar("URL copied to clipboard.");
+      showToast("URL copied to clipboard.");
     })
     .catch((error) => {
       console.error("Error copying URL to clipboard:", error);
-      updateStatusBar(`Failed to copy URL`);
+      showToast(`Failed to copy URL`);
     });
 }
 
@@ -1013,7 +1026,7 @@ function generateQuickSearchButtons() {
             link.href = '#';
             link.textContent = subCategory.trim();
             link.style.color = 'white';
-            link.style.marginRight = '15px';
+            link.style.marginRight = '20px';
             link.style.fontSize = '24px';
             link.onclick = () => {
               searchInput.value = subCategory.trim();
@@ -1070,7 +1083,7 @@ async function runOnLoad() {
   initializePlaylist();
   loadPlaylist();
   populateDataListForSearchInput();
-  updateStatusBar("Total Playlist Items: " + localStorage.length);
+  showToast("Total Playlist Items: " + localStorage.length);
 }
 
 closeDialogBtn.addEventListener("click", () => {
@@ -1216,7 +1229,7 @@ document.getElementById("load-static-button").addEventListener("click", () => {
           }
         }
       });
-      updateStatusBar("New items loaded, refresh or restart app.");
+      showToast("New items loaded, refresh or restart app.");
     };
     reader.readAsText(file);
   });

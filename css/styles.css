@@ -64,7 +64,8 @@ body {
     width: 100%;
     background-color: black;
     white-space: nowrap; /* Prevent wrapping to new line */
-    overflow-x: auto; /
+    overflow-x: auto; 
+    border-bottom: 1px solid #ccc;
 }
 
 #search-container {
