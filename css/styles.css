@@ -66,6 +66,7 @@ body {
     white-space: nowrap; /* Prevent wrapping to new line */
     overflow-x: auto; 
     border-bottom: 1px solid #ccc;
+    padding: 5px;
 }
 
 #search-container {
