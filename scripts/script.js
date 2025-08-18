@@ -999,6 +999,34 @@ function generateQuickSearchButtons() {
         searchInput.value = "";
       } else {
         searchInput.value = button.textContent + " ";
+        const subCategories = localStorage.getItem(button.textContent) ? localStorage.getItem(button.textContent).split(',') : null;   
+        const subCategoryDiv = document.getElementById("sub-category");     
+        subCategoryDiv.innerHTML = '';      
+        
+        if (subCategories) {
+        
+          subCategories.forEach((subCategory) => {
+            if(subCategory==="0000")
+              return;
+            
+            const link = document.createElement('a');
+            link.href = '#';
+            link.textContent = subCategory.trim();
+            link.style.color = 'white';
+            link.style.marginRight = '15px';
+            link.style.fontSize = '24px';
+            link.onclick = () => {
+              searchInput.value = subCategory.trim();
+              searchInput.dispatchEvent(new Event("input", { bubbles: true }));              
+              searchInput.dispatchEvent(new Event("change", { bubbles: true }));
+            };
+            console.log("link added");
+            subCategoryDiv.appendChild(link);            
+
+          });
+        }else{
+          subCategoryDiv.display = 'none';
+        }
       }
       searchInput.dispatchEvent(new Event("input", { bubbles: true }));
       searchInput.dispatchEvent(new Event("change", { bubbles: true }));

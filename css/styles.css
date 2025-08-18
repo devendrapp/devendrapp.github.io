@@ -58,6 +58,15 @@ body {
     height: 20px;
 }
 
+#sub-category{
+    display: flex;
+    flex-shrink: 0;
+    width: 100%;
+    background-color: black;
+    white-space: nowrap; /* Prevent wrapping to new line */
+    overflow-x: auto; /
+}
+
 #search-container {
     padding: 2px;    
     flex-shrink: 0;
