@@ -371,7 +371,10 @@ function formatChannelName(name, url) {
                   .replace("Food","🥗")
                   .replace("Recipe","🥗")
                   .replace("Sci-Fi","👽")
+                  .replace("Documentary","📽️")
+                  .replace("Documentaries","📽️")
                   .replace("Crime","🕵🏾‍♀️");    
+                  
     
     if (url.includes("youtube")) 
       return "▶️ " + formattedName;
