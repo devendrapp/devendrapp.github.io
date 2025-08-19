@@ -1020,8 +1020,7 @@ function generateQuickSearchButtons() {
             link.href = '#';
             link.textContent = subCategory.trim();
             link.style.color = 'white';
-            link.style.marginRight = '10px';
-            link.style.marginLeft = '10px';
+            link.style.marginLeft = '20px';
             link.style.fontSize = '24px';
             link.style.textDecoration = 'none';
             link.onclick = () => {
