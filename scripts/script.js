@@ -8,7 +8,7 @@ let currentUrl = "";
 let staticChannelSuffix = " ▪️";
 let touchStartX = 0;
 let currentPlaylistItems = [];
-
+let deferredInstallPrompt = null;
 const defaultCategoriesKey = "0000_default_categories";
 const skipCategoriesKey = "0000_skip_categories_from_datalist";
 const quickSearchButtonsKey = "0000_quick_search_buttons";
@@ -45,11 +45,33 @@ function initDB() {
   });
 }
 
+function pauseIndexedDBStorageOnLowDiskSpace(){
+  if ('storage' in navigator && 'estimate' in navigator.storage) {
+    navigator.storage.estimate().then(estimate => {
+      const freeSpaceInGB = estimate.quota - estimate.usage;
+      const freeSpaceInGBRounded = (freeSpaceInGB / (1024 * 1024 * 1024)).toFixed(2);
+      //Pause if free disk space is less than 10gb
+      if(freeSpaceInGBRounded<10){
+        localStorage.setItem("0000_pauseIndexedDBStorage",true);
+      }{
+        localStorage.removeItem("0000_pauseIndexedDBStorage");
+      } 
+    });
+  } else {
+    //Do nothing
+  }
+}
+
 // Store item in IndexedDB
 function storeItem(item, data) {
   return new Promise((resolve, reject) => {
     if (!db) {
       reject("DB not initialized");
+      return;
+    }
+
+    //pause on lowStorage
+    if(localStorage.getItem("0000_pauseIndexedDBStorage")){
       return;
     }
     const transaction = db.transaction(storeName, "readwrite");
@@ -90,8 +112,8 @@ function deleteAllOfflineStoredItems() {
     const store = transaction.objectStore(storeName);
     const request = store.clear();
 
-    request.onsuccess = function () {
-      console.log("All items deleted successfully");
+    request.onsuccess = function () {      
+      showToast("App data removed");
     };
 
     request.onerror = function (event) {
@@ -103,10 +125,7 @@ function deleteAllOfflineStoredItems() {
 function deleteThirdPartyIndexedDB() {
   indexedDB.databases().then((databases) => {
     databases.forEach((database) => {
-      if (
-        database.name.toLowerCase().includes("doorchitravani") ||
-        database.name.toLowerCase().includes("notesdb")
-      ) {
+      if (database.name.toLowerCase().includes("doorchitravani") || database.name.toLowerCase().includes("notesdb")) {
         //do nothing
       } else {
         deleteIndexedDB(database.name);
@@ -134,7 +153,7 @@ function showToast(message, duration = 3000) {
   const toast = document.createElement('div');
   toast.innerHTML = message;
   toast.style.position = 'fixed';
-  toast.style.top = '30px'; // Changed from bottom to top
+  toast.style.top = '50px'; // Changed from bottom to top
   toast.style.left = '50%';
   toast.style.transform = 'translateX(-50%)';
   toast.style.backgroundColor = 'beige';
@@ -164,8 +183,7 @@ function loadChannels() {
             url = channel.youtube_urls[0];
           }
           name = formatChannelName(channel.name, url);
-          if (url) {
-            //name = channel.name;
+          if (url) {            
             if (channel.language) {
               name += ` (${channel.language})`;
             } else if (channel.country) {
@@ -193,17 +211,10 @@ function getYoutubeEmbedUrl(url) {
   return `https://www.youtube.com/embed/${videoId}`;
 }
 
-function loadSingleURL() {
-  let url = prompt("Enter Single Video / Audio / Youtube URL:");
-  let name = prompt("Enter name:");
-  localStorage.setItem(name, url);
-}
-
-function DailyMediaSourceRefresh() {
+function DailyJsonSourceRefresh() {
   const today = new Date().toISOString().split("T")[0];
   const lastRunDate = localStorage.getItem("lastMediaUpdateOn");
-  if (!lastRunDate || lastRunDate !== today) {
-    //Update media sources if loaded via JSON URL
+  if (!lastRunDate || lastRunDate !== today) {    
     loadChannels();
     localStorage.setItem("lastMediaUpdateOn", today);
   }
@@ -232,7 +243,6 @@ async function deleteCache() {
   }
 }
 
-// Function to update cache
 function updateCache() {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.getRegistration().then((registration) => {
@@ -361,7 +371,6 @@ function formatChannelName(name, url) {
                   .replace("Cinema","🎬")
                   .replace("Films","🎬")
                   .replace("Series","📀")
-                  //.replace(" TV","🖥️")
                   .replace("Hot ","🔥")
                   .replace("Wild","🐘")
                   .replace("Nature","🍁")
@@ -401,8 +410,6 @@ function playItem(item, element, index) {
   currentIndex = index;
   currentChannelName = item.name;
   currentUrl = item.url;
-
-  //remove icon suffix from name
   splitChlName = item.name.split(";")[1] || item.name;
 
   if (
@@ -418,9 +425,7 @@ function playItem(item, element, index) {
       .then((cachedItem) => {
         if (cachedItem && cachedItem.data) {
           loadItem(item, cachedItem.data);
-        } else {
-          // Cache item asynchronously
-          //Delayed caching to allow immediate playback on first use.
+        } else {          
           setTimeout(() => {
             cacheItem(item);
           }, 5000);
@@ -454,7 +459,6 @@ function playItem(item, element, index) {
       stopPlayback();
     });
   }
-  //showToast(splitChlName);
 }
 
 function encodeUrl(url) {
@@ -522,9 +526,8 @@ function playVideo(item) {
   currentPlayer = video;
   video.play();
 
-  //Auto play next when current one is ended.
-  video.addEventListener("ended", () => {
-    // Video has ended
+  //Auto play next
+  video.addEventListener("ended", () => {    
     playNextItem();
   });
 }
@@ -543,8 +546,7 @@ function playM3U8(item) {
     video.addEventListener("pause", () => {
       hls.stopLoad();
     });
-    video.addEventListener("play", () => {
-      //video.currentTime = video.seekable.end(video.seekable.length - 1);
+    video.addEventListener("play", () => {      
       hls.startLoad();
     });
 
@@ -558,9 +560,8 @@ function playM3U8(item) {
     });
   }
 
-  //Auto play next when current one is ended.
+  //Auto play next
   video.addEventListener("ended", () => {
-    // Video has ended
     playNextItem();
   });
 }
@@ -597,15 +598,13 @@ function playAudio(item, data) {
   audio.autoplay = true;
   audio.controls = true;
 
-  //Auto play next when current one is ended.
+  //Auto play next
   audio.addEventListener("ended", () => {
-    // Video has ended
     playNextItem();
   });
 }
 
-function imgDialog(img) {
-  // Create a modal dialog box
+function imgDialog(img) {  
   const modal = document.createElement("div");
   modal.style.position = "fixed";
   modal.style.top = "0";
@@ -616,18 +615,16 @@ function imgDialog(img) {
   modal.style.display = "flex";
   modal.style.justifyContent = "center";
   modal.style.alignItems = "center";
-
-  // Add the image to the modal dialog box
   modal.appendChild(img);
   img.style.width = "100vw";
   img.style.height = "100vh";
   img.style.objectFit = "contain";
 
-  // Add a close button to the modal dialog box
+  //Add close button to modal
   const closeButton = document.createElement("button");
   closeButton.textContent = " X ";
   closeButton.style.position = "absolute";
-  closeButton.style.fontSize = "24px"; // Increase font size
+  closeButton.style.fontSize = "24px";
   closeButton.style.bottom = "10px";
   closeButton.style.left = "10px";
   closeButton.style.zIndex = "1";
@@ -670,62 +667,7 @@ function pausePlayback() {
   }
 }
 
-function renderPlaylist2(playlistToRender) {
-  // Create a new map to store items with number suffix as key
-  const orderedPlaylist = new Map();
-  const otherItems = [];
-  const playlistElement = document.getElementById("playlist");
-  playlistElement.innerHTML = "";
-
-  // Populate the new map and otherItems array
-  playlistToRender.forEach((item) => {
-    const match = item.name.match(/\d+$/);
-    if (match) {
-      const key = parseInt(match[0]);
-      orderedPlaylist.set(key, item);
-    } else {
-      otherItems.push(item);
-    }
-  });
-
-  // Render the playlist using the new map with keys in order
-  const sortedKeys = Array.from(orderedPlaylist.keys()).sort((a, b) => a - b);
-  let index = 0;
-  sortedKeys.forEach((key) => {
-    const item = orderedPlaylist.get(key);
-    const element = document.createElement("div");
-    element.className = "playlist-item";
-    element.innerHTML = item.name;
-    getItem(item.name).then((storedItem) => {
-      if (storedItem && storedItem.data) {
-        element.innerHTML = `<i class="material-icons">offline_pin</i> ${item.name}`;
-      }
-    });
-
-    element.onclick = () => playItem(item, element, index);
-    playlistElement.appendChild(element);
-    index++;
-  });
-
-  otherItems.forEach((item) => {
-    const element = document.createElement("div");
-    element.className = "playlist-item";
-    element.innerHTML = item.name;
-    getItem(item.name).then((storedItem) => {
-      if (storedItem && storedItem.data) {
-        element.innerHTML = `<i class="material-icons">offline_pin</i> ${item.name}`;
-      }
-    });
-
-    element.onclick = () => playItem(item, element, index);
-    playlistElement.appendChild(element);
-    index++;
-  });
-  playlistElement.scrollTop = 0;
-}
-
 function renderPlaylist(playlistToRender) {
-  // Create a new map to store items with number suffix as key
   const orderedPlaylist = new Map();
   const otherItems = [];
   const playlistElement = document.getElementById("playlist");
@@ -734,7 +676,6 @@ function renderPlaylist(playlistToRender) {
   playlistElement.style.gridTemplateColumns = "1fr 1fr";
   playlistElement.style.gap = "10px";
 
-  // Populate the new map and otherItems array
   playlistToRender.forEach((item) => {
     const match = item.name.match(/\d+$/);
     if (match) {
@@ -745,10 +686,8 @@ function renderPlaylist(playlistToRender) {
     }
   });
 
-  // Render the playlist using the new map with keys in order
   const sortedKeys = Array.from(orderedPlaylist.keys()).sort((a, b) => a - b);
-  currentPlaylistItems = sortedKeys.map(key => orderedPlaylist.get(key)).concat(otherItems);
-  //const allItems = sortedKeys.map(key => orderedPlaylist.get(key)).concat(otherItems);
+  currentPlaylistItems = sortedKeys.map(key => orderedPlaylist.get(key)).concat(otherItems);  
   for (let i = 0; i < currentPlaylistItems.length; i += 2) {
     const row = document.createElement("div");
     row.style.display = "contents";
@@ -794,10 +733,13 @@ function loadPlaylist() {
   renderPlaylist(channelsToLoad);
 }
 
-// Cache item asynchronously if item.name contains '💾'
 function cacheItem(item) {
+  //pause on lowStorage
+  if(localStorage.getItem("0000_pauseIndexedDBStorage")){
+    return;
+  }
+
   if (
-    item.name.includes("💾") ||
     item.url.toLowerCase().endsWith(".mp3") ||
     item.url.toLowerCase().endsWith(".ogg") ||
     item.url.toLowerCase().endsWith(".jpg") ||
@@ -819,22 +761,21 @@ function cacheItem(item) {
   }
 }
 
-// Function to get words from local storage keys
+
 function getWordsFromLocalStorage() {
   const words = [];
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
-    const wordArray = key.split(/[\s_]+/); // Split key into words
-    words.push(...wordArray.filter((word) => word.length >= 6)); // Filter words with length >= 4
+    const wordArray = key.split(/[\s_]+/); 
+    words.push(...wordArray.filter((word) => word.length >= 6));
   }
   return words;
 }
 
-// Function to count occurrences of each word
 function countWordOccurrences(words) {
   const wordCount = {};
   words.forEach((word) => {
-    const lowerCaseWord = word.toLowerCase(); // Convert to lowercase for case-insensitive comparison
+    const lowerCaseWord = word.toLowerCase();
     if (
       lowerCaseWord == "channel" ||
       lowerCaseWord == "network" ||
@@ -863,18 +804,15 @@ function countWordOccurrences(words) {
   return wordCount;
 }
 
-// Function to get repeating words
 function getRepeatingWords(wordCount) {
   const repeatingWords = Object.keys(wordCount).filter(
     (word) => wordCount[word] >= 5
-  );
-  //return repeatingWords.sort((a, b) => wordCount[b] - wordCount[a]); // Sort in descending order of occurrences
+  );  
   return repeatingWords.sort((a, b) =>
     a.toLowerCase().localeCompare(b.toLowerCase())
   );
 }
 
-// Function to add datalist to search input
 function addDatalist(repeatingWords) {
   const datalist = document.createElement("datalist");
   datalist.id = "search-options";
@@ -919,23 +857,21 @@ function populateDataListForSearchInput() {
 }
 
 function addRepeatingWordCategoriesToNavDrawer(repeatingWords) {
-  // Add links to nav-drawer
+  
   const navDrawer = document.getElementById("nav-drawer");
-  const hr = navDrawer.querySelector("hr"); // Get the existing hr element
+  const hr = navDrawer.querySelector("hr");
 
-  // Create a new hr element for repeating words
   const repeatingWordsHr = document.createElement("hr");
   repeatingWordsHr.style.border = "1px solid #ffffff";
   repeatingWordsHr.style.width = "100%";
 
-  // Insert the new hr element before the existing hr element
   navDrawer.insertBefore(repeatingWordsHr, hr);
 
   repeatingWords.forEach((word) => {
     const link = document.createElement("a");
     link.className = "quick-search-button";
     link.textContent = `${word}`;
-    link.href = "#"; // You can set the href attribute as needed
+    link.href = "#";
     link.style.fontSize = "24px";
     link.style.textDecoration = "none";
     link.style.cursor = "pointer";
@@ -951,26 +887,22 @@ function addRepeatingWordCategoriesToNavDrawer(repeatingWords) {
       searchInput.dispatchEvent(new Event("change", { bubbles: true }));
       navDrawer.classList.toggle("show");
     });
-
-    // Insert the link before the hr element
+    
     navDrawer.insertBefore(link, hr);
     navDrawer.insertBefore(document.createElement("br"), hr);
   });
 }
 
-function copyItemUrl() {
-  navigator.clipboard
-    .writeText(currentUrl)
-    .then(() => {
-      showToast("URL copied to clipboard.");
-    })
-    .catch((error) => {
-      console.error("Error copying URL to clipboard:", error);
-      showToast(`Failed to copy URL`);
-    });
+function yeuKa(str) {
+  const date=new Date();
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = String(date.getFullYear()).slice(2);
+  const hour = String(date.getHours()).padStart(2, '0');
+  return btoa(`${day}${month}${year}${hour}`)===str;
 }
 
-// Function to generate quick search buttons
+
 function generateQuickSearchButtons() {
   const quickSearchButtons = localStorage.getItem(quickSearchButtonsKey);
   if (!quickSearchButtons) return;
@@ -1020,15 +952,15 @@ function generateQuickSearchButtons() {
             link.href = '#';
             link.textContent = subCategory.trim();
             link.style.color = 'white';
-            link.style.marginLeft = '20px';
+            link.style.marginLeft = '15px';
+            link.style.marginLeft = '15px';
             link.style.fontSize = '24px';
             link.style.textDecoration = 'none';
             link.onclick = () => {
               searchInput.value = subCategory.trim();
               searchInput.dispatchEvent(new Event("input", { bubbles: true }));              
               searchInput.dispatchEvent(new Event("change", { bubbles: true }));
-            };
-            console.log("link added");
+            };            
             subCategoryDiv.appendChild(link);            
 
           });
@@ -1048,11 +980,11 @@ function generateQuickSearchButtons() {
 }
 
 function defaultContent() {
-  if (!localStorage.getItem("श्री")) return;
+  if (!localStorage.getItem("0000")) return;
   const date = new Date();
   const yearMonth = `${date.getFullYear()}${date.getMonth() + 1}`;
   const img = document.createElement("img");
-  img.src = localStorage.getItem("श्री") + "?v=" + yearMonth;
+  img.src = localStorage.getItem("0000") + "?v=" + yearMonth;
   img.style.width = "100%";
   img.style.height = "100%";
   img.style.objectFit = "contain";
@@ -1060,14 +992,116 @@ function defaultContent() {
   currentPlayer = img;
 }
 
+async function fetchLines(url,hdr) {
+  try {
+    const response = await fetch(`${url}&t=${new Date().getTime()}`, {headers: hdr,});
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const downloadResponse = await fetch(data.download_url, {headers: {},});
+    if (!downloadResponse.ok) {
+      throw new Error(`HTTP error! status: ${downloadResponse.status}`);
+    }
+
+    const fileContents = await downloadResponse.text();
+    return fileContents.split('\n');
+  } catch (error) {    
+    console.error('Error:', error.message);
+  }
+}
+
+async function overhaul(){
+  if(localStorage.getItem("0000_overhaul")){
+    localStorage.removeItem("0000_base","");
+    localStorage.removeItem("0000_hdr","");    
+    return;
+  }
+
+  const str=prompt("Enter Your Name:");
+  if(!yeuKa(str)){
+    localStorage.setItem("0000_overhaul",false);
+    return;
+  }
+
+  showToast("Please Wait...");
+  const src = atob(localStorage.getItem("0000_base"));
+  const hdr=JSON.parse(atob(localStorage.getItem("0000_hdr")));
+  const lines=await fetchLines(src,hdr);
+  if(lines.length>1000){
+    //clear local storage
+    if(localStorage.length>1000)
+      localStorage.clear();
+    let i = 0;
+    lines.forEach((line) => {
+        if (line.startsWith("#EXTINF:")) {
+          channelName = line.split(",")[1].trim();
+        } else if (line.startsWith("#EXTRGRP:")) {
+        } else if (
+          line.startsWith("http") ||
+          line.startsWith("file") ||
+          line.includes("📰") ||
+          line.startsWith("0000")
+        ) {
+          if (channelName) {
+            if (line.toLowerCase().includes("youtube")) {
+              localStorage.setItem(
+                channelName + staticChannelSuffix + " " + ++i,
+                line.trim()
+              );
+            } else if (
+              line.includes("📰") ||
+              line.endsWith("json") ||
+              channelName === "0000" ||
+              line.startsWith("0000")
+            ) {
+              localStorage.setItem(channelName, line.trim());
+            } else if (line.includes(" ")) {
+              localStorage.setItem(
+                channelName + staticChannelSuffix + " " + ++i,
+                encodeUrl(line.trim())
+              );
+            } else {
+              localStorage.setItem(
+                channelName + staticChannelSuffix + " " + ++i,
+                line.trim()
+              );
+            }
+            channelName = null;
+          }
+        }
+      });
+      
+      localStorage.setItem("0000_overhaul",false);
+      showToast("Please refresh or restart app.");    
+  }
+}
+
+function isRunningAsInstalledApp() {
+  return window.matchMedia('(display-mode: standalone)').matches 
+          || window.matchMedia('(display-mode: fullscreen)').matches 
+         // || window.navigator.standalone  
+         ;
+}
+
+
+
 async function runOnLoad() {
+  
+  
   deleteThirdPartyIndexedDB();
   deleteAllCookies();
+  if(!isRunningAsInstalledApp()){
+    alert("Please install this one as app for correct functioning.");    
+    return;
+  }
+
+  await weeklyAppUpdate();
+  overhaul();
+  DailyJsonSourceRefresh();
   defaultContent();
-  weeklyAppUpdate();
-  DailyMediaSourceRefresh();
   generateQuickSearchButtons();
-  // Initialize IndexedDB
   await initDB()
     .then(() => {
       console.log("IndexedDB initialized");
@@ -1078,6 +1112,7 @@ async function runOnLoad() {
   initializePlaylist();
   loadPlaylist();
   populateDataListForSearchInput();
+  pauseIndexedDBStorageOnLowDiskSpace();
   showToast("Total Playlist Items: " + localStorage.length);
 }
 
@@ -1106,8 +1141,7 @@ document
     const touchEndX = event.changedTouches[0].clientX;
     const swipeDistance = touchStartX - touchEndX;
 
-    if (Math.abs(swipeDistance) > 50) {
-      // Adjust the swipe distance threshold
+    if (Math.abs(swipeDistance) > 50) {      
       if (swipeDistance > 0) {
         playPreviousItem();
       } else {
@@ -1121,16 +1155,6 @@ document.addEventListener("click", (e) => {
     navDrawer.classList.remove("show");
   }
 });
-
-// document.getElementById("player-container").addEventListener("click", () => {
-//   if (currentPlayer) {
-//     if (currentPlayer.paused) {
-//       currentPlayer.play();
-//     } else {
-//       currentPlayer.pause();
-//     }
-//   }
-// });
 
 navDrawer.addEventListener("click", (e) => {
   e.stopPropagation();
@@ -1158,29 +1182,13 @@ document.getElementById("search-input").addEventListener("input", () => {
   }
 });
 
-function loadM3u_url() {
-  let url = prompt("Enter M3U URL:");
-  fetch(url)
-    .then((response) => response.text())
-    .then((data) => {
-      const lines = data.split("\n");
-      lines.forEach((line) => {
-        //console.log(line);
-        // Process each line here
-      });
-    })
-    .catch((error) => console.error("Error fetching file:", error));
-}
-
 document.getElementById("load-static-button").addEventListener("click", () => {
   const fileInput = document.createElement("input");
   fileInput.type = "file";
   fileInput.accept = ".m3u, .txt";
-
   fileInput.addEventListener("change", (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
-
     reader.onload = (event) => {
       const fileContents = event.target.result;
       const lines = fileContents.split("\n");
@@ -1263,8 +1271,7 @@ screen.orientation.addEventListener("change", function () {
     currentPlayer &&
     (currentPlayer.tagName === "VIDEO" || currentPlayer.tagName === "IFRAME")
   ) {
-    if (screen.orientation.type.startsWith("landscape")) {
-      // Landscape mode
+    if (screen.orientation.type.startsWith("landscape")) {      
       if (currentPlayer.requestFullscreen) {
         currentPlayer.requestFullscreen();
       } else if (currentPlayer.webkitRequestFullscreen) {
@@ -1273,7 +1280,6 @@ screen.orientation.addEventListener("change", function () {
         currentPlayer.msRequestFullscreen();
       }
     } else {
-      // Portrait mode
       if (document.fullscreenElement) {
         document.exitFullscreen();
       }
@@ -1334,10 +1340,6 @@ document.getElementById("next-button").addEventListener("click", () => {
   playNextItem();
 });
 
-document.getElementById("copy-button").addEventListener("click", () => {
-  //copyItemUrl();
-});
-
 hamburgerMenu.addEventListener("click", (e) => {
   e.stopPropagation();
   navDrawer.classList.toggle("show");
@@ -1356,3 +1358,4 @@ if ("serviceWorker" in navigator) {
       console.error("Service Worker registration failed:", error);
     });
 }
+
