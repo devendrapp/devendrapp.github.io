@@ -1297,6 +1297,11 @@ document.getElementById("refresh-button").addEventListener("click", () => {
   window.location.reload();
 });
 
+document.getElementById("close-button").addEventListener("click", () => {
+  stopPlayback();
+});
+
+
 document.getElementById("about-button").addEventListener("click", () => {
   aboutDialog.showModal();
 });
