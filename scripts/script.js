@@ -370,7 +370,7 @@ function formatChannelName(name, url) {
                   .replace("Food","🥗").replace("Recipe","🥗").replace("Kitchen","🥗").replace("Chef","🥗").replace("Cook","🥗").replace("Taste","🥗")
                   .replace("Sci-Fi","👽")
                   .replace("Documentary","📽️").replace("Documentaries","📽️")
-                  .replace("sports","⚽").replace("football","⚽").replace("basketball","⚽").replace("tennis","⚽").replace("poker","⚽").replace("golf","⚽")
+                  .replace("Sports","⚽").replace("Football","⚽").replace("Basketball","⚽").replace("Tennis","⚽").replace("Poker","⚽").replace("Golf","⚽")
                   .replace("Crime","🕵🏾‍♀️");    
                   
     
