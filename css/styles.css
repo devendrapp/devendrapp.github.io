@@ -133,9 +133,9 @@ body {
 }
 
 
-.playlist-item.selected {
-    background-color: #0b07ff;
-    color: #ffffff;
+#playlist > div > .playlist-item.selected {
+  background-color: #ffffff;
+  color: #ff0000;
 }
 
 .playlist-item:focus {
