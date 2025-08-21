@@ -362,26 +362,15 @@ function initializePlaylist() {
 }
 
 function formatChannelName(name, url) {
-  let formattedName=name.replace("Mystery","🕵️")
-                  .replace("Romance","❤️")
-                  .replace("Horror","👻")
-                  .replace("Thrillers","😱")
-                  .replace("Thriller","😱")
-                  .replace("Movies","🎬")
-                  .replace("Cinema","🎬")
-                  .replace("Films","🎬")
+  let formattedName=name.replace("Mystery","🕵️").replace("Romance","❤️").replace("Horror","👻").replace("Thrillers","😱").replace("Thriller","😱")
+                  .replace("Movies","🎬").replace("Cinema","🎬").replace("Films","🎬")
                   .replace("Series","📀")
                   .replace("Hot ","🔥")
-                  .replace("Wild","🐘")
-                  .replace("Nature","🍁")
-                  .replace("Earth","🌍")
-                  .replace("Outdoor","🌍")
-                  .replace("Geographic","🌍")
-                  .replace("Food","🥗")
-                  .replace("Recipe","🥗")
+                  .replace("Wild","🐘").replace("Nature","🍁").replace("Earth","🌍").replace("Outdoor","🌍").replace("Geographic","🌍")
+                  .replace("Food","🥗").replace("Recipe","🥗").replace("Kitchen","🥗").replace("Chef","🥗").replace("Cook","🥗").replace("Taste","🥗")
                   .replace("Sci-Fi","👽")
-                  .replace("Documentary","📽️")
-                  .replace("Documentaries","📽️")
+                  .replace("Documentary","📽️").replace("Documentaries","📽️")
+                  .replace("sports","⚽").replace("football","⚽").replace("basketball","⚽").replace("tennis","⚽").replace("poker","⚽").replace("golf","⚽")
                   .replace("Crime","🕵🏾‍♀️");    
                   
     
