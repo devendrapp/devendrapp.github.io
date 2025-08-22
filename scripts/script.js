@@ -1,17 +1,11 @@
 let currentPlayer = null;
-let hls = null;
 let currentItem = null;
 let currentIndex = 0;
-let channels = {};
 let currentChannelName = "";
 let currentUrl = "";
-let staticChannelSuffix = " ▪️";
-let touchStartX = 0;
+
+let channels = {};
 let currentPlaylistItems = [];
-let deferredInstallPrompt = null;
-const defaultCategoriesKey = "0000_default_categories";
-const skipCategoriesKey = "0000_skip_categories_from_datalist";
-const quickSearchButtonsKey = "0000_quick_search_buttons";
 
 //IndexedDB, Store & Offline Support
 let db;
@@ -19,6 +13,15 @@ const dbName = "doorChitraVaniDB";
 const storeName = "doorChitraVaniStore";
 const cacheDelay = 5000; // 5 seconds
 const offlineSupportedExtensions = [".mp3", ".ogg", ".jpg", ".jpeg", ".png"];
+
+let deferredInstallPrompt = null;
+let hls = null;
+let staticChannelSuffix = " ▪️";
+let touchStartX = 0;
+
+const defaultCategoriesKey = "0000_default_categories";
+const skipCategoriesKey = "0000_skip_categories_from_datalist";
+const quickSearchButtonsKey = "0000_quick_search_buttons";
 
 //DOM Constants
 const searchInput = document.getElementById("search-input");
@@ -87,7 +90,6 @@ function storeItem(item, data) {
   });
 }
 
-// Get item from IndexedDB
 function getItem(name) {
   return new Promise((resolve, reject) => {
     if (!db) {
@@ -152,8 +154,10 @@ function deleteIndexedDB(dbname) {
 function showToast(message, duration = 3000) {
   const toast = document.createElement('div');
   toast.innerHTML = message;
-  toast.style.position = 'fixed';
-  toast.style.top = '50px'; // Changed from bottom to top
+  toast.style.position = 'fixed';  
+  const rightPaneRect = document.querySelector('.right-pane').getBoundingClientRect();
+  const toastHeight = toast.offsetHeight; // Get the height of the toast element
+  toast.style.top = `${rightPaneRect.height - toastHeight }px`;
   toast.style.left = '50%';
   toast.style.transform = 'translateX(-50%)';
   toast.style.backgroundColor = 'black';
@@ -421,6 +425,7 @@ function playItem(item, element, index) {
 
     navigator.mediaSession.setActionHandler("stop", () => {      
       stopPlayback();
+      showToast("Choose Playlist Item to play...");
     });
   }
 }
@@ -618,7 +623,6 @@ function stopPlayback() {
       hls.detachMedia();
       hls = null;
     }
-    showToast("Choose playlist item to play...");
     currentPlayer = null;
   }
 }
@@ -954,6 +958,8 @@ function defaultContent() {
   img.style.objectFit = "contain";
   document.getElementById("player-container").appendChild(img);
   currentPlayer = img;
+  showToast("Choose Playlist Item to play...");
+  showActionContainer(false);
 }
 
 async function fetchLines(url,hdr) {
@@ -1225,6 +1231,7 @@ document.addEventListener("keydown", (e) => {
         break;
       case "Escape":
         stopPlayback();
+        defaultContent();
         break;
     }
   }
@@ -1266,6 +1273,7 @@ document.getElementById("close-button").addEventListener("click", () => {
   searchInput.value = "";
   searchInput.dispatchEvent(new Event("input", { bubbles: true }));
   searchInput.dispatchEvent(new Event("change", { bubbles: true }));
+  defaultContent();
 });
 
 
@@ -1290,6 +1298,7 @@ document.addEventListener(
   "backbutton",
   function (event) {
     stopPlayback();
+    defaultContent();
   },
   false
 );
@@ -1300,7 +1309,6 @@ document.getElementById("prev-button").addEventListener("click", () => {
 
 document.getElementById("stop-button").addEventListener("click", () => {
   stopPlayback();
-  showActionContainer(false);
   defaultContent();
 });
 
