@@ -536,9 +536,9 @@ function playYoutubeVideo(item) {
     : getYoutubeEmbedUrl(item.url);
   const iframe = document.createElement("iframe");
   iframe.src = youtubeUrl + "?autoplay=1&fs=0";
-  iframe.frameBorder = 0;
+  iframe.style.border = 'none';
+  iframe.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
   iframe.allowFullScreen = true;
-  iframe.allow = "autoplay";
   document.getElementById("player-container").appendChild(iframe);
   currentPlayer = iframe;
 }
