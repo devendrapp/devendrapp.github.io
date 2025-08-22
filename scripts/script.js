@@ -1263,6 +1263,9 @@ document.getElementById("refresh-button").addEventListener("click", () => {
 
 document.getElementById("close-button").addEventListener("click", () => {
   stopPlayback();
+  searchInput.value = "";
+  searchInput.dispatchEvent(new Event("input", { bubbles: true }));
+  searchInput.dispatchEvent(new Event("change", { bubbles: true }));
 });
 
 
