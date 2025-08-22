@@ -303,31 +303,6 @@ function getCurrentIndex() {
   return currentItem ? playlistItems.indexOf(currentItem) : 0;
 }
 
-function playPreviousItem2() {
-  const currentIndex = getCurrentIndex();
-  const playlistItems = getPlaylistItems();
-  stopPlayback();
-  if (currentIndex > 0) {
-    const previousItem = playlistItems[currentIndex - 1];
-    previousItem.element.click();
-  } else {
-    playlistItems[0].element.click();
-  }
-}
-
-function playNextItem2() {
-  const currentIndex = getCurrentIndex();
-  const playlistItems = getPlaylistItems();
-
-  stopPlayback();
-  if (currentIndex < playlistItems.length - 1) {
-    const nextItem = playlistItems[currentIndex + 1];
-    nextItem.element.click();
-  } else {
-    playlistItems[0].element.click();
-  }
-}
-
 function playPreviousItem() {
   stopPlayback();
   if (currentIndex > 0) {
