@@ -451,7 +451,9 @@ function loadItem(item, data) {
     playVideo(item);
   } else if (item.url.includes("youtube")) {
     playYoutubeVideo(item);
-  } else if (
+  }else if(item.name.includes("🔳")){
+    playEmbeddedURL(item);
+  }else if (
     item.url.endsWith(".jpg") ||
     item.url.endsWith(".png") ||
     item.url.endsWith(".jpeg") ||
@@ -541,6 +543,16 @@ function playYoutubeVideo(item) {
     : getYoutubeEmbedUrl(item.url);
   const iframe = document.createElement("iframe");
   iframe.src = youtubeUrl + "?autoplay=1&fs=0";
+  iframe.style.border = 'none';
+  iframe.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
+  iframe.allowFullScreen = true;
+  document.getElementById("player-container").appendChild(iframe);
+  currentPlayer = iframe;
+}
+
+function playEmbeddedURL(item) {
+  const iframe = document.createElement("iframe");
+  iframe.src = item.url;
   iframe.style.border = 'none';
   iframe.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
   iframe.allowFullScreen = true;
