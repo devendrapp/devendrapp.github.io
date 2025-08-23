@@ -932,8 +932,8 @@ function generateQuickSearchButtons() {
             link.href = '#';
             link.textContent = subCategory.trim();
             link.style.color = 'white';
-            link.style.marginLeft = '15px';
-            link.style.marginLeft = '15px';
+            link.style.marginLeft = '25px';
+            link.style.marginLeft = '25px';
             link.style.fontSize = '24px';
             link.style.textDecoration = 'none';
             link.onclick = () => {

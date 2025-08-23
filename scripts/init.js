@@ -3,7 +3,7 @@ function loadDefaultItems() {
     ,"🕉️,🌼,🌺,🚩,📰,📻,🇮🇳,💡");
 
   localStorage.setItem("0000_quick_search_buttons",
-    "🌺,🕉️,🌼,🚩,श्री,💡,📻,🖥️,🎙️,🎤,🎧,🎬,🐤,🐘,📀,▶️,🤣,🇮🇳"
+    "श्री,🌺,🕉️,🌼,🚩,🐤,📻,🖥️,🎙️,🎤,🎧,🎬,🐘,📀,▶️,🤣,💡,🇮🇳"
   );
 
   localStorage.setItem("🌺 श्री ​गणपती आरती | Ganapati Aarti 51000","shree/stotra.html?id=ga");
@@ -52,11 +52,11 @@ function loadDefaultItems() {
 
   localStorage.setItem("🎬","0000,🎬 👻,🎬 🤣,🎬 👊,🎬 🕵️,🎬 💡,🎬 👽,🎬 ❤️");
 
-  localStorage.setItem("🖥️","0000,Ⓜ️,🖥️ 🎵,🖥️ 🎬,🖥️ 🐤,⚽,🕵️,👽,👻,🕵🏾‍♀️,😱,📰");
+  localStorage.setItem("🖥️","0000,🖥️ Ⓜ️,📰,💹,🖥️ 🎵,🖥️ 🎬,🖥️ 🐘,🖥️ 📘,🖥️ 🐤,🖥️ 🙏,🖥️ 👽,🖥️ 👻,🕵🏾‍♀️,😱,🕵️,⚽");
 
-  localStorage.setItem("🐘","0000,🥗,🌍,🐘,🍁,📽️");  
+  localStorage.setItem("🐘","0000,🥗,🌍,🐘,🍁,📽️");
 
-  localStorage.setItem("🎧","0000,Ⓜ️,👧🏻,❤️,🎙️,🔥,💔,🌧️,🎺,💡,🥁,🚘,🎶,🎸");
+  localStorage.setItem("🎧","0000,🎶 Ⓜ️,👧🏻,❤️,🎙️,🔥,💔,🌧️,🎺,💡,🥁,🚘,🎶,🎸");
   localStorage.setItem("🎙️","0000,Ⓜ️,👧🏻,❤️,🎙️,🌧️,💡,🔥,💔,🎺,🥁,🚘,🎶,🎸");
 
   localStorage.setItem("▶️","0000,🐤 ▶️,📀 ▶️,▶️ 🎵");
