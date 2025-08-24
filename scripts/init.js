@@ -23,6 +23,7 @@ function loadDefaultItems() {
   localStorage.setItem("🌼 श्री राम रक्षा स्तोत्र | Shree Ram Raksha 51101","shree/stotra.html?id=rr");
   localStorage.setItem("🌼 मारुती स्तोत्र | Maruti Stotra 51102","shree/stotra.html?id=ms");
   localStorage.setItem("🌼 श्री मनाचे श्लोक | Manache Shlok 51103","shree/stotra.html?id=mncs");
+  
   localStorage.setItem("🌼 श्री नवग्रह स्तोत्र | Navgrah Stotra 51104","shree/stotra.html?id=ns");
   localStorage.setItem("🌼 श्री स्वामी समर्थ तारक मंत्र | Swami Samarth Tarak Mantra 51105","shree/stotra.html?id=sstm");
   localStorage.setItem("🌼 श्री ​गणपती अथर्वशीर्ष | Ganapati Atharvashirsh 51106","shree/stotra.html?id=gash");
@@ -38,6 +39,7 @@ function loadDefaultItems() {
   localStorage.setItem("🌼 श्री विष्णु सहस्रनाम स्तोत्र | Vishnu Sahastranam 51114","shree/stotra.html?id=vs");
   localStorage.setItem("🌼 श्री महालक्ष्मी कवच | Mahalaxmi Kavach 51115","shree/stotra.html?id=mk");
   localStorage.setItem("🌼 श्री दुर्गा कवच | Mahalaxmi Kavach 51116","shree/stotra.html?id=dk");
+  localStorage.setItem("🌼 ज्ञानेश्वर माउलींचा हरिपाठ | Haripath 51117","shree/stotra.html?id=hp");
   
   localStorage.setItem("🏵️ श्री सत्यनारायण कथा | Satyanarayan Katha 51200","shree/stotra.html?id=sk2");
 
