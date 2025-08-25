@@ -1072,8 +1072,8 @@ function isRunningAsInstalledApp() {
 async function runOnLoad() {
   deleteThirdPartyIndexedDB();
   deleteAllCookies();
-  if(!isRunningAsInstalledApp() && confirm("Click OK to Install the Application.")){
-    installApp();    
+  if(!isRunningAsInstalledApp() ){
+     alert('Use "Install" or "Add to home screen" button to install the application on your device.');  
     return;
   }
 
@@ -1331,39 +1331,10 @@ document.getElementById("next-button").addEventListener("click", () => {
 });
 
 hamburgerMenu.addEventListener("click", (e) => {
-
-  //TODO: Test and Review
-  if(!isRunningAsInstalledApp()){
-    installApp();   
-    beforeinstallpromptevent.prompt(); 
-    return;
-  }
   e.stopPropagation();
   navDrawer.classList.toggle("show");
   navDrawer.scrollTop = 0;
 });
-
-window.addEventListener('beforeinstallprompt', (event) => {
-  event.preventDefault(); // Prevent automatic prompt
-   beforeinstallpromptevent.prompt();
-  deferredInstallPrompt = event;
-});
-
-async function installApp(){
-  console.log("In Install App");
-  console.log(deferredInstallPrompt);
-  if (deferredInstallPrompt) {
-    console.log("deferred installed prompt available");
-    deferredInstallPrompt.prompt();
-    const { outcome } = await deferredInstallPrompt.userChoice;
-    if (outcome === 'accepted') {
-      console.log('User accepted the install prompt');
-    } else {
-      console.log('User dismissed the install prompt');
-    }
-    deferredInstallPrompt = null;
-  }
-}
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
