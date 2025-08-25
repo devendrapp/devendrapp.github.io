@@ -1338,6 +1338,7 @@ hamburgerMenu.addEventListener("click", (e) => {
 
 window.addEventListener('beforeinstallprompt', (event) => {
   event.preventDefault(); // Prevent automatic prompt
+   beforeinstallpromptevent.prompt();
   deferredInstallPrompt = event;
 });
 
