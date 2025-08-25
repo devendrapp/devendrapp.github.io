@@ -1070,12 +1070,10 @@ function isRunningAsInstalledApp() {
 
 
 async function runOnLoad() {
-  
-  
   deleteThirdPartyIndexedDB();
   deleteAllCookies();
-  if(!isRunningAsInstalledApp()){
-    alert("Please install this one as app for correct functioning.");    
+  if(!isRunningAsInstalledApp() && confirm("Click OK to Install the Application.")){
+    installApp();    
     return;
   }
 
@@ -1338,13 +1336,29 @@ hamburgerMenu.addEventListener("click", (e) => {
   navDrawer.scrollTop = 0;
 });
 
-runOnLoad();
+window.addEventListener('beforeinstallprompt', (event) => {
+  deferredInstallPrompt = event;
+});
+
+async function installApp(){
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    const { outcome } = await deferredInstallPrompt.userChoice;
+    if (outcome === 'accepted') {
+      console.log('User accepted the install prompt');
+    } else {
+      console.log('User dismissed the install prompt');
+    }
+    deferredInstallPrompt = null;
+  }
+}
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("sw.js")
     .then((registration) => {
       console.log("Service Worker registered");
+      runOnLoad();
     })
     .catch((error) => {
       console.error("Service Worker registration failed:", error);
