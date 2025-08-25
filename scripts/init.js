@@ -54,12 +54,12 @@ function loadDefaultItems() {
 
   localStorage.setItem("🎬","0000,🎬 👻,🎬 🤣,🎬 👊,🎬 🕵️,🎬 💡,🎬 👽,🎬 ❤️");
 
-  localStorage.setItem("🖥️","0000,🖥️ Ⓜ️,📰,💹,🖥️ 🎵,🖥️ 🎬,🖥️ 🐘,🖥️ 📘,🖥️ 🐤,🖥️ 🙏,🖥️ 👽,🖥️ 👻,🕵🏾‍♀️,😱,🕵️,⚽");
+  localStorage.setItem("🖥️","0000,🖥️ Ⓜ️,📰,💹,🖥️ 🎵,🖥️ 🎬,🖥️ 🐘,🖥️ 📘,🖥️ 🐤,🖥️ 🙏,🖥️ 👽,🖥️ 👻,🕵🏾‍♀️,😱,🕵️,⛹🏼‍♀️");
 
   localStorage.setItem("🐘","0000,🥗,🌍,🐘,🍁,📽️");
 
   localStorage.setItem("🎧","0000,🎶 Ⓜ️,👧🏻,❤️,🎙️,🔥,💔,🌧️,🎺,💡,🥁,🚘,🎶,🎸");
-  localStorage.setItem("🎙️","0000,Ⓜ️,👧🏻,❤️,🎙️,🌧️,💡,🔥,💔,🎺,🥁,🚘,🎶,🎸");
+  localStorage.setItem("🎙️","0000,🎶 Ⓜ️,👧🏻,❤️,🎙️,🌧️,💡,🔥,💔,🎺,🥁,🚘,🎶,🎸");
 
   localStorage.setItem("▶️","0000,🐤 ▶️,📀 ▶️,▶️ 🎵");
   //🔱🈴🔔
