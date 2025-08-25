@@ -1331,6 +1331,13 @@ document.getElementById("next-button").addEventListener("click", () => {
 });
 
 hamburgerMenu.addEventListener("click", (e) => {
+
+  //TODO: Test and Review
+  if(!isRunningAsInstalledApp()){
+    installApp();   
+    beforeinstallpromptevent.prompt(); 
+    return;
+  }
   e.stopPropagation();
   navDrawer.classList.toggle("show");
   navDrawer.scrollTop = 0;
