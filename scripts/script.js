@@ -1337,11 +1337,15 @@ hamburgerMenu.addEventListener("click", (e) => {
 });
 
 window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault(); // Prevent automatic prompt
   deferredInstallPrompt = event;
 });
 
 async function installApp(){
+  console.log("In Install App");
+  console.log(deferredInstallPrompt);
   if (deferredInstallPrompt) {
+    console.log("deferred installed prompt available");
     deferredInstallPrompt.prompt();
     const { outcome } = await deferredInstallPrompt.userChoice;
     if (outcome === 'accepted') {
