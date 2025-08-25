@@ -11,7 +11,6 @@ const urlsToCache = [
   "/icons/favicon.ico",
   "/about.txt",
   "/manifest.json",
-  "https://fonts.googleapis.com/icon?family=Material+Icons",
   "https://cdn.jsdelivr.net/npm/hls.js@1.6.10",
 ];
 
