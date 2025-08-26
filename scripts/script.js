@@ -930,7 +930,7 @@ function generateQuickSearchButtons() {
             
             const link = document.createElement('a');
             link.href = '#';
-            link.textContent = subCategory.trim();
+            link.innerHTML = subCategory.trim();
             link.style.color = 'white';
             link.style.marginLeft = '25px';
             link.style.marginLeft = '25px';
