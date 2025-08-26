@@ -911,7 +911,7 @@ function generateQuickSearchButtons() {
     button.style.cursor = "pointer";
     button.style.backgroundColor = "black";
     button.style.color = "white";
-    button.textContent = buttons[i];
+    button.innerHTML = buttons[i];
 
     button.addEventListener("click", () => {
       if (searchInput.value.includes(button.textContent)) {
