@@ -54,7 +54,7 @@ function loadDefaultItems() {
 
   localStorage.setItem("🎬","0000,🎬 Ⓜ️,🎬 <i class=\"material-icons\">h_mobiledata</i>,🎬 <i class=\"material-icons\">explicit</i>,🎬 👻,🎬 🤣,🎬 👊,🎬 🕵️,🎬 💡,🎬 👽,🎬 ❤️, ");
 
-  localStorage.setItem("🖥️","0000,🖥️ Ⓜ️,🖥️ <i class=\"material-icons\">h_mobiledata</i>,💹,📰,🖥️ 🎬,🖥️ 🎵,🖥️ 🐘,🖥️ 🐤,🖥️ ⛹🏼‍♀️,🖥️ 🙏,🖥️ <i class=\"material-icons\">explicit</i>,🖥️ 👽,🖥️ 👻,🖥️ 📘,🕵🏾‍♀️,😱,🕵️, ");
+  localStorage.setItem("🖥️","0000,🖥️ Ⓜ️,🖥️ <i class=\"material-icons\">h_mobiledata</i>,🖥️ <i class=\"material-icons\">explicit</i>,🖥️ 🎬,💹,📰,🖥️ 🎵,🖥️ 🐘,🖥️ 🐤,🖥️ ⛹🏼‍♀️,🖥️ 🙏,🖥️ 👽,🖥️ 👻,🖥️ 📘,🕵🏾‍♀️,😱,🕵️, ");
 
   localStorage.setItem("🐘","0000,🥗,🌍,🐘,🍁,📽️, ");
 

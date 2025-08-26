@@ -1062,12 +1062,8 @@ async function overhaul(){
 
 function isRunningAsInstalledApp() {
   return window.matchMedia('(display-mode: standalone)').matches 
-          || window.matchMedia('(display-mode: fullscreen)').matches 
-         // || window.navigator.standalone  
-         ;
+          || window.matchMedia('(display-mode: fullscreen)').matches;
 }
-
-
 
 async function runOnLoad() {
   deleteThirdPartyIndexedDB();
