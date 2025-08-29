@@ -864,13 +864,7 @@ function addRepeatingWordCategoriesToNavDrawer(repeatingWords) {
     link.style.color = "white";
 
     link.addEventListener("click", () => {
-      if (searchInput.value.includes(link.textContent)) {
-        searchInput.value = "";
-      } else {
-        searchInput.value = link.textContent + " ";
-      }
-      searchInput.dispatchEvent(new Event("input", { bubbles: true }));
-      searchInput.dispatchEvent(new Event("change", { bubbles: true }));
+      updatePlaylistItemsBySearchTerm(link.textContent);
       navDrawer.classList.toggle("show");
     });
     
@@ -923,7 +917,7 @@ function generateQuickSearchButtons() {
       if (searchInput.value.includes(button.textContent)) {
         searchInput.value = "";
       } else {
-        searchInput.value = button.textContent + " ";
+        updatePlaylistItemsBySearchTerm(button.textContent + " ");                 
         const subCategories = localStorage.getItem(button.textContent) ? localStorage.getItem(button.textContent).split(',') : null;   
         const subCategoryDiv = document.getElementById("sub-category");     
         subCategoryDiv.innerHTML = '';      
@@ -943,10 +937,8 @@ function generateQuickSearchButtons() {
             link.style.fontSize = '24px';
             link.style.textDecoration = 'none';
             link.onclick = () => {
-              searchInput.value = subCategory.trim();
-              searchInput.dispatchEvent(new Event("input", { bubbles: true }));              
-              searchInput.dispatchEvent(new Event("change", { bubbles: true }));
-            };            
+              updatePlaylistItemsBySearchTerm(subCategory.trim());              
+            };
             subCategoryDiv.appendChild(link);            
 
           });
@@ -954,8 +946,6 @@ function generateQuickSearchButtons() {
           subCategoryDiv.display = 'none';
         }
       }
-      searchInput.dispatchEvent(new Event("input", { bubbles: true }));
-      searchInput.dispatchEvent(new Event("change", { bubbles: true }));
     });
 
     row.appendChild(button);
@@ -963,6 +953,23 @@ function generateQuickSearchButtons() {
 
   // Append the last row
   container.appendChild(row);
+}
+
+function updatePlaylistItemsBySearchTerm(searchTerm){
+  if(!searchTerm || searchTerm==""){
+    loadPlaylist();
+    return;
+  }
+  const searchWords = searchTerm
+      .split(" ")
+      .filter((word) => word.length > 1);
+    const filteredPlaylist = Object.keys(channels)
+      .filter((name) => {
+        const nameLower = name.toLowerCase();
+        return searchWords.every((word) => nameLower.includes(word.toLowerCase()));
+      })
+      .map((name, index) => ({ name, url: channels[name], index }));
+    renderPlaylist(filteredPlaylist);
 }
 
 function defaultContent() {
@@ -1147,21 +1154,12 @@ document.getElementById("search-input").addEventListener("input", () => {
     .getElementById("search-input")
     .value.trim()
     .toLowerCase();
-  if (searchQuery.length >= 2) {
-    const searchWords = searchQuery
-      .split(" ")
-      .filter((word) => word.length > 1);
-    const filteredPlaylist = Object.keys(channels)
-      .filter((name) => {
-        const nameLower = name.toLowerCase();
-        return searchWords.every((word) => nameLower.includes(word));
-      })
-      .map((name, index) => ({ name, url: channels[name], index }));
-    renderPlaylist(filteredPlaylist);
-  } else {
-    document.getElementById("playlist").innerHTML = "";
-    loadPlaylist();
-  }
+
+    if (searchQuery.length >= 2) {
+      updatePlaylistItemsBySearchTerm(searchQuery);
+    }else if(searchQuery==""){
+      loadPlaylist();
+    }
 });
 
 document.getElementById("load-static-button").addEventListener("click", () => {
@@ -1272,8 +1270,7 @@ screen.orientation.addEventListener("change", function () {
 
 document.getElementById("clear-search-input").addEventListener("click", () => {
   searchInput.value = "";
-  searchInput.dispatchEvent(new Event("input", { bubbles: true }));
-  searchInput.dispatchEvent(new Event("change", { bubbles: true }));
+  updatePlaylistItemsBySearchTerm("");  
 });
 
 document.getElementById("refresh-button").addEventListener("click", () => {
@@ -1283,8 +1280,7 @@ document.getElementById("refresh-button").addEventListener("click", () => {
 document.getElementById("close-button").addEventListener("click", () => {
   stopPlayback();
   searchInput.value = "";
-  searchInput.dispatchEvent(new Event("input", { bubbles: true }));
-  searchInput.dispatchEvent(new Event("change", { bubbles: true }));
+  updatePlaylistItemsBySearchTerm("");  
   defaultContent();
 });
 
