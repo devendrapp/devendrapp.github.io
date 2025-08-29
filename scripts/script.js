@@ -447,6 +447,8 @@ function loadItem(item, data) {
     loadChannels();
   } else if (item.url.endsWith(".m3u8")) {
     playM3U8(item);
+  }else if(item.url.includes(".m3u8?")){
+    playInDPlayer(item);
   } else if (item.url.endsWith(".mp4")) {
     playVideo(item);
   } else if (item.url.includes("youtube")) {
@@ -535,6 +537,10 @@ function playM3U8(item) {
   video.addEventListener("ended", () => {
     playNextItem();
   });
+}
+
+function playInDPlayer(item) {
+  //TODO
 }
 
 function playYoutubeVideo(item) {
@@ -1341,6 +1347,7 @@ if ("serviceWorker" in navigator) {
     })
     .catch((error) => {
       console.error("Service Worker registration failed:", error);
+      runOnLoad();
     });
 }
 
