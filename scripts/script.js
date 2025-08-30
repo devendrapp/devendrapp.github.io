@@ -1074,7 +1074,12 @@ async function overhaul(){
 }
 
 function isRunningAsInstalledApp() {
-  return window.matchMedia('(display-mode: standalone)').matches 
+
+  const userAgent = navigator.userAgent.toLowerCase();
+  const isAndroidTV = userAgent.includes('android tv') || userAgent.includes('atv');
+  const isJioSphere = userAgent.includes('jiosphere') || userAgent.includes('jiophone');
+  
+  return isJioSphere || isAndroidTV || window.matchMedia('(display-mode: standalone)').matches 
           || window.matchMedia('(display-mode: fullscreen)').matches;
 }
 
