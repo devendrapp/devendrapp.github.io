@@ -2,6 +2,7 @@ let currentPlayer = null;
 let currentItem = null;
 let currentIndex = 0;
 let currentChannelName = "";
+let currentChannelNameWithoutSuffix="";
 let currentUrl = "";
 
 let channels = {};
@@ -79,10 +80,10 @@ function storeItem(item, data) {
     }
     const transaction = db.transaction(storeName, "readwrite");
     const store = transaction.objectStore(storeName);
-    const request = store.put({ name: item.name, url: item.url, data: data });
+    const request = store.put({ name: currentChannelNameWithoutSuffix, url: item.url, data: data });
     request.onsuccess = () => {
       resolve();
-      showToast(`<i class="material-icons">offline_pin</i> ${item.name}`);
+      showToast(`<i class="material-icons">offline_pin</i> ${currentChannelNameWithoutSuffix}`);
     };
     request.onerror = (event) => {
       reject(event.target.error);
@@ -377,11 +378,10 @@ function playItem(item, element, index) {
   currentItem = element;
   currentIndex = index;
   currentChannelName = item.name;
+  currentChannelNameWithoutSuffix=currentChannelName.replace(/ ▪️ \d+$/, '');
   currentUrl = item.url;
-  splitChlName = item.name.split(";")[1] || item.name;
 
   if (
-    item.name.includes("💾") ||
     item.url.toLowerCase().endsWith(".mp3") ||
     item.url.toLowerCase().endsWith(".ogg") ||
     item.url.toLowerCase().endsWith(".jpg") ||
@@ -389,14 +389,14 @@ function playItem(item, element, index) {
     item.url.toLowerCase().endsWith(".png")
   ) {
     // Check if item is cached in IndexedDB
-    getItem(item.name)
+    getItem(currentChannelNameWithoutSuffix)
       .then((cachedItem) => {
         if (cachedItem && cachedItem.data) {
           loadItem(item, cachedItem.data);
         } else {          
           setTimeout(() => {
             cacheItem(item);
-          }, 5000);
+          }, 50000);
           loadItem(item);
         }
       })
@@ -410,7 +410,7 @@ function playItem(item, element, index) {
 
   if ("mediaSession" in navigator) {
     navigator.mediaSession.metadata = new MediaMetadata({
-      title: splitChlName,
+      title: currentChannelNameWithoutSuffix,
       artist: "",
       album: "",
     });
@@ -440,7 +440,6 @@ function loadItem(item, data) {
     item.name.startsWith("🌼") ||
     item.name.startsWith("🌺")
   ) {
-    console.log(item.url);
     window.location.href = item.url;
   } else if (item.url.endsWith(".json")) {
     localStorage.setItem("jsonUrl", item.url);
@@ -683,7 +682,7 @@ function renderPlaylist(playlistToRender) {
       element.className = "playlist-item";
       let playListElementtitle= item.name.replace(/ ▪️ \d+$/, '');
       element.innerHTML = playListElementtitle;
-      getItem(item.name).then((storedItem) => {
+      getItem(playListElementtitle).then((storedItem) => {
         if (storedItem && storedItem.data) {
           element.innerHTML = `<i class="material-icons">offline_pin</i> ${playListElementtitle}`;
         }
@@ -723,6 +722,11 @@ function cacheItem(item) {
   //pause on lowStorage
   if(localStorage.getItem("0000_pauseIndexedDBStorage")){
     return;
+  }
+
+  if(!item.name.includes(currentChannelNameWithoutSuffix)){
+    console.log("media changed, do not cache");
+      return;
   }
 
   if (
