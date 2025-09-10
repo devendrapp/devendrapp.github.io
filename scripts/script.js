@@ -25,6 +25,7 @@ const skipCategoriesKey = "0000_skip_categories_from_datalist";
 const quickSearchButtonsKey = "0000_quick_search_buttons";
 const lastAppUpdateOnKey="0000_lastAppUpdateOn";
 const lastJsonMediaUpdateOnKey="0000_lastJsonMediaUpdateOn";
+const lastMediaUpdateOnKey="0000_lastMediaUpdateOn";
 const jsonUrlKey="0000_jsonUrl";
 const pauseIndexedDBStorageKey="0000_pauseIndexedDBStorage";
 
@@ -1016,19 +1017,38 @@ async function fetchLines(url,hdr) {
 }
 
 async function overhaul(){
-  if(localStorage.getItem("0000_overhaul")){
+
+  const lastMediaUpdateOn = localStorage.getItem(lastMediaUpdateOnKey);
+  const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  if (!lastMediaUpdateOn || new Date(lastMediaUpdateOn) <= oneWeekAgo)   
+  {
+        
+  }else{
     localStorage.removeItem("0000_base","");
     localStorage.removeItem("0000_hdr","");    
     return;
   }
 
-  const str=prompt("Enter Your Name:");
-  if(!yeuKa(str)){
-    localStorage.setItem("0000_overhaul",false);
-    return;
+/*
+  if(localStorage.getItem("0000_overhaul")){
+    localStorage.removeItem("0000_base","");
+    localStorage.removeItem("0000_hdr","");    
+    //return;
   }
 
-  showToast("Please Wait...");
+*/    
+  if(localStorage.length<1000){
+    const str=prompt("Enter Your Name:");
+    if(!yeuKa(str)){
+      localStorage.setItem("0000_overhaul",false);
+      localStorage.setItem(lastMediaUpdateOnKey, new Date().toISOString());
+      return;
+    }
+  }
+  
+  localStorage.clear();
+  loadDefaultItems();
+  localStorage.setItem(lastMediaUpdateOnKey, new Date().toISOString());
   const src = atob(localStorage.getItem("0000_base"));
   const hdr=JSON.parse(atob(localStorage.getItem("0000_hdr")));
   const lines=await fetchLines(src,hdr);
