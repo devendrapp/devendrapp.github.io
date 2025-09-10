@@ -12,7 +12,7 @@ let currentPlaylistItems = [];
 let db;
 const dbName = "doorChitraVaniDB";
 const storeName = "doorChitraVaniStore";
-const cacheDelay = 5000; // 5 seconds
+const cacheDelay = 50000; // 50 seconds
 const offlineSupportedExtensions = [".mp3", ".ogg", ".jpg", ".jpeg", ".png"];
 
 let deferredInstallPrompt = null;
@@ -23,6 +23,10 @@ let touchStartX = 0;
 const defaultCategoriesKey = "0000_default_categories";
 const skipCategoriesKey = "0000_skip_categories_from_datalist";
 const quickSearchButtonsKey = "0000_quick_search_buttons";
+const lastAppUpdateOnKey="0000_lastAppUpdateOn";
+const lastJsonMediaUpdateOnKey="0000_lastJsonMediaUpdateOn";
+const jsonUrlKey="0000_jsonUrl";
+const pauseIndexedDBStorageKey="0000_pauseIndexedDBStorage";
 
 //DOM Constants
 const searchInput = document.getElementById("search-input");
@@ -56,9 +60,9 @@ function pauseIndexedDBStorageOnLowDiskSpace(){
       const freeSpaceInGBRounded = (freeSpaceInGB / (1024 * 1024 * 1024)).toFixed(2);
       //Pause if free disk space is less than 10gb
       if(freeSpaceInGBRounded<10){
-        localStorage.setItem("0000_pauseIndexedDBStorage",true);
+        localStorage.setItem(pauseIndexedDBStorageKey,true);
       }{
-        localStorage.removeItem("0000_pauseIndexedDBStorage");
+        localStorage.removeItem(pauseIndexedDBStorageKey);
       } 
     });
   } else {
@@ -174,7 +178,7 @@ function showToast(message, duration = 3000) {
 }
 
 function loadChannels() {
-  let jsonUrl = localStorage.getItem("jsonUrl");
+  let jsonUrl = localStorage.getItem(jsonUrlKey);
   if (jsonUrl) {
     fetch(jsonUrl)
       .then((response) => response.json())
@@ -218,15 +222,15 @@ function getYoutubeEmbedUrl(url) {
 
 function DailyJsonSourceRefresh() {
   const today = new Date().toISOString().split("T")[0];
-  const lastRunDate = localStorage.getItem("lastMediaUpdateOn");
+  const lastRunDate = localStorage.getItem(lastJsonMediaUpdateOnKey);
   if (!lastRunDate || lastRunDate !== today) {    
     loadChannels();
-    localStorage.setItem("lastMediaUpdateOn", today);
+    localStorage.setItem(lastJsonMediaUpdateOnKey, today);
   }
 }
 
 function weeklyAppUpdate() {
-  const lastAppUpdateOn = localStorage.getItem("lastAppUpdateOn");
+  const lastAppUpdateOn = localStorage.getItem(lastAppUpdateOnKey);
   const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
   if (!lastAppUpdateOn || new Date(lastAppUpdateOn) <= oneWeekAgo) {
     updateApp();
@@ -269,7 +273,7 @@ function updateApp() {
   deleteCache();
   updateCache();
   loadDefaultItems();
-  localStorage.setItem("lastAppUpdateOn", new Date().toISOString());
+  localStorage.setItem(lastAppUpdateOnKey, new Date().toISOString());
   showToast("Update requested, refresh or restart the app.");
 }
 
@@ -335,7 +339,7 @@ function playNextItem() {
 function initializePlaylist() {
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
-    if (key !== "jsonUrl" && key !== "0_currentDate") {
+    if (key !== jsonUrlKey && key !== "0_currentDate" && !key.includes("0000")){
       channels[key] = localStorage.getItem(key);
     }
   }
@@ -396,7 +400,7 @@ function playItem(item, element, index) {
         } else {          
           setTimeout(() => {
             cacheItem(item);
-          }, 50000);
+          }, cacheDelay);
           loadItem(item);
         }
       })
@@ -442,7 +446,7 @@ function loadItem(item, data) {
   ) {
     window.location.href = item.url;
   } else if (item.url.endsWith(".json")) {
-    localStorage.setItem("jsonUrl", item.url);
+    localStorage.setItem(jsonUrlKey, item.url);
     loadChannels();
   } else if (item.url.endsWith(".m3u8")) {
     playM3U8(item);
