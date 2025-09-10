@@ -1097,7 +1097,9 @@ async function overhaul(){
       });
       
       localStorage.setItem("0000_overhaul",false);
-      showToast("Please refresh or restart app.");    
+      setTimeout(function() {
+        window.location.reload(true);
+      }, 5000);
   }
 }
 
