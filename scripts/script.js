@@ -730,7 +730,7 @@ function cacheItem(item) {
   }
 
   if(!item.name.includes(currentChannelNameWithoutSuffix)){
-    console.log("media changed, do not cache");
+    //console.log("media changed, do not cache");
       return;
   }
 
