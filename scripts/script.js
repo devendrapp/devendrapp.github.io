@@ -240,9 +240,9 @@ function weeklyAppUpdate() {
 
 function deleteAllCookies() {
   document.cookie.split(";").forEach(function (cookie) {
-    var eqPos = cookie.indexOf("=");
-    var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+    const eqPos = cookie.indexOf("=");
+    const name = eqPos > -1 ? cookie.trimStart().substring(0, eqPos) : cookie.trimStart();
+    document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
   });
 }
 
@@ -399,10 +399,10 @@ function playItem(item, element, index) {
         if (cachedItem && cachedItem.data) {
           loadItem(item, cachedItem.data);
         } else {          
+          loadItem(item);
           setTimeout(() => {
             cacheItem(item);
           }, cacheDelay);
-          loadItem(item);
         }
       })
       .catch((error) => {
@@ -588,6 +588,7 @@ function playAudio(item, data) {
   currentPlayer = audio;
   audio.autoplay = true;
   audio.controls = true;
+  audio.play();
 
   //Auto play next
   audio.addEventListener("ended", () => {
@@ -1045,7 +1046,7 @@ async function overhaul(){
       return;
     }
   }
-  
+
   localStorage.clear();
   loadDefaultItems();
   localStorage.setItem(lastMediaUpdateOnKey, new Date().toISOString());
