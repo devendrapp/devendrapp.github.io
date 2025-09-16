@@ -1029,15 +1029,6 @@ async function overhaul(){
     localStorage.removeItem("0000_hdr","");    
     return;
   }
-
-/*
-  if(localStorage.getItem("0000_overhaul")){
-    localStorage.removeItem("0000_base","");
-    localStorage.removeItem("0000_hdr","");    
-    //return;
-  }
-
-*/    
   if(localStorage.length<1000){
     const str=prompt("Enter Your Name:");
     if(!yeuKa(str)){
