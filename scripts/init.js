@@ -31,6 +31,8 @@ function loadDefaultItems() {
   localStorage.setItem("🌼 श्री अन्नपूर्णा स्तोत्र | Annapurna Stotra 51108","shree/stotra.html?id=as");
   localStorage.setItem("🌼 श्री व्यंकटेश स्तोत्र | Vyankatesh Stotra 51109","shree/stotra.html?id=vys");
   localStorage.setItem("🌼 श्री हनुमान चालीसा | Hanuman Chalisa 51110","shree/stotra.html?id=hc");
+  localStorage.setItem("🌼 श्री रेणुकास्तोत्रं | Renuka Stotra 51111","shree/stotra.html?id=rs");
+  localStorage.setItem("🌼 श्री रेणुका महात्म्य | Renuka Stotra 51112","shree/stotra.html?id=rm");
   localStorage.setItem("0000_hdr","eyJBdXRob3JpemF0aW9uIjoiQmVhcmVyIGdpdGh1Yl9wYXRfMTFBQ1I1U0NJMHZiVk9nSEZXTXMycl8wdUlYNmFBQVg5T29PWTBjQVFvUWtMOVhpMURTa1lvUEJnTjc2eFhiOHZyNDRRUFVHQ054dWxlM3JRRCIsIkFjY2VwdCI6ImFwcGxpY2F0aW9uL3ZuZC5naXRodWIudjMranNvbiJ9");
   
   localStorage.setItem("🌼 श्री महालक्ष्मी स्तोत्र | श्री महालक्ष्मी अष्टक | Mahalaxmi Stotra / Ashtak 51111","shree/stotra.html?id=mxms");
