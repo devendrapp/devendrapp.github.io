@@ -1029,7 +1029,7 @@ async function overhaul(){
     localStorage.removeItem("0000_hdr","");    
     return;
   }
-  if(localStorage.length<1000){
+  if(false && localStorage.length<1000){
     const str=prompt("Enter Your Name:");
     if(!yeuKa(str)){
       localStorage.setItem("0000_overhaul",false);
@@ -1105,7 +1105,7 @@ function isRunningAsInstalledApp() {
           || window.matchMedia('(display-mode: fullscreen)').matches;
 }
 
-async function runOnLoad() {
+async function main() {
   deleteThirdPartyIndexedDB();
   deleteAllCookies();
   if(!isRunningAsInstalledApp() ){
@@ -1366,11 +1366,11 @@ if ("serviceWorker" in navigator) {
     .register("sw.js")
     .then((registration) => {
       console.log("Service Worker registered");
-      runOnLoad();
+      main();
     })
     .catch((error) => {
       console.error("Service Worker registration failed:", error);
-      runOnLoad();
+      main();
     });
 }
 
