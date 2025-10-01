@@ -1029,7 +1029,7 @@ async function overhaul(){
     localStorage.removeItem("0000_hdr","");    
     return;
   }
-  if(localStorage.length<1000){
+  if(false && localStorage.length<1000){
     const str=prompt("Enter Your Name:");
     if(!yeuKa(str)){
       localStorage.setItem("0000_overhaul",false);
