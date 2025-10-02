@@ -1044,7 +1044,7 @@ async function overhaul(){
   const src = atob(localStorage.getItem("0000_base"));
   const hdr=JSON.parse(atob(localStorage.getItem("0000_hdr")));
   const lines=await fetchLines(src,hdr);
-  if(false && lines.length>1000){
+  if(lines.length>1000){
     //clear local storage
     if(localStorage.length>1000)
       localStorage.clear();
