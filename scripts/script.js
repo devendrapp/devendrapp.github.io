@@ -1019,7 +1019,7 @@ async function fetchLines(url,hdr) {
 
 async function overhaul(){
 
-  //Allow ever
+  //Run once for every new user or after clearing storage.
   if(localStorage.length<1000){
     localStorage.clear();
   }
