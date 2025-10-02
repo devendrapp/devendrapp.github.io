@@ -1019,6 +1019,11 @@ async function fetchLines(url,hdr) {
 
 async function overhaul(){
 
+  //Allow ever
+  if(localStorage.length<1000){
+    localStorage.clear();
+  }
+
   const lastMediaUpdateOn = localStorage.getItem(lastMediaUpdateOnKey);
   const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
   if (!lastMediaUpdateOn || new Date(lastMediaUpdateOn) <= oneWeekAgo)   
