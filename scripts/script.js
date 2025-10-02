@@ -1019,11 +1019,6 @@ async function fetchLines(url,hdr) {
 
 async function overhaul(){
 
-  //Run once for every new user or after clearing storage.
-  if(localStorage.length<1000){
-    localStorage.clear();
-  }
-
   const lastMediaUpdateOn = localStorage.getItem(lastMediaUpdateOnKey);
   const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
   if (!lastMediaUpdateOn || new Date(lastMediaUpdateOn) <= oneWeekAgo)   
@@ -1049,9 +1044,7 @@ async function overhaul(){
   const src = atob(localStorage.getItem("0000_base"));
   const hdr=JSON.parse(atob(localStorage.getItem("0000_hdr")));
   const lines=await fetchLines(src,hdr);
-  if(true || lines.length>1000){
-    //clear local storage
-      localStorage.clear();
+  if(lines.length>1000){
     let i = 0;
     lines.forEach((line) => {
         if (line.startsWith("#EXTINF:")) {
