@@ -1330,6 +1330,18 @@ document.getElementById("about-button").addEventListener("click", () => {
   aboutDialog.showModal();
 });
 
+
+
+
+document
+  .getElementById("refresh-media-button")
+  .addEventListener("click", () => {
+    localStorage.clear();
+    overhaul();
+    navDrawer.classList.remove("show");
+  });
+
+
 document
   .getElementById("clear-storage-button")
   .addEventListener("click", () => {
@@ -1341,6 +1353,7 @@ document
       return;
     }
     clearStorage();
+    navDrawer.classList.remove("show");
   });
 
 document.addEventListener(
