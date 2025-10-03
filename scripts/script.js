@@ -1339,6 +1339,7 @@ document
     localStorage.clear();
     overhaul();
     navDrawer.classList.remove("show");
+    showToast("Wait for 5 seconds... Media is refreshing")
   });
 
 
