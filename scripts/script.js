@@ -1102,11 +1102,27 @@ function isRunningAsInstalledApp() {
           || window.matchMedia('(display-mode: fullscreen)').matches;
 }
 
+async function checkChannels() {
+    console.log("In checkChannels")
+    for (const [name, url] of Object.entries(channels)) {
+        try {
+            const response = await fetch(url, { method: 'HEAD' });
+            if (response.status > 204) {
+                console.log(`Channel Name: ${name}, URL: ${url}, Status: ${response.status}`);
+            }
+        } catch (error) {
+            console.error(`Error fetching ${url}:`, error);
+        }
+    }
+    console.log("checkChannels completed.")
+}
+
+
 async function main() {
   deleteThirdPartyIndexedDB();
   deleteAllCookies();
   if(!isRunningAsInstalledApp() ){
-     alert('Use "Install" or "Add to home screen" button to install the application on your device.');  
+     alert('Use "Install" or "Add to home screen" button from browser menu to install the application on your device.');  
     return;
   }
 
@@ -1127,6 +1143,7 @@ async function main() {
   populateDataListForSearchInput();
   pauseIndexedDBStorageOnLowDiskSpace();
   showToast("Total Playlist Items: " + localStorage.length);
+  //checkChannels();
 }
 
 closeDialogBtn.addEventListener("click", () => {
