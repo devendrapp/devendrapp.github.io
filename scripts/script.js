@@ -37,6 +37,18 @@ const navDrawer = document.getElementById("nav-drawer");
 const aboutDialog = document.getElementById("about-dialog");
 const closeDialogBtn = document.getElementById("close-dialog-btn");
 
+function clearLocalStorage(){
+  localStorage.clear();
+}
+
+function addToLocalStorage(key,val){
+  localStorage.setItem(key,val)
+}
+
+function removeFromLocalStorage(key){
+  localStorage.removeItem(key);
+}
+
 function initDB() {
   return new Promise((resolve, reject) => {
     const request = window.indexedDB.open(dbName, 1);
@@ -457,7 +469,7 @@ function loadItem(item, data) {
     playVideo(item);
   } else if (item.url.includes("youtube")) {
     playYoutubeVideo(item);
-  }else if(item.name.includes("🔳")){
+  }else if(item.name.includes("🖥️") && !item.url.includes(".m3u8")){
     playEmbeddedURL(item);
   }else if (
     item.url.endsWith(".jpg") ||
@@ -541,10 +553,6 @@ function playM3U8(item) {
   video.addEventListener("ended", () => {
     playNextItem();
   });
-}
-
-function playInDPlayer(item) {
-  //TODO
 }
 
 function playYoutubeVideo(item) {
