@@ -463,9 +463,7 @@ function loadItem(item, data) {
     loadChannels();
   } else if (item.url.endsWith(".m3u8")) {
     playM3U8(item);
-  }else if(item.url.includes(".m3u8?")){
-    playInDPlayer(item);
-  } else if (item.url.endsWith(".mp4")) {
+  }else if (item.url.endsWith(".mp4") || item.url.includes(".mpd")) {
     playVideo(item);
   } else if (item.url.includes("youtube")) {
     playYoutubeVideo(item);
@@ -1152,6 +1150,7 @@ async function main() {
   pauseIndexedDBStorageOnLowDiskSpace();
   showToast("Total Playlist Items: " + localStorage.length);
   //checkChannels();
+  
 }
 
 closeDialogBtn.addEventListener("click", () => {
