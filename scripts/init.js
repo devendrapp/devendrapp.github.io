@@ -69,8 +69,8 @@ localStorage.setItem("0000_quick_search_buttons",
 
   localStorage.setItem("🐘","0000,🥗,🌍,🐘,🍁,📽️, ");
 
-  localStorage.setItem("🎧","0000,🎶 Ⓜ️,👧🏻,❤️,🎙️,🔥,💔,🌧️,🎺,🎨,💡,🥁,🚘,🎶,🎸,▶️ 🎵, ");
-  localStorage.setItem("🎙️","0000,🎶 Ⓜ️,👧🏻,❤️,🎙️,🔥,💔,🌧️,🎺,🎨,💡,🥁,🚘,🎶,🎸,▶️ 🎵, ");
+  localStorage.setItem("🎧","0000,🎶 Ⓜ️,👧🏻,❤️,🎙️,🎨,🔥,💔,🌧️,🎺,💡,🥁,🚘,🎶,🎸,▶️ 🎵, ");
+  localStorage.setItem("🎙️","0000,🎶 Ⓜ️,👧🏻,❤️,🎙️,🎨,🔥,💔,🌧️,🎺,💡,🥁,🚘,🎶,🎸,▶️ 🎵, ");
 
   localStorage.setItem("▶️","0000,🐤 ▶️,📀 ▶️,▶️ 🎵, ");
   //🔱🈴🔔
