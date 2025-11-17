@@ -242,13 +242,6 @@ function DailyJsonSourceRefresh() {
   }
 }
 
-function weeklyAppUpdate() {
-  const lastAppUpdateOn = localStorage.getItem(lastAppUpdateOnKey);
-  const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  if (!lastAppUpdateOn || new Date(lastAppUpdateOn) <= oneWeekAgo) {
-    updateApp();
-  }
-}
 
 function deleteAllCookies() {
   document.cookie.split(";").forEach(function (cookie) {
@@ -275,14 +268,15 @@ function updateCache() {
   }
 }
 
-function updateApp() {
-  if (
-    !confirm(
-      "Are you connected to Internet? Do you want to check for update to this application?"
-    )
-  ) {
-    return;
+function weeklyAppUpdate() {
+  const lastAppUpdateOn = localStorage.getItem(lastAppUpdateOnKey);
+  const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  if (!lastAppUpdateOn || new Date(lastAppUpdateOn) <= oneWeekAgo) {
+    updateApp();
   }
+}
+
+function updateApp() {
   deleteCache();
   updateCache();
   loadDefaultItems();
@@ -349,7 +343,7 @@ function playNextItem() {
   playItem(nextItem, element, currentIndex);
 }
 
-function initializePlaylist() {
+function localStorageToPlaylistArray() {
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     if (key !== jsonUrlKey && key !== "0_currentDate" && !key.includes("0000")){
@@ -899,7 +893,7 @@ function yeuKa(str) {
 }
 
 
-function generateQuickSearchButtons() {
+function quickFilters() {
   const quickSearchButtons = localStorage.getItem(quickSearchButtonsKey);
   if (!quickSearchButtons) return;
   buttons = quickSearchButtons.split(",");
@@ -1136,7 +1130,7 @@ async function main() {
   overhaul();
   DailyJsonSourceRefresh();
   defaultContent();
-  generateQuickSearchButtons();
+  quickFilters();
   await initDB()
     .then(() => {
       console.log("IndexedDB initialized");
@@ -1144,7 +1138,7 @@ async function main() {
     .catch((error) => {
       console.error("Error initializing IndexedDB:", error);
     });
-  initializePlaylist();
+  localStorageToPlaylistArray();
   loadPlaylist();
   populateDataListForSearchInput();
   pauseIndexedDBStorageOnLowDiskSpace();
