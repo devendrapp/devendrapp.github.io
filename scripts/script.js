@@ -457,12 +457,10 @@ function loadItem(item, data) {
     loadChannels();
   } else if (item.url.endsWith(".m3u8")) {
     playM3U8(item);
-  }else if (item.url.endsWith(".mp4") || item.url.includes(".mpd")) {
+  }else if (item.url.endsWith(".mp4")) {
     playVideo(item);
   } else if (item.url.includes("youtube")) {
     playYoutubeVideo(item);
-  }else if(item.name.includes("🖥️") && item.url.startsWith("id=")){
-    playThirdPartyVideo(item)
   }else if(item.name.includes("🖥️") && !item.url.includes(".m3u8")){
     playEmbeddedURL(item);
   }else if (
@@ -562,35 +560,6 @@ function playYoutubeVideo(item) {
   currentPlayer = iframe;
 }
 
-function playThirdPartyVideo(item){
-  id=item.url.split("=")[1];
-  if(!id) return;
-  fetch(atob(localStorage.getItem("0000_extSrc")))
-  .then(response => response.json())
-                .then(data => {
-                    const streamInfo = data.find(item => item.id === streamId);
-                    const iframe = document.createElement("iframe");
-                    if (streamInfo.keyId && streamInfo.key) {
-                      const key= encodeURIComponent(streamInfo.url);
-                      const key1= encodeURIComponent(streamInfo.keyId);                             
-                      const key2= encodeURIComponent(streamInfo.key);  
-                      let str = streamInfo.name;
-                      let result = str.split(" ").map(word => word.replace(" ", "_")).join("_");
-                      console.log(result);
-                      [k1, k2] = key.split('mpd');
-                                 
-                      iframe.src =`https://jall.pages.dev/?url=${key}&keyId=${key1}&key=${key2}`;
-                      iframe.style.border = 'none';
-                      iframe.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
-                      iframe.allowFullScreen = true;
-                      document.getElementById("player-container").appendChild(iframe);
-                      currentPlayer = iframe;
-                    } 
-                });
-  
-
-}
-
 function playEmbeddedURL(item) {
   const iframe = document.createElement("iframe");
   iframe.src = item.url;
@@ -599,6 +568,15 @@ function playEmbeddedURL(item) {
   iframe.allowFullScreen = true;
   document.getElementById("player-container").appendChild(iframe);
   currentPlayer = iframe;
+
+  const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+  const videoElement = iframeDoc.getElementsByTagName('video')[0];
+
+  if (videoElement) {
+    videoElement.muted = false;
+    videoElement.volume = 1.0; // Set volume to max (1.0)
+  }
+
 }
 
 function playLocalFileAsAudio(item) {
