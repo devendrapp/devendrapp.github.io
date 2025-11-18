@@ -712,7 +712,7 @@ function renderPlaylist(playlistToRender) {
   currentIndex = 0;
 }
 
-function loadPlaylist() {
+function loadDefaultPlaylist() {
   let defaultCategories = [staticChannelSuffix];
   if (localStorage.getItem(defaultCategoriesKey)) {
     defaultCategories = localStorage.getItem(defaultCategoriesKey).split(",");
@@ -976,7 +976,7 @@ function quickFilters() {
 
 function updatePlaylistItemsBySearchTerm(searchTerm){
   if(!searchTerm || searchTerm==""){
-    loadPlaylist();
+    loadDefaultPlaylist();
     return;
   }
   const searchWords = searchTerm
@@ -1149,7 +1149,7 @@ async function main() {
       console.error("Error initializing IndexedDB:", error);
     });
   localStorageToPlaylistArray();
-  loadPlaylist();
+  loadDefaultPlaylist();
   populateDataListForSearchInput();
   pauseIndexedDBStorageOnLowDiskSpace();
   showToast("Total Playlist Items: " + localStorage.length);
@@ -1210,7 +1210,7 @@ document.getElementById("search-input").addEventListener("input", () => {
     if (searchQuery.length >= 2) {
       updatePlaylistItemsBySearchTerm(searchQuery);
     }else if(searchQuery==""){
-      loadPlaylist();
+      loadDefaultPlaylist();
     }
 });
 
