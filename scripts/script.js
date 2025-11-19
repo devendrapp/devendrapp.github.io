@@ -406,6 +406,7 @@ function playItem(item, element, index) {
           loadItem(item, cachedItem.data);
         } else {          
           loadItem(item);
+          pauseIndexedDBStorageOnLowDiskSpace();
           setTimeout(() => {
             cacheItem(item);
           }, cacheDelay);
@@ -1151,7 +1152,6 @@ async function main() {
   localStorageToPlaylistArray();
   loadDefaultPlaylist();
   populateDataListForSearchInput();
-  pauseIndexedDBStorageOnLowDiskSpace();
   showToast("Total Playlist Items: " + localStorage.length);
   //checkChannels();
   
