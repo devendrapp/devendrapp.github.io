@@ -3,7 +3,7 @@ function loadDefaultItems() {
     ,"🎺,🕉️,🚩,📰,📻");
 
 localStorage.setItem("0000_quick_search_buttons",
-  "🕉️,📰,🎤,🎙️,🎧,🐤,📻,🖥️,📀,Ⓜ️,<i class=\"material-icons\">h_mobiledata</i>,<i class=\"material-icons\">explicit</i>,🎬,🐘,▶️,🤣,💡,🇮🇳"
+  "📻,📰,🕉️,🎤,🎙️,🎧,🐤,🖥️,📀,▶️,Ⓜ️,<i class=\"material-icons\">h_mobiledata</i>,<i class=\"material-icons\">explicit</i>,🎬,🐘,🤣,💡,🇮🇳"
   );
 
 
@@ -63,7 +63,7 @@ localStorage.setItem("0000_quick_search_buttons",
   localStorage.setItem("🎧","0000,🎶 Ⓜ️,👧🏻,❤️,🎙️,🎨,🔥,💔,🌧️,🎺,💡,🥁,🚘,🎶,🎸,▶️ 🎵, ");
   localStorage.setItem("🎙️","0000,🎶 Ⓜ️,👧🏻,❤️,🎙️,🎨,🔥,💔,🌧️,🎺,💡,🥁,🚘,🎶,🎸,▶️ 🎵, ");
 
-  localStorage.setItem("▶️","0000,🐤 ▶️,📀 ▶️,▶️ 🎵, ");
+  localStorage.setItem("▶️","0000,🐤 ▶️,📀 ▶️,▶️ 🎵,▶️ cartoon,▶️ goshti ");
 
 
   localStorage.setItem(`<i class=\"material-icons\">h_mobiledata</i>`,`0000,<i class=\"material-icons\">h_mobiledata</i> 🖥️,<i class=\"material-icons\">h_mobiledata</i> 📰,<i class=\"material-icons\">h_mobiledata</i> 📻,<i class=\"material-icons\">h_mobiledata</i> 🎬,<i class=\"material-icons\">h_mobiledata</i> 🎵,<i class=\"material-icons\">h_mobiledata</i> 🎶, `);
