@@ -52,7 +52,7 @@ localStorage.setItem("0000_quick_search_buttons",
   
   localStorage.setItem("Ⓜ️","0000,Ⓜ️ 📻,Ⓜ️ 🖥️,Ⓜ️ 📰,Ⓜ️ 🎬,Ⓜ️ 🐤,Ⓜ️ 🎵,Ⓜ️ 🎶, ");
 
-  localStorage.setItem("📻","0000,🎙️,📻 🎵,📻 🎙️,📻 <i class=\"material-icons\">h_mobiledata</i>,📻 Guj,📻 Rajasthan,📻 Kannada,📻 Tamil,📻 Telugu,📻 Bengali,📻 Malyalam,📻 NorthEast,📻 Ⓜ️, ");
+  localStorage.setItem("📻","0000,📻 Ⓜ️,🎙️,📻 🎵,📻 🎙️,📻 <i class=\"material-icons\">h_mobiledata</i>,📻 Guj,📻 Rajasthan,📻 Kannada,📻 Tamil,📻 Telugu,📻 Bengali,📻 Malyalam,📻 NorthEast, ");
 
   localStorage.setItem("🎬","0000,🎬 Ⓜ️,🎬 <i class=\"material-icons\">h_mobiledata</i>,🎬 <i class=\"material-icons\">explicit</i>,🎬 👻,🎬 🤣,🎬 👊,🎬 🕵️,🎬 💡,🎬 👽,🎬 ❤️, ");
 
