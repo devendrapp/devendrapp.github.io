@@ -285,7 +285,7 @@ function updateApp() {
 }
 
 function clearStorage() {
-  localStorage.clear();
+  clearLocalStorage();
   deleteAllCookies();
   deleteCache();
   deleteAllOfflineStoredItems();
@@ -1039,7 +1039,7 @@ async function overhaul(){
     localStorage.removeItem("0000_hdr","");    
     return;
   }
-  if(false && localStorage.length<1000){
+  if(localStorage.length<1000){
     const str=prompt("Enter Your Name:");
     if(!yeuKa(str)){
       localStorage.setItem("0000_overhaul",false);
@@ -1048,7 +1048,7 @@ async function overhaul(){
     }
   }
 
-  localStorage.clear();
+  clearLocalStorage();
   loadDefaultItems();
   localStorage.setItem(lastMediaUpdateOnKey, new Date().toISOString());
   const src = atob(localStorage.getItem("0000_base"));
@@ -1347,7 +1347,6 @@ document.getElementById("about-button").addEventListener("click", () => {
 document
   .getElementById("refresh-media-button")
   .addEventListener("click", () => {
-    localStorage.clear();
     overhaul();
     navDrawer.classList.remove("show");
     showToast("Wait for 5 seconds... Media is refreshing")
