@@ -221,7 +221,6 @@ function loadChannels() {
         });
       })
       .catch((error) => console.error("Error:", error));
-    showToast("New items loaded, refresh or restart app.");
   }
 }
 
@@ -1262,7 +1261,6 @@ document.getElementById("load-static-button").addEventListener("click", () => {
           }
         }
       });
-      showToast("New items loaded, refresh or restart app.");
     };
     reader.readAsText(file);
   });
