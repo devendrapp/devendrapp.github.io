@@ -1345,9 +1345,9 @@ document.getElementById("about-button").addEventListener("click", () => {
 document
   .getElementById("refresh-media-button")
   .addEventListener("click", () => {
-    overhaul();
+    localStorage.removeItem("0000_lastMediaUpdateOn");
     navDrawer.classList.remove("show");
-    showToast("Wait for 5 seconds... Media is refreshing")
+    window.location.reload(true);
   });
 
 
