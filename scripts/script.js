@@ -1097,9 +1097,7 @@ async function overhaul(){
       });
       
       localStorage.setItem("0000_overhaul",false);
-      setTimeout(function() {
-        window.location.reload(true);
-      }, 5000);
+      //setTimeout(function() {window.location.reload(true);}, 5000);
   }
 }
 
