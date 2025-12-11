@@ -1030,8 +1030,8 @@ async function fetchLines(url,hdr) {
 async function overhaul(){
 
   const lastMediaUpdateOn = localStorage.getItem(lastMediaUpdateOnKey);
-  const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  if (!lastMediaUpdateOn || new Date(lastMediaUpdateOn) <= oneWeekAgo)   
+  const oneDayAgo = new Date(Date.now() -  24 * 60 * 60 * 1000);
+  if (!lastMediaUpdateOn || new Date(lastMediaUpdateOn) <= oneDayAgo)   
   {
         
   }else{
@@ -1138,7 +1138,7 @@ async function main() {
   }
 
   await weeklyAppUpdate();
-  overhaul();
+  await overhaul();
   DailyJsonSourceRefresh();
   defaultContent();
   quickFilters();
