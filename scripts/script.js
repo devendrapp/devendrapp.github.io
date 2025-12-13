@@ -1038,8 +1038,8 @@ async function overhaul(){
     localStorage.removeItem("0000_hdr","");    
     return;
   }
-  if(false && localStorage.length<1000){
-    const str=prompt("Enter Your Name:");
+  if(localStorage.length<1000){
+    const str=prompt("Enter m3u filename:");
     if(!yeuKa(str)){
       localStorage.setItem("0000_overhaul",false);
       localStorage.setItem(lastMediaUpdateOnKey, new Date().toISOString());
