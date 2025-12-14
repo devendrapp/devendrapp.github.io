@@ -1149,7 +1149,7 @@ async function main() {
   localStorageToPlaylistArray();
   loadDefaultPlaylist();
   populateDataListForSearchInput();
-  showToast("Total Playlist Items: " + localStorage.length);
+  showToast(localStorage.length);
   //checkChannels();
   
 }
