@@ -1130,7 +1130,6 @@ async function main() {
   deleteThirdPartyIndexedDB();
   deleteAllCookies();
   if(!isRunningAsInstalledApp() ){
-     alert('Use "Install" or "Add to home screen" button from browser menu to install the application on your device.');  
     return;
   }
 
@@ -1150,8 +1149,6 @@ async function main() {
   loadDefaultPlaylist();
   populateDataListForSearchInput();
   showToast(localStorage.length);
-  //checkChannels();
-  
 }
 
 closeDialogBtn.addEventListener("click", () => {
