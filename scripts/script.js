@@ -580,10 +580,14 @@ function playEmbeddedURL(item) {
 }
 
 function playLocalFileAsAudio(item) {
-  const intentUrl = `intent://${item.url.substring(
-    7
-  )}#Intent;action=android.intent.action.VIEW;type=audio/mpeg;end`;
-  window.location.href = intentUrl;
+  try{
+    const intentUrl = `intent://${item.url.substring(
+      7
+    )}#Intent;action=android.intent.action.VIEW;type=audio/mpeg;end`;
+    window.location.href = intentUrl;
+  }catch(err){
+    showToast(err);
+  }
 }
 
 function playAudio(item, data) {
