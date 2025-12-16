@@ -580,6 +580,7 @@ function playEmbeddedURL(item) {
 }
 
 function playLocalFileAsAudio(item) {
+  showToast("Attempt to play local file....");
   try{
     const intentUrl = `intent://${item.url.substring(
       7
