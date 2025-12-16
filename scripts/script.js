@@ -391,12 +391,12 @@ function playItem(item, element, index) {
   currentChannelNameWithoutSuffix=currentChannelName.replace(/ ▪️ \d+$/, '');
   currentUrl = item.url;
 
-  if (
-    item.url.toLowerCase().endsWith(".mp3") ||
+  if (!item.url.startsWith("file") && 
+    (item.url.toLowerCase().endsWith(".mp3") ||
     item.url.toLowerCase().endsWith(".ogg") ||
     item.url.toLowerCase().endsWith(".jpg") ||
     item.url.toLowerCase().endsWith(".jpeg") ||
-    item.url.toLowerCase().endsWith(".png")
+    item.url.toLowerCase().endsWith(".png"))
   ) {
     // Check if item is cached in IndexedDB
     getItem(currentChannelNameWithoutSuffix)
@@ -584,6 +584,7 @@ function playLocalFileAsAudio(item) {
     const intentUrl = `intent://${item.url.substring(
       7
     )}#Intent;action=android.intent.action.VIEW;type=audio/mpeg;end`;
+    showToast(intentUrl);
     window.location.href = intentUrl;
   }catch(err){
     showToast(err);
