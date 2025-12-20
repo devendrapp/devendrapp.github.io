@@ -208,7 +208,11 @@ function loadChannels() {
           if (url) {            
             if (channel.language) {
               if(channel.language==="hin" || channel.language==="eng" || channel.language==="mar"){
-                name += ` (${channel.language}) 🖥️`;
+                name += ` 🖥️ Ⓜ️`;
+              }if(channel.language==="hin"){
+                name += ` 🖥️ <i class=\"material-icons\">h_mobiledata</i>`;
+              }if(channel.language==="eng"){
+                name += ` 🖥️ <i class=\"material-icons\">explicit</i>`;
               }else{
                 name += ` (${channel.language})`;
               }
