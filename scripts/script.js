@@ -207,7 +207,7 @@ function loadChannels() {
           name = formatChannelName(channel.name, url);
           if (url) {            
             if (channel.language) {
-              if(channel.language==="hin" || channel.language==="eng" || channel.language==="mar"){
+              if(channel.language==="mar"){
                 name += ` 🖥️ Ⓜ️`;
               }if(channel.language==="hin"){
                 name += ` 🖥️ <i class=\"material-icons\">h_mobiledata</i>`;
