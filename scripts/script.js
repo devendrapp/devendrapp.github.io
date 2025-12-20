@@ -1061,6 +1061,7 @@ async function overhaul(){
   const lines=await fetchLines(src,hdr);
   if(lines.length>1000){
     let i = 0;
+    loadChannels();
     lines.forEach((line) => {
         if (line.startsWith("#EXTINF:")) {
           channelName = line.split(",")[1].trim();
@@ -1101,7 +1102,7 @@ async function overhaul(){
         }
         
       });
-      loadChannels();
+      
       localStorage.setItem("0000_overhaul",false);
       //setTimeout(function() {window.location.reload(true);}, 5000);
   }
