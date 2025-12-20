@@ -1,6 +1,6 @@
 function loadDefaultItems() {
   localStorage.setItem("0000_default_categories"
-    ,"🖥️ 📘");
+    ,"🖥️ 📘,📰,📻");
 
 localStorage.setItem("0000_quick_search_buttons",
   "📻,📰,🕉️,🎤,🎙️,🎧,🐤,🖥️,📀,▶️,Ⓜ️,<i class=\"material-icons\">h_mobiledata</i>,<i class=\"material-icons\">explicit</i>,🎬,🐘,🤣,💡,🇮🇳"
