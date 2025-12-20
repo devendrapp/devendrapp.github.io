@@ -345,7 +345,7 @@ function playNextItem() {
 function localStorageToPlaylistArray() {
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
-    if (key !== jsonUrlKey && key !== "0_currentDate" && !key.includes("0000")){
+    if (key !== "0_currentDate" && !key.includes("0000")){
       channels[key] = localStorage.getItem(key);
     }
   }
@@ -1099,6 +1099,7 @@ async function overhaul(){
             channelName = null;
           }
         }
+        loadChannels();
       });
       
       localStorage.setItem("0000_overhaul",false);
