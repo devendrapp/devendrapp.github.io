@@ -1099,9 +1099,9 @@ async function overhaul(){
             channelName = null;
           }
         }
-        loadChannels();
+        
       });
-      
+      loadChannels();
       localStorage.setItem("0000_overhaul",false);
       //setTimeout(function() {window.location.reload(true);}, 5000);
   }
