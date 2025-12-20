@@ -207,8 +207,18 @@ function loadChannels() {
           name = formatChannelName(channel.name, url);
           if (url) {            
             if (channel.language) {
-              name += ` (${channel.language})`;
+              if(channel.language==="hin" || channel.language==="eng" || channel.language==="mar"){
+                name += ` (${channel.language}) 🖥️`;
+              }else{
+                name += ` (${channel.language})`;
+              }
+              
             } else if (channel.country) {
+              if(channel.country==="in" || channel.country==="us" || channel.country==="uk"){
+                name += ` (${channel.country})  🖥️`;
+              }else{
+                name += ` (${channel.country})`;
+              }
               name += ` (${channel.country})`;
             }
 
