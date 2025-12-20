@@ -208,18 +208,18 @@ function loadChannels() {
           if (url) {            
             if (channel.language) {
               if(channel.language==="mar"){
-                name += ` 🖥️ Ⓜ️`;
-              }if(channel.language==="hin"){
-                name += ` 🖥️ <i class=\"material-icons\">h_mobiledata</i>`;
-              }if(channel.language==="eng"){
-                name += ` 🖥️ <i class=\"material-icons\">explicit</i>`;
+                name += ` Ⓜ️`;
+              }else if(channel.language==="hin"){
+                name += ` <i class=\"material-icons\">h_mobiledata</i>`;
+              }else if(channel.language==="eng"){
+                name += ` <i class=\"material-icons\">explicit</i>`;
               }else{
                 name += ` (${channel.language})`;
               }
               
             } else if (channel.country) {
               if(channel.country==="in" || channel.country==="us" || channel.country==="uk"){
-                name += ` (${channel.country}) 🖥️`;
+                name += ` (${channel.country})`;
               }else{
                 name += ` (${channel.country})`;
               }
@@ -365,17 +365,35 @@ function localStorageToPlaylistArray() {
   }
 }
 
+function categorizeChannel(name){
+  let categories=localStorage.getItem("0000_CHANNEL_CATEGORIES").split(",");
+  //console.log(categories);
+  for(ctgry of categories){
+    if(ctgry==="0000") continue;
+    let channels=localStorage.getItem(ctgry).split(",");    
+    let symbol=channels[1];
+    for(chl of channels){
+      if(chl==="0000" || chl ===symbol) continue;
+      if(chl===name.toLowerCase()){
+        return symbol+" "+name;
+      }
+    }
+  }
+  return name;
+}
+
 function formatChannelName(name, url) {
-  let formattedName=name.replace("Mystery","🕵️").replace("Romance","❤️").replace("Horror","👻").replace("Thrillers","😱").replace("Thriller","😱")
-                  .replace("Movies","🎬").replace("Cinema","🎬").replace("Films","🎬")
-                  .replace("Series","📀")
-                  .replace("Hot ","🔥")
-                  .replace("Wild","🐘").replace("Nature","🍁").replace("Earth","🌍").replace("Outdoor","🌍").replace("Geographic","🌍")
-                  .replace("Food","🥗").replace("Recipe","🥗").replace("Kitchen","🥗").replace("Chef","🥗").replace("Cook","🥗").replace("Taste","🥗")
-                  .replace("Sci-Fi","👽")
-                  .replace("Documentary","📽️").replace("Documentaries","📽️")
-                  .replace("Sports","⛹🏼‍♀️").replace("Football","⛹🏼‍♀️").replace("Basketball","⛹🏼‍♀️").replace("Tennis","⛹🏼‍♀️").replace("Poker","⛹🏼‍♀️").replace("Golf","⛹🏼‍♀️")
-                  .replace("Crime","🕵🏾‍♀️");    
+  let formattedName = categorizeChannel(name);
+  //let formattedName=name.replace("Mystery","🕵️").replace("Romance","❤️").replace("Horror","👻").replace("Thrillers","😱").replace("Thriller","😱")
+  //                .replace("Movies","🎬").replace("Cinema","🎬").replace("Films","🎬")
+  //                .replace("Series","📀")
+  //                .replace("Hot ","🔥")
+  //                .replace("Wild","🐘").replace("Nature","🍁").replace("Earth","🌍").replace("Outdoor","🌍").replace("Geographic","🌍")
+  //                .replace("Food","🥗").replace("Recipe","🥗").replace("Kitchen","🥗").replace("Chef","🥗").replace("Cook","🥗").replace("Taste","🥗")
+  //                .replace("Sci-Fi","👽")
+  //                .replace("Documentary","📽️").replace("Documentaries","📽️")
+  //                .replace("Sports","⛹🏼‍♀️").replace("Football","⛹🏼‍♀️").replace("Basketball","⛹🏼‍♀️").replace("Tennis","⛹🏼‍♀️").replace("Poker","⛹🏼‍♀️").replace("Golf","⛹🏼‍♀️")
+  //                .replace("Crime","🕵🏾‍♀️");    
                   
     
     if (url.includes("youtube")) 
@@ -1077,6 +1095,7 @@ async function overhaul(){
     let i = 0;
     loadChannels();
     lines.forEach((line) => {
+        
         if (line.startsWith("#EXTINF:")) {
           channelName = line.split(",")[1].trim();
         } else if (line.startsWith("#EXTRGRP:")) {
