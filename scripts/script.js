@@ -219,7 +219,7 @@ function loadChannels() {
               
             } else if (channel.country) {
               if(channel.country==="in" || channel.country==="us" || channel.country==="uk"){
-                name += ` (${channel.country})  🖥️`;
+                name += ` (${channel.country}) 🖥️`;
               }else{
                 name += ` (${channel.country})`;
               }
