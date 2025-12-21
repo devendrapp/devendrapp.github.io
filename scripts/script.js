@@ -969,13 +969,14 @@ function quickFilters() {
     button.style.backgroundColor = "black";
     button.style.color = "white";
     button.innerHTML = buttons[i];
+    console.log(button.innerHTML);
 
     button.addEventListener("click", () => {
-      if (searchInput.value.includes(button.textContent)) {
+      if (searchInput.value.includes(button.innerHTML)) {
         searchInput.value = "";
       } else {
-        updatePlaylistItemsBySearchTerm(button.textContent + " ");                 
-        const subCategories = localStorage.getItem(button.textContent) ? localStorage.getItem(button.textContent).split(',') : null;   
+        updatePlaylistItemsBySearchTerm(button.innerHTML + " ");                 
+        const subCategories = localStorage.getItem(button.innerHTML) ? localStorage.getItem(button.innerHTML).split(',') : null;   
         const subCategoryDiv = document.getElementById("sub-category");     
         subCategoryDiv.innerHTML = '';      
         
