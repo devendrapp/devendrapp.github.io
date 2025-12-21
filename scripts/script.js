@@ -1175,9 +1175,10 @@ async function main() {
   }
 
   await weeklyAppUpdate();
+  defaultContent();
   await overhaul();
   DailyJsonSourceRefresh();
-  defaultContent();
+  
   quickFilters();
   await initDB()
     .then(() => {
