@@ -462,8 +462,7 @@ function playItem(item, element, index) {
     });
 
     navigator.mediaSession.setActionHandler("stop", () => {      
-      stopPlayback();
-      showToast("Choose Playlist Item to play...");
+      stopPlayback();      
     });
   }
 }
@@ -612,7 +611,7 @@ function playLocalFileAsAudio(item) {
     const intentUrl = `intent://${item.url.substring(
       7
     )}#Intent;action=android.intent.action.VIEW;type=audio/mpeg;end`;
-    showToast(intentUrl);
+    
     window.location.href = intentUrl;
   }catch(err){
     showToast(err);
@@ -1035,8 +1034,7 @@ function defaultContent() {
   img.style.height = "100%";
   img.style.objectFit = "contain";
   document.getElementById("player-container").appendChild(img);
-  currentPlayer = img;
-  showToast("Choose Playlist Item to play...");
+  currentPlayer = img;  
   showActionContainer(false);
 }
 
