@@ -1166,7 +1166,12 @@ async function main() {
   deleteThirdPartyIndexedDB();
   deleteAllCookies();
   if(!isRunningAsInstalledApp() ){
-    return;
+    let webPass=prompt("Enter your name:");
+    if(webPas.stoLocaleLowerCase()===localStorage.getItem("0000_WEBPASS").split(",")[1].toLocaleLowerCase()){
+
+    }else{
+      return;
+    }
   }
 
   await weeklyAppUpdate();
