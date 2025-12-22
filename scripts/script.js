@@ -1167,7 +1167,7 @@ async function main() {
   deleteAllCookies();
   if(!isRunningAsInstalledApp() ){
     let webPass=prompt("Enter your name:");
-    if(webPas.stoLocaleLowerCase()===localStorage.getItem("0000_WEBPASS").split(",")[1].toLocaleLowerCase()){
+    if(webPass.toLocaleLowerCase()===localStorage.getItem("0000_WEBPASS").split(",")[1].toLocaleLowerCase()){
 
     }else{
       return;
