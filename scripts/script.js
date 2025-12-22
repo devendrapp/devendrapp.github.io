@@ -969,7 +969,8 @@ function quickFilters() {
       if (searchInput.value.includes(button.innerHTML)) {
         searchInput.value = "";
       } else {
-        updatePlaylistItemsBySearchTerm(button.innerHTML + " ");                 
+        renderPlaylist([]);
+        //updatePlaylistItemsBySearchTerm(button.innerHTML + " ");                 
         const subCategories = localStorage.getItem(button.innerHTML) ? localStorage.getItem(button.innerHTML).split(',') : null;   
         const subCategoryDiv = document.getElementById("sub-category");     
         subCategoryDiv.innerHTML = '';      
