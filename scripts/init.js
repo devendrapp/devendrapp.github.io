@@ -44,24 +44,6 @@ localStorage.setItem("0000_quick_search_buttons",
   localStorage.setItem("🏵️ श्री सत्यनारायण कथा | Satyanarayan Katha 51200","shree/stotra.html?id=sk2");
 
   //SubCategories
-  
   localStorage.setItem("🕉️","0000,🕉️,🎺,🌺,🌼,🏵️,🚩,श्री,आरती,स्तोत्र,श्लोक,मंत्र,सूक्त,कवच,प्रार्थना,दर्शन,कथा,dasbodh,🔔, ");
   
-  localStorage.setItem("📻","0000,🎙️,📻 🎵,📻 Ⓜ️,📻 <i class=\"material-icons\">h_mobiledata</i>,📻 Guj,📻 Rajasthan,📻 Kannada,📻 Tamil,📻 Telugu,📻 Bengali,📻 Malyalam,📻 NorthEast, ");
-
-  //localStorage.setItem("🎬","0000,🎬 Ⓜ️,🎬 <i class=\"material-icons\">h_mobiledata</i>,🎬 <i class=\"material-icons\">explicit</i>,🎬 👻,🎬 🤣,🎬 👊,🎬 🕵️,🎬 💡,🎬 👽,🎬 ❤️, ");
-
-  //localStorage.setItem("🖥️","0000,🖥️ Ⓜ️,<i class=\"material-icons\">h_mobiledata</i>,<i class=\"material-icons\">explicit</i>,🖥️ 🎬,💹,📰,🖥️ 🎵,🖥️ 🐘,🖥️ 🐤,🖥️ ⛹🏼‍♀️,🖥️ 🙏,🖥️ 👽,🖥️ 👻,🖥️ 📘,🕵🏾‍♀️,😱,🕵️, ");
-
-  //localStorage.setItem("🐘","0000,🥗,🌍,🐘,🍁,📽️, ");
-
-  //localStorage.setItem("🎧","0000,🎶 Ⓜ️,👧🏻,❤️,🎙️,🎨,🔥,💔,🌧️,🎺,💡,🥁,🚘,🎶,🎸,▶️ 🎵, ");
-  //localStorage.setItem("🎙️","0000,🎶 Ⓜ️,👧🏻,❤️,🎙️,🎨,🔥,💔,🌧️,🎺,💡,🥁,🚘,🎶,🎸,▶️ 🎵, ");
-
-  //localStorage.setItem("▶️","0000,🐤 ▶️,📀 ▶️,▶️ cartoon,▶️ goshti ");
-
-
-  localStorage.setItem(`<i class=\"material-icons\">h_mobiledata</i>`,`0000,<i class=\"material-icons\">h_mobiledata</i> 🖥️,<i class=\"material-icons\">h_mobiledata</i> 📰,<i class=\"material-icons\">h_mobiledata</i> 📻,<i class=\"material-icons\">h_mobiledata</i> 🎬,<i class=\"material-icons\">h_mobiledata</i> 🎵,<i class=\"material-icons\">h_mobiledata</i> 🎶, `);
-  //🔱🈴🔔
-
 }
