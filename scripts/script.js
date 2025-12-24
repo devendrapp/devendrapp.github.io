@@ -289,7 +289,7 @@ function updateApp() {
   updateCache();
   loadDefaultItems();
   localStorage.setItem(lastAppUpdateOnKey, new Date().toISOString());
-  showToast("Update requested, refresh or restart the app.");
+  showToast("Update requested");
 }
 
 function clearStorage() {
