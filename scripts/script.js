@@ -1166,7 +1166,8 @@ async function main() {
   deleteThirdPartyIndexedDB();
   deleteAllCookies();
   if(!isRunningAsInstalledApp() ){
-    let webPass=prompt("Enter your name:");
+    let webPass=localStorage.getItem("0000_userProvidedWebPassKey");
+    if(!webPass) {webPass=prompt("Enter your name:"); localStorage.setItem("0000_userProvidedWebPassKey",webPass)};
     if(webPass.toLocaleLowerCase()===localStorage.getItem("0000_WEBPASS").split(",")[1].toLocaleLowerCase()){
 
     }else{
@@ -1190,7 +1191,7 @@ async function main() {
   localStorageToPlaylistArray();
   loadDefaultPlaylist();
   populateDataListForSearchInput();
-  showToast(localStorage.length);
+  showToast(localStorage.length);  
 }
 
 closeDialogBtn.addEventListener("click", () => {
