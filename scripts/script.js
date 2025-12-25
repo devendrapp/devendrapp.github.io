@@ -20,7 +20,7 @@ let hls = null;
 let staticChannelSuffix = " ▪️";
 let touchStartX = 0;
 
-const defaultCategoriesKey = "0000_default_categories";
+const defaultCategoriesKey = "0000_default_playlist_items";
 const skipCategoriesKey = "0000_skip_categories_from_datalist";
 const quickSearchButtonsKey = "0000_quick_search_buttons";
 const lastAppUpdateOnKey="0000_lastAppUpdateOn";
