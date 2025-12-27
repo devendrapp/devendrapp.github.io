@@ -1168,7 +1168,7 @@ async function main() {
   if(!isRunningAsInstalledApp() ){
     let webPass=localStorage.getItem("0000_userProvidedWebPassKey");
     if(!webPass) {webPass=prompt("Enter your name:"); localStorage.setItem("0000_userProvidedWebPassKey",webPass)};
-    if(webPass && webPass.includes(",") && webPass.toLocaleLowerCase()===localStorage.getItem("0000_WEBPASS").split(",")[1].toLocaleLowerCase()){
+    if(webPass && webPass.toLocaleLowerCase()===localStorage.getItem("0000_WEBPASS").split(",")[1].toLocaleLowerCase()){
 
     }else{
       return;
