@@ -354,9 +354,9 @@ function playNextItem() {
 function localStorageToPlaylistArray() {
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
-    const trimmedKey=localStorage.key(i).substring(0,60);
+    //const trimmedKey=localStorage.key(i).substring(0,60);
     if (key !== "0_currentDate" && !key.includes("0000")){
-      channels[trimmedKey] = localStorage.getItem(key);      
+      channels[key] = localStorage.getItem(key);      
     }
   }
 }
