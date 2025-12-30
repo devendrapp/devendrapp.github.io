@@ -1072,7 +1072,7 @@ async function overhaul(){
     localStorage.removeItem("0000_hdr","");    
     return;
   }
-  if(localStorage.length<1000){
+  if(true && localStorage.length<1000){
     const str=prompt("Enter m3u filename:");
     if(!yeuKa(str)){
       localStorage.setItem("0000_overhaul",false);
