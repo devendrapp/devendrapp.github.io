@@ -984,8 +984,8 @@ function quickFilters() {
             link.href = '#';
             link.innerHTML = subCategory.trim();
             link.style.color = 'white';
-            link.style.marginLeft = '25px';
-            link.style.marginLeft = '25px';
+            link.style.marginLeft = '17px';
+            link.style.marginLeft = '17px';
             link.style.fontSize = '24px';
             link.style.textDecoration = 'none';
             link.onclick = () => {
