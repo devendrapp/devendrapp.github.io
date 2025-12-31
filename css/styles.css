@@ -46,7 +46,7 @@ body {
     height: 20px;
 }
 
-#sub-category{
+#sub-category0{
     display: flex;
     flex-shrink: 0;
     width: 100%;
@@ -55,6 +55,23 @@ body {
     overflow-x: auto; 
     border-bottom: 1px solid #ccc;
     padding: 10px;
+}
+
+#sub-category {
+    flex-shrink: 0;
+    display: flex; /* Use flex for inline layout */
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    width: 100%;
+    background-color: black;
+    border-bottom: 1px solid #ccc;
+    padding: 5px;
+    max-height: calc(2 * 20px + 20px); /* Max height for 3 lines of items plus padding */
+    overflow-y: auto; /* Enable vertical scrollbar if items exceed 3 lines */
+}
+
+#sub-category > a { /* Assuming each item is wrapped in a hyperlink */
+    white-space: normal; /* Allow wrapping for individual items */
+     margin: 4px 0; /* Add vertical space between items */
 }
 
 #search-container {
