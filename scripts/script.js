@@ -241,13 +241,11 @@ function getYoutubeEmbedUrl(url) {
   return `https://www.youtube.com/embed/${videoId}`;
 }
 
-function DailyJsonSourceRefresh() {
-  const today = new Date().toISOString().split("T")[0];
-  const lastRunDate = localStorage.getItem(lastJsonMediaUpdateOnKey);
-  if (!lastRunDate || lastRunDate !== today) {    
+function jsonSourceRefresh() {
+
+  if(localStorage.length<12000){
     loadChannels();
-    localStorage.setItem(lastJsonMediaUpdateOnKey, today);
-  }
+  }  
 }
 
 
@@ -1089,7 +1087,6 @@ async function overhaul(){
   const lines=await fetchLines(src,hdr);
   if(lines.length>1000){
     let i = 0;
-    loadChannels();
     lines.forEach((line) => {
         
         if (line.startsWith("#EXTINF:")) {
@@ -1179,8 +1176,6 @@ async function main() {
   await weeklyAppUpdate();
   defaultContent();
   await overhaul();
-  DailyJsonSourceRefresh();
-  
   quickFilters();
   await initDB()
     .then(() => {
@@ -1189,6 +1184,7 @@ async function main() {
     .catch((error) => {
       console.error("Error initializing IndexedDB:", error);
     });
+  jsonSourceRefresh();
   localStorageToPlaylistArray();
   loadDefaultPlaylist();
   populateDataListForSearchInput();
