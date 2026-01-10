@@ -62,7 +62,7 @@ body {
     display: flex; /* Use flex for inline layout */
     flex-wrap: wrap; /* Allow items to wrap to the next line */
     width: 100%;
-    background-color: black;
+    background-color: #CC5500;
     border-bottom: 1px solid #ccc;
     padding: 5px;
     max-height: calc(2 * 20px + 20px); /* Max height for 3 lines of items plus padding */
