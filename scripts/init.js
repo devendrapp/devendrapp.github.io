@@ -16,6 +16,7 @@ function loadDefaultItems() {
   localStorage.setItem("🌺 घालीन लोटांगण | Ghalin Lotangan (Aarti) 51098","shree/stotra.html?id=gl");
   localStorage.setItem("🌺 मंत्र पुष्पांजलि | Mantra Pushpanjali (Aarti) 51099","shree/stotra.html?id=mp");
 
+  localStorage.setItem("🌼 श्री स्वामी समर्थ तारक मंत्र | Swami Taarak Mantra","shree/stotra.html?id=stm");
   localStorage.setItem("🌼 शुभं करोति कल्याणम स्तोत्र | Shubham Karoti Stotra 51100","shree/stotra.html?id=sk");
   localStorage.setItem("🌼 श्री राम रक्षा स्तोत्र | Shree Ram Raksha 51101","shree/stotra.html?id=rr");
   localStorage.setItem("🌼 मारुती स्तोत्र | Maruti Stotra 51102","shree/stotra.html?id=ms");
