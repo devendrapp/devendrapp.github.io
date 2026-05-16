@@ -43,6 +43,6 @@ function loadDefaultItems() {
   localStorage.setItem("🏵️ श्री सत्यनारायण कथा | Satyanarayan Katha 51200","shree/stotra.html?id=sk2");
 
   //SubCategories
-  localStorage.setItem("🕉️","0000,🕉️,🔂,🌺,🎺,🌼,🏵️,🚩,श्री,आरती,स्तोत्र,श्लोक,मंत्र,सूक्त,कवच,प्रार्थना,दर्शन,कथा,dasbodh,🔔, ");
+  localStorage.setItem("🕉️","0000,🕉️,🔂,🌺,🎺,🌼,🏵️,🚩,श्री,आरती,स्तोत्र,श्लोक,मंत्र,सूक्त,कवच,प्रार्थना,दर्शन,कथा,ramkatha,dasbodh,🔔, ");
   
 }
