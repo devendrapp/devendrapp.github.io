@@ -1059,10 +1059,10 @@ async function fetchLines(url,hdr) {
 }
 
 async function overhaul(){
-
+  
   const lastMediaUpdateOn = localStorage.getItem(lastMediaUpdateOnKey);
   const oneDayAgo = new Date(Date.now() -  24 * 60 * 60 * 1000);
-  if (!lastMediaUpdateOn || new Date(lastMediaUpdateOn) <= oneDayAgo)   
+  if (true || !lastMediaUpdateOn || new Date(lastMediaUpdateOn) <= oneDayAgo)   
   {
         
   }else{
@@ -1078,7 +1078,7 @@ async function overhaul(){
       return;
     }
   }
-
+  
   clearLocalStorage();
   loadDefaultItems();
   localStorage.setItem(lastMediaUpdateOnKey, new Date().toISOString());

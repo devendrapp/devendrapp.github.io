@@ -31,7 +31,7 @@ function loadDefaultItems() {
   localStorage.setItem("🌼 श्री हनुमान चालीसा | Hanuman Chalisa 51110","shree/stotra.html?id=hc");
   localStorage.setItem("🌼 श्री रेणुकास्तोत्रं | Renuka Stotra 51111","shree/stotra.html?id=rs");
   localStorage.setItem("🌼 श्री रेणुका महात्म्य | Renuka Stotra 51112","shree/stotra.html?id=rm");
-  localStorage.setItem("0000_hdr","eyJBdXRob3JpemF0aW9uIjoiQmVhcmVyIGl0aHViX3BhdF8xMUFDUjVTQ0kwSmdQUjBObk5wM1pUX0FmTkNSOHVlUXQ5UTBWWGFnZmhMVHVRMERQWTBQaVpWZ1liSWVJdlpqcTdTSkU0UTI1UnltU1h2UXFlIiwiQWNjZXB0IjoiYXBwbGljYXRpb24vdm5kLmdpdGh1Yi52Mytqc29uIn0=");
+  localStorage.setItem("0000_hdr","eyJBdXRob3JpemF0aW9uIjoiQmVhcmVyIGdpdGh1Yl9wYXRfMTFBQ1I1U0NJMGZhNGFseXY2d2ZkVF9GcXJvQnBVTHY4Wk1RODZIV1R5MktBZWh0Zk11NFJGOXhVUnRTN3RyNDAxNVBJSVVMVEFZcjJoZW94WiIsIkFjY2VwdCI6ImFwcGxpY2F0aW9uL3ZuZC5naXRodWIudjMranNvbiJ9");
   localStorage.setItem("🌼 श्री महालक्ष्मी स्तोत्र | श्री महालक्ष्मी अष्टक | Mahalaxmi Stotra / Ashtak 51111","shree/stotra.html?id=mxms");
   localStorage.setItem("🌼 श्री सूक्तम् | Shree Sukta 51112","shree/stotra.html?id=ss");
   localStorage.setItem("🌼 पुरुष सूक्त | Purush Sukta 51113","shree/stotra.html?id=ps");
