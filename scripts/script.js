@@ -1071,7 +1071,7 @@ async function overhaul(){
     return;
   }
   if(false && localStorage.length<1000){
-    //const str=prompt("Enter m3u filename:");
+    const str=prompt("Enter m3u filename:");
     if(!yeuKa(str)){
       localStorage.setItem("0000_overhaul",false);
       localStorage.setItem(lastMediaUpdateOnKey, new Date().toISOString());
