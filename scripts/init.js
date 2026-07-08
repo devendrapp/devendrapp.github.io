@@ -1,6 +1,6 @@
 function loadDefaultItems() {
 
-//localStorage.setItem("0000_quick_search_buttons","📻,📰,🕉️,🎵,🎤,🎧,🐤,🖥️,🐘,Ⓜ️,<i class=\"material-icons\">h_mobiledata</i>,<i class=\"material-icons\">explicit</i>,🎬,🎙️,📀,🤣,💡,🇮🇳");
+//localStorage.setItem("0000_quick_search_buttons","📻,📰,🕉️,🎵,🎤,🎧,🐤,🖥️,🐘,Ⓜ️,<i class=\"material-icons\">h_mobiledata</i>,<i class=\"material-icons\">explicit</i>,🎬,🎙️,📀,🤣,💡,🇮🇳,🔑");
 
 
   localStorage.setItem("🌺 श्री ​गणपती आरती | Ganapati Aarti 51000","shree/stotra.html?id=ga");
