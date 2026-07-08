@@ -488,6 +488,10 @@ function loadItem(item, data) {
     playYoutubeVideo(item);
   }else if(item.name.includes("🖥️") && !item.url.includes(".m3u8")){
     playEmbeddedURL(item);
+  }else if(item.name.includes("🔑")){
+    //TOTP
+    alert(item.name);
+    generateTOTP(data);
   }else if (
     item.url.endsWith(".jpg") ||
     item.url.endsWith(".png") ||
@@ -1157,6 +1161,65 @@ async function checkChannels() {
         }
     }
     console.log("checkChannels completed.")
+}
+
+async function generateTOTP(base32Secret) {
+    // 1. Clean the base32 secret and decode it to a byte array
+    const cleanedSecret = base32Secret.replace(/\s+/g, '').toUpperCase();
+    const base32chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+    let bits = "";
+    const valueArray = [];
+
+    for (let i = 0; i < cleanedSecret.length; i++) {
+        const val = base32chars.indexOf(cleanedSecret.charAt(i));
+        if (val === -1) continue; // Skip padding or invalid chars
+        bits += val.toString(2).padStart(5, '0');
+    }
+
+    const secretBytes = new Uint8Array(Math.floor(bits.length / 8));
+    for (let i = 0; i < secretBytes.length; i++) {
+        secretBytes[i] = parseInt(bits.substring(i * 8, (i + 1) * 8), 2);
+    }
+
+    // 2. Calculate the 8-byte time step buffer (current Unix time / 30)
+    const timeStep = Math.floor(Date.now() / 1000 / 30);
+    const timeBuffer = new ArrayBuffer(8);
+    const view = new DataView(timeBuffer);
+    
+    // Fill the 8 bytes from MSB to LSB (Big Endian)
+    // Javascript handles bitwise ops on 32-bit ints, so split the 64-bit timestamp
+    view.setUint32(0, Math.floor(timeStep / 0x100000000), false);
+    view.setUint32(4, timeStep % 0x100000000, false);
+
+    // 3. Import the key into Web Crypto API
+    const cryptoKey = await window.crypto.subtle.importKey(
+        "raw",
+        secretBytes,
+        { name: "HMAC", hash: { name: "SHA-1" } },
+        false,
+        ["sign"]
+    );
+
+    // 4. Compute the HMAC-SHA1 signature
+    const signatureBuffer = await window.crypto.subtle.sign(
+        "HMAC",
+        cryptoKey,
+        timeBuffer
+    );
+
+    // 5. Dynamic Truncation
+    const hmacResult = new Uint8Array(signatureBuffer);
+    const offset = hmacResult[hmacResult.length - 1] & 0xf;
+    
+    const binary = 
+        ((hmacResult[offset] & 0x7f) << 24) |
+        ((hmacResult[offset + 1] & 0xff) << 16) |
+        ((hmacResult[offset + 2] & 0xff) << 8) |
+        (hmacResult[offset + 3] & 0xff);
+
+    // 6. Generate 6 digit pin
+    const otp = binary % 1000000;
+    return otp.toString().padStart(6, '0');
 }
 
 
