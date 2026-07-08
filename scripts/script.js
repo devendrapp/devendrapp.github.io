@@ -490,8 +490,7 @@ function loadItem(item, data) {
     playEmbeddedURL(item);
   }else if(item.name.includes("🔑")){
     //TOTP
-    alert(item.name);
-    alert(await generateTOTP(item.url.split(',')[1]));
+    showToken(item.url)
   }else if (
     item.url.endsWith(".jpg") ||
     item.url.endsWith(".png") ||
@@ -509,6 +508,10 @@ function loadItem(item, data) {
   } else {
     playAudio(item, data);
   }
+}
+
+async function showToken(key) {
+    alert(await generateTOTP(key.split(',')[1]));
 }
 
 function openPDF(item) {
