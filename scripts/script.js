@@ -1166,22 +1166,27 @@ async function checkChannels() {
 }
 
 async function generateTOTP(base32Secret) {
-    // 1. Clean the base32 secret and decode it to a byte array
+    // 1. Strict Base32 decoding via bit shifting
     const cleanedSecret = base32Secret.replace(/\s+/g, '').toUpperCase();
     const base32chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-    let bits = "";
-    const valueArray = [];
+    
+    let buffer = 0;
+    let bitsLeft = 0;
+    const bytes = [];
 
     for (let i = 0; i < cleanedSecret.length; i++) {
         const val = base32chars.indexOf(cleanedSecret.charAt(i));
-        if (val === -1) continue; // Skip padding or invalid chars
-        bits += val.toString(2).padStart(5, '0');
-    }
+        if (val === -1) continue; // Skip padding or invalid characters
 
-    const secretBytes = new Uint8Array(Math.floor(bits.length / 8));
-    for (let i = 0; i < secretBytes.length; i++) {
-        secretBytes[i] = parseInt(bits.substring(i * 8, (i + 1) * 8), 2);
+        buffer = (buffer << 5) | val;
+        bitsLeft += 5;
+
+        if (bitsLeft >= 8) {
+            bytes.push((buffer >> (bitsLeft - 8)) & 0xFF);
+            bitsLeft -= 8;
+        }
     }
+    const secretBytes = new Uint8Array(bytes);
 
     // 2. Calculate the 8-byte time step buffer (current Unix time / 30)
     const timeStep = Math.floor(Date.now() / 1000 / 30);
@@ -1189,7 +1194,6 @@ async function generateTOTP(base32Secret) {
     const view = new DataView(timeBuffer);
     
     // Fill the 8 bytes from MSB to LSB (Big Endian)
-    // Javascript handles bitwise ops on 32-bit ints, so split the 64-bit timestamp
     view.setUint32(0, Math.floor(timeStep / 0x100000000), false);
     view.setUint32(4, timeStep % 0x100000000, false);
 
