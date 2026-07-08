@@ -489,7 +489,6 @@ function loadItem(item, data) {
   }else if(item.name.includes("🖥️") && !item.url.includes(".m3u8")){
     playEmbeddedURL(item);
   }else if(item.name.includes("🔑")){
-    //TOTP
     showToken(item.url)
   }else if (
     item.url.endsWith(".jpg") ||
