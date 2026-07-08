@@ -517,6 +517,9 @@ async function showToken(key) {
     const container = document.getElementById("player-container");
     if (!container) return;
 
+    // Ensure the parent container has relative positioning so absolute center positioning functions correctly
+    container.style.position = "relative";
+
     const token = await generateTOTP(key.split(',')[1]);
 
     // Check if a display element already exists to avoid duplication
@@ -525,21 +528,27 @@ async function showToken(key) {
         tokenDisplay = document.createElement("div");
         tokenDisplay.id = "totp-display";
         
-        // Increase visual presence and size via inline styles
+        // Exact center alignment styling parameters
+        tokenDisplay.style.position = "absolute";
+        tokenDisplay.style.top = "50%";
+        tokenDisplay.style.left = "50%";
+        tokenDisplay.style.transform = "translate(-50%, -50%)";
+        
+        // Visual backdrop settings
         tokenDisplay.style.backgroundColor = "#000000";
         tokenDisplay.style.color = "#FFFFFF";
         tokenDisplay.style.fontSize = "24px";
         tokenDisplay.style.fontWeight = "bold";
         tokenDisplay.style.fontFamily = "sans-serif";
-        tokenDisplay.style.padding = "15px";
-        tokenDisplay.style.marginTop = "15px";
-        tokenDisplay.style.textAlign = "center";
-        tokenDisplay.style.borderRadius = "4px";
+        tokenDisplay.style.padding = "15px 25px";
+        tokenDisplay.style.borderRadius = "6px";
+        tokenDisplay.style.zIndex = "10"; // Ensures it sits above the video element
+        tokenDisplay.style.pointerEvents = "none"; // Clicks pass through to the video if needed
         
         container.appendChild(tokenDisplay);
     }
     
-    tokenDisplay.textContent = "TOTP Token: " + token;
+    tokenDisplay.textContent = "" + token;
 }
 
 function openPDF(item) {
