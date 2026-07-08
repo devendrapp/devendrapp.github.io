@@ -509,8 +509,32 @@ function loadItem(item, data) {
   }
 }
 
-async function showToken(key) {
+async function showTokenOld(key) {
     alert(await generateTOTP(key.split(',')[1]));
+}
+
+async function showToken(key) {
+    const container = document.getElementById("player-container");
+    if (!container) return;
+
+    const token = await generateTOTP(key.split(',')[1]);
+
+    // Check if a display element already exists to avoid duplication
+    let tokenDisplay = document.getElementById("totp-display");
+    if (!tokenDisplay) {
+        tokenDisplay = document.createElement("div");
+        tokenDisplay.id = "totp-display";
+        
+        // Increase visual presence and size via inline styles
+        tokenDisplay.style.fontSize = "24px";
+        tokenDisplay.style.fontWeight = "bold";
+        tokenDisplay.style.marginTop = "15px";
+        tokenDisplay.style.fontFamily = "sans-serif";
+        
+        container.appendChild(tokenDisplay);
+    }
+    
+    tokenDisplay.textContent = "TOTP Token: " + token;
 }
 
 function openPDF(item) {
