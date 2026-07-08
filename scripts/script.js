@@ -526,10 +526,15 @@ async function showToken(key) {
         tokenDisplay.id = "totp-display";
         
         // Increase visual presence and size via inline styles
+        tokenDisplay.style.backgroundColor = "#000000";
+        tokenDisplay.style.color = "#FFFFFF";
         tokenDisplay.style.fontSize = "24px";
         tokenDisplay.style.fontWeight = "bold";
-        tokenDisplay.style.marginTop = "15px";
         tokenDisplay.style.fontFamily = "sans-serif";
+        tokenDisplay.style.padding = "15px";
+        tokenDisplay.style.marginTop = "15px";
+        tokenDisplay.style.textAlign = "center";
+        tokenDisplay.style.borderRadius = "4px";
         
         container.appendChild(tokenDisplay);
     }
