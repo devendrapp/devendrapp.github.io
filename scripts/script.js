@@ -585,6 +585,11 @@ function playVideo(item) {
 function playM3U8(item) {
   const video = document.createElement("video");
   video.controls = true;
+
+  // Critical iOS Safari Fix: Prevents automatic fullscreen launch on iPhone
+  video.setAttribute("playsinline", "true");
+  video.setAttribute("webkit-playsinline", "true");
+
   document.getElementById("player-container").appendChild(video);
   currentPlayer = video;
 
