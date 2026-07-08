@@ -491,7 +491,7 @@ function loadItem(item, data) {
   }else if(item.name.includes("🔑")){
     //TOTP
     alert(item.name);
-    generateTOTP(data);
+    alert(generateTOTP(data));
   }else if (
     item.url.endsWith(".jpg") ||
     item.url.endsWith(".png") ||
