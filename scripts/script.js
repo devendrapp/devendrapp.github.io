@@ -1111,7 +1111,7 @@ async function overhaul(){
   
   const lastMediaUpdateOn = localStorage.getItem(lastMediaUpdateOnKey);
   const oneDayAgo = new Date(Date.now() -  24 * 60 * 60 * 1000);
-  if (true || !lastMediaUpdateOn || new Date(lastMediaUpdateOn) <= oneDayAgo)   
+  if (!lastMediaUpdateOn || new Date(lastMediaUpdateOn) <= oneDayAgo)   
   {
         
   }else{
@@ -1119,7 +1119,7 @@ async function overhaul(){
     localStorage.removeItem("0000_hdr","");    
     return;
   }
-  if(false && localStorage.length<1000){
+  if(localStorage.length<1000){
     const str=prompt("Enter m3u filename:");
     if(!yeuKa(str)){
       localStorage.setItem("0000_overhaul",false);
