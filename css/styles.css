@@ -53,7 +53,7 @@ body {
     background-color: black;
     white-space: nowrap; /* Prevent wrapping to new line */
     overflow-x: auto; 
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #6a5353;
     padding: 10px;
 }
 
