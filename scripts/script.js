@@ -192,7 +192,54 @@ function showToast(message, duration = 3000) {
 
 function loadChannels() {
   let jsonUrl = localStorage.getItem(jsonUrlKey);
+  
   if (jsonUrl) {
+    fetch(jsonUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        data.forEach((channel) => {
+          let url = "";
+          let name = "";
+          
+          if (channel.streams && channel.streams.length > 0) {
+            url = channel.streams[0].url || channel.streams[0];
+          } else if (channel.youtube_urls && channel.youtube_urls.length > 0) {
+            url = channel.youtube_urls[0];
+          }
+          
+          name = formatChannelName(channel.name, url);
+          
+          if (url) {            
+            if (channel.language) {
+              if(channel.language==="mar"){
+                name += ` Ⓜ️`;
+              }else if(channel.language==="hin"){
+                name += ` <i class=\"material-icons\">h_mobiledata</i>`;
+              }else if(channel.language==="eng"){
+                name += ` <i class=\"material-icons\">explicit</i>`;
+              }else{
+                name += ` (${channel.language})`;
+              }
+              
+            } else if (channel.country) {             
+              name += ` (${channel.country})`;
+            }
+
+            if (typeof url === 'string' && url.includes("youtube-nocookie")) {
+              url = url.replace("-nocookie", "");
+            }
+            
+            channels[name] = url;
+            localStorage.setItem(name, url);
+          }
+        });
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+  
+  
+  //Old Logic
+  if (false && jsonUrl) {
     fetch(jsonUrl)
       .then((response) => response.json())
       .then((data) => {
@@ -1178,6 +1225,7 @@ async function overhaul(){
         
       });
       
+      jsonSourceRefresh();
       localStorage.setItem("0000_overhaul",false);
       //setTimeout(function() {window.location.reload(true);}, 5000);
   }
@@ -1296,7 +1344,7 @@ async function main() {
     .catch((error) => {
       console.error("Error initializing IndexedDB:", error);
     });
-  jsonSourceRefresh();
+  
   localStorageToPlaylistArray();
   loadDefaultPlaylist();
   populateDataListForSearchInput();
