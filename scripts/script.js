@@ -200,27 +200,30 @@ function loadChannels() {
         data.forEach((channel) => {
           let url = "";
           let name = "";
-          console.log(name +" : "+ url);
-          if (channel.streams && channel.streams.length > 0) {
-            url = channel.streams[0].url || channel.streams[0];
-          } else if (channel.youtube_urls && channel.youtube_urls.length > 0) {
-            url = channel.youtube_urls[0];
+          
+          if (channel.sources) {
+            if (channel.sources.streams && channel.sources.streams.length > 0) {
+              url = channel.sources.streams[0];
+            } else if (channel.sources.youtube && channel.sources.youtube.length > 0) {
+              url = channel.sources.youtube[0];
+            }
           }
           
           name = formatChannelName(channel.name, url);
           
           if (url) {            
-            if (channel.language) {
-              if(channel.language==="mar"){
+            let lang = (channel.languages && channel.languages.length > 0) ? channel.languages[0] : null;
+            
+            if (lang) {
+              if (lang === "mar") {
                 name += ` Ⓜ️`;
-              }else if(channel.language==="hin"){
+              } else if (lang === "hin") {
                 name += ` <i class=\"material-icons\">h_mobiledata</i>`;
-              }else if(channel.language==="eng"){
+              } else if (lang === "eng") {
                 name += ` <i class=\"material-icons\">explicit</i>`;
-              }else{
-                name += ` (${channel.language})`;
+              } else {
+                name += ` (${lang})`;
               }
-              
             } else if (channel.country) {             
               name += ` (${channel.country})`;
             }
