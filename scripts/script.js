@@ -380,7 +380,7 @@ function categorizeChannel(name){
 }
 
 function formatChannelName(name, url) {
-  let formattedName = categorizeChannel(name);
+  //let formattedName = categorizeChannel(name);
   let formattedName=name.replace("Mystery","🕵️").replace("Romance","❤️").replace("Horror","👻").replace("Thrillers","😱").replace("Thriller","😱")
                   .replace("Movies"," 🎬").replace("Cinema","🎬").replace("Films","🎬")
                   .replace("Series","📀")
