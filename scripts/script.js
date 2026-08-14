@@ -233,6 +233,7 @@ function loadChannels() {
             }
             
             channels[name] = url;
+            console.log(name+" : "+url);
             localStorage.setItem(name, url);
           }
         });
