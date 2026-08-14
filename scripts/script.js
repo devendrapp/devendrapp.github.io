@@ -1180,8 +1180,8 @@ async function overhaul(){
         
       });
       
-      loadChannels(localStorage.getItem(jsonUrlKey));
-      loadChannels(localStorage.getItem(jsonUrlKey2));
+      loadChannels(localStorage.getItem(jsonUrlKey),"🖥️");
+      loadChannels(localStorage.getItem(jsonUrlKey2),"📻");
       localStorage.setItem("0000_overhaul",false);
       //setTimeout(function() {window.location.reload(true);}, 5000);
   }
