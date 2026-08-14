@@ -191,7 +191,7 @@ function showToast(message, duration = 3000) {
   }, duration);
 }
 
-function loadChannels(jsonUrl) {
+function loadChannels(jsonUrl,prefix) {
   
   console.log("Loading channels from "+jsonUrl);
   if (jsonUrl) {
@@ -210,7 +210,7 @@ function loadChannels(jsonUrl) {
             }
           }
           
-          name = formatChannelName(channel.name, url);
+          name = formatChannelName(channel.name, url,prefix);
           
           if (url) {            
             let lang = (channel.languages && channel.languages.length > 0) ? channel.languages[0] : null;
@@ -379,7 +379,7 @@ function categorizeChannel(name){
   return name;
 }
 
-function formatChannelName(name, url) {
+function formatChannelName(name, url,prefix) {
   //let formattedName = categorizeChannel(name);
   let formattedName=name.replace("Mystery","🕵️").replace("Romance","❤️").replace("Horror","👻").replace("Thrillers","😱").replace("Thriller","😱")
                   .replace("Movies"," 🎬").replace("Cinema","🎬").replace("Films","🎬")
@@ -396,7 +396,7 @@ function formatChannelName(name, url) {
     if (url.includes("youtube")) 
       return "▶️ " + formattedName;
 
-    return formattedName;
+    return prefix + " " +formattedName;
   
 }
 
