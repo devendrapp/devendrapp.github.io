@@ -27,6 +27,7 @@ const lastAppUpdateOnKey="0000_lastAppUpdateOn";
 const lastJsonMediaUpdateOnKey="0000_lastJsonMediaUpdateOn";
 const lastMediaUpdateOnKey="0000_lastMediaUpdateOn";
 const jsonUrlKey="0000_jsonUrl";
+const jsonUrlKey2="0000_jsonUrl2";
 const pauseIndexedDBStorageKey="0000_pauseIndexedDBStorage";
 
 //DOM Constants
@@ -190,8 +191,8 @@ function showToast(message, duration = 3000) {
   }, duration);
 }
 
-function loadChannels() {
-  let jsonUrl = localStorage.getItem(jsonUrlKey);
+function loadChannels(jsonUrl) {
+  
   console.log("Loading channels from "+jsonUrl);
   if (jsonUrl) {
     fetch(jsonUrl)
@@ -250,14 +251,6 @@ function getYoutubeEmbedUrl(url) {
   const videoId = match && match[7].length == 11 ? match[7] : false;
   return `https://www.youtube.com/embed/${videoId}`;
 }
-
-function jsonSourceRefresh() {
-
-  if(localStorage.length<12000){
-    loadChannels();
-  }  
-}
-
 
 function deleteAllCookies() {
   document.cookie.split(";").forEach(function (cookie) {
@@ -489,7 +482,6 @@ function loadItem(item, data) {
     window.location.href = item.url;
   } else if (item.url.endsWith(".json")) {
     localStorage.setItem(jsonUrlKey, item.url);
-    loadChannels();
   } else if (item.url.endsWith(".m3u8")) {
     playM3U8(item);
   }else if (item.url.endsWith(".mp4")) {
@@ -1188,7 +1180,8 @@ async function overhaul(){
         
       });
       
-      jsonSourceRefresh();
+      loadChannels(localStorage.getItem(jsonUrlKey));
+      loadChannels(localStorage.getItem(jsonUrlKey2));
       localStorage.setItem("0000_overhaul",false);
       //setTimeout(function() {window.location.reload(true);}, 5000);
   }
