@@ -241,47 +241,6 @@ function loadChannels() {
       .catch((error) => console.error("Error:", error));
   }
   
-  
-  //Old Logic
-  if (false && jsonUrl) {
-    fetch(jsonUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        data.forEach((channel) => {
-          let url = "";
-          let name = "";
-          if (channel.iptv_urls && channel.iptv_urls.length > 0) {
-            url = channel.iptv_urls[0];
-          } else if (channel.youtube_urls && channel.youtube_urls.length > 0) {
-            url = channel.youtube_urls[0];
-          }
-          name = formatChannelName(channel.name, url);
-          if (url) {            
-            if (channel.language) {
-              if(channel.language==="mar"){
-                name += ` Ⓜ️`;
-              }else if(channel.language==="hin"){
-                name += ` <i class=\"material-icons\">h_mobiledata</i>`;
-              }else if(channel.language==="eng"){
-                name += ` <i class=\"material-icons\">explicit</i>`;
-              }else{
-                name += ` (${channel.language})`;
-              }
-              
-            } else if (channel.country) {             
-              name += ` (${channel.country})`;
-            }
-
-            if (url.includes("youtube-nocookie")) {
-              url = url.replace("-nocookie", "");
-            }
-            channels[name] = url;
-            localStorage.setItem(name, url);
-          }
-        });
-      })
-      .catch((error) => console.error("Error:", error));
-  }
 }
 
 function getYoutubeEmbedUrl(url) {
@@ -429,16 +388,16 @@ function categorizeChannel(name){
 
 function formatChannelName(name, url) {
   let formattedName = categorizeChannel(name);
-  //let formattedName=name.replace("Mystery","🕵️").replace("Romance","❤️").replace("Horror","👻").replace("Thrillers","😱").replace("Thriller","😱")
-  //                .replace("Movies","🎬").replace("Cinema","🎬").replace("Films","🎬")
-  //                .replace("Series","📀")
+  let formattedName=name.replace("Mystery","🕵️").replace("Romance","❤️").replace("Horror","👻").replace("Thrillers","😱").replace("Thriller","😱")
+                  .replace("Movies"," 🎬").replace("Cinema","🎬").replace("Films","🎬")
+                  .replace("Series","📀")
   //                .replace("Hot ","🔥")
-  //                .replace("Wild","🐘").replace("Nature","🍁").replace("Earth","🌍").replace("Outdoor","🌍").replace("Geographic","🌍")
-  //                .replace("Food","🥗").replace("Recipe","🥗").replace("Kitchen","🥗").replace("Chef","🥗").replace("Cook","🥗").replace("Taste","🥗")
-  //                .replace("Sci-Fi","👽")
-  //                .replace("Documentary","📽️").replace("Documentaries","📽️")
-  //                .replace("Sports","⛹🏼‍♀️").replace("Football","⛹🏼‍♀️").replace("Basketball","⛹🏼‍♀️").replace("Tennis","⛹🏼‍♀️").replace("Poker","⛹🏼‍♀️").replace("Golf","⛹🏼‍♀️")
-  //                .replace("Crime","🕵🏾‍♀️");    
+                  .replace("Wild","🐘").replace("Nature","🍁").replace("Earth","🌍").replace("Outdoor","🌍").replace("Geographic","🌍")
+                  .replace("Food","🥗").replace("Recipe","🥗").replace("Kitchen","🥗").replace("Chef","🥗").replace("Cook","🥗").replace("Taste","🥗")
+                  .replace("Sci-Fi","👽")
+                  .replace("Documentary","📽️").replace("Documentaries","📽️")
+                  .replace("Sports","⛹🏼‍♀️").replace("Football","⛹🏼‍♀️").replace("Basketball","⛹🏼‍♀️").replace("Tennis","⛹🏼‍♀️").replace("Poker","⛹🏼‍♀️").replace("Golf","⛹🏼‍♀️")
+                  .replace("Crime","🕵🏾‍♀️");    
                   
     
     if (url.includes("youtube")) 
