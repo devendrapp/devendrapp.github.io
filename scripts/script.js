@@ -192,7 +192,7 @@ function showToast(message, duration = 3000) {
 
 function loadChannels() {
   let jsonUrl = localStorage.getItem(jsonUrlKey);
-  
+  console.log("Loading channels from "+jsonUrl);
   if (jsonUrl) {
     fetch(jsonUrl)
       .then((response) => response.json())
@@ -200,7 +200,7 @@ function loadChannels() {
         data.forEach((channel) => {
           let url = "";
           let name = "";
-          
+          console.log(name +" : "+ url);
           if (channel.streams && channel.streams.length > 0) {
             url = channel.streams[0].url || channel.streams[0];
           } else if (channel.youtube_urls && channel.youtube_urls.length > 0) {
@@ -1058,7 +1058,7 @@ function quickFilters() {
     button.style.backgroundColor = "black";
     button.style.color = "white";
     button.innerHTML = buttons[i];
-    console.log(button.innerHTML);
+    //console.log(button.innerHTML);
 
     button.addEventListener("click", () => {
       if (searchInput.value.includes(button.innerHTML)) {
