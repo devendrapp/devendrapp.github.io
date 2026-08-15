@@ -396,8 +396,8 @@ function formatChannelName(name, url,prefix) {
                   .replace("Bollywood","Bollywood 🎵")
                   .replace("Bollywood","BollyVibes 🎵")
                   .replace("Bollywood","Bolly 🎵")
-                  .replace("Gaane","🎵")
-                  .replace("Radio","")
+                  .replace("Gaane","Gaane 🎵")
+                  .replace("Sangeet","Sangeet 🎵")
                   .replace("Radio","");
                   
     
