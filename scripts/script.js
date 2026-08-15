@@ -390,7 +390,15 @@ function formatChannelName(name, url,prefix) {
                   .replace("Sci-Fi","👽")
                   .replace("Documentary","📽️").replace("Documentaries","📽️")
                   .replace("Sports","⛹🏼‍♀️").replace("Football","⛹🏼‍♀️").replace("Basketball","⛹🏼‍♀️").replace("Tennis","⛹🏼‍♀️").replace("Poker","⛹🏼‍♀️").replace("Golf","⛹🏼‍♀️")
-                  .replace("Crime","🕵🏾‍♀️");    
+                  .replace("Crime","🕵🏾‍♀️")    
+
+                  .replace("Radio",""); 
+                  .replace("Bollywood","Bollywood 🎵")
+                  .replace("Bollywood","BollyVibes 🎵")
+                  .replace("Bollywood","Bolly 🎵")
+                  .replace("Gaane","🎵")
+                  .replace("Radio","")
+                  .replace("Radio","")
                   
     
     if (url.includes("youtube")) 
