@@ -392,11 +392,11 @@ function formatChannelName(name, url,prefix) {
                   .replace("Sports","⛹🏼‍♀️").replace("Football","⛹🏼‍♀️").replace("Basketball","⛹🏼‍♀️").replace("Tennis","⛹🏼‍♀️").replace("Poker","⛹🏼‍♀️").replace("Golf","⛹🏼‍♀️")
                   .replace("Crime","🕵🏾‍♀️")    
 
-                  .replace("Radio","")
-                  .replace("Bollywood","Bollywood 🎵")
+                  .replace("Radio","")                  
                   .replace("Bollywood","BollyVibes 🎵")
                   .replace("Bollywood","Bolly 🎵")
                   .replace("Gaane","Gaane 🎵")
+                  .replace("Gaane","Songs 🎵")
                   .replace("Sangeet","Sangeet 🎵")
                   .replace("Radio","");
                   
