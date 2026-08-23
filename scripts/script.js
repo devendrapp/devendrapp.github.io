@@ -1038,6 +1038,10 @@ function quickFilters() {
           subCategories.forEach((subCategory) => {
             if(subCategory==="0000")
               return;
+
+            if (!firstValidSubCategory) {
+                  firstValidSubCategory = subCategory.trim();
+            }
             
             const link = document.createElement('a');
             link.href = '#';
@@ -1053,6 +1057,10 @@ function quickFilters() {
             subCategoryDiv.appendChild(link);            
 
           });
+
+          if (firstValidSubCategory) {
+            updatePlaylistItemsBySearchTerm(firstValidSubCategory);
+          }
         }else{
           subCategoryDiv.display = 'none';
         }
