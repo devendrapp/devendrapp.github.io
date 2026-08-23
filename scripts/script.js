@@ -1034,6 +1034,7 @@ function quickFilters() {
         subCategoryDiv.innerHTML = '';      
         
         if (subCategories) {
+          let firstValidSubCategory = null;
         
           subCategories.forEach((subCategory) => {
             if(subCategory==="0000")
