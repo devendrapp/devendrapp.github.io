@@ -1126,36 +1126,11 @@ async function fetchLines(url,hdr) {
   }
 }
 
-async function overhaul(){
-  
-  const lastMediaUpdateOn = localStorage.getItem(lastMediaUpdateOnKey);
-  const oneDayAgo = new Date(Date.now() -  24 * 60 * 60 * 1000);
-  if (!lastMediaUpdateOn || new Date(lastMediaUpdateOn) <= oneDayAgo)   
-  {
-        
-  }else{
-    localStorage.removeItem("0000_base","");
-    localStorage.removeItem("0000_hdr","");    
-    return;
-  }
-  if(localStorage.length<1000){
-    const str=prompt("Enter m3u filename:");
-    if(!yeuKa(str)){
-      localStorage.setItem("0000_overhaul",false);
-      localStorage.setItem(lastMediaUpdateOnKey, new Date().toISOString());
-      return;
-    }
-  }
-  
-  clearLocalStorage();
-  loadDefaultItems();
-  localStorage.setItem(lastMediaUpdateOnKey, new Date().toISOString());
-  const src = atob(localStorage.getItem("0000_base"));
+async function loadM3U(lst){
   const hdr=JSON.parse(atob(localStorage.getItem("0000_hdr")));
-  const lines=await fetchLines(src,hdr);
-  if(lines.length>1000){
-    let i = 0;
-    lines.forEach((line) => {
+  const lines=await fetchLines(lst,hdr);
+
+  lines.forEach((line) => {
         
         if (line.startsWith("#EXTINF:")) {
           channelName = line.split(",")[1].trim();
@@ -1168,7 +1143,9 @@ async function overhaul(){
           line.startsWith("0000")
         ) {
           if (channelName) {
-            if (line.toLowerCase().includes("youtube")) {
+          if(line.toLowerCase().endsWith(".m3u")){
+              await loadM3U(line);
+          }else if (line.toLowerCase().includes("youtube")) {
               localStorage.setItem(
                 channelName + staticChannelSuffix + " " + ++i,
                 line.trim()
@@ -1196,6 +1173,83 @@ async function overhaul(){
         }
         
       });
+}
+
+async function overhaul(){
+  
+  const lastMediaUpdateOn = localStorage.getItem(lastMediaUpdateOnKey);
+  const oneDayAgo = new Date(Date.now() -  24 * 60 * 60 * 1000);
+  if (!lastMediaUpdateOn || new Date(lastMediaUpdateOn) <= oneDayAgo)   
+  {
+        
+  }else{
+    localStorage.removeItem("0000_base","");
+    localStorage.removeItem("0000_hdr","");    
+    return;
+  }
+  if(localStorage.length<1000){
+    const str=prompt("Enter m3u filename:");
+    if(!yeuKa(str)){
+      localStorage.setItem("0000_overhaul",false);
+      localStorage.setItem(lastMediaUpdateOnKey, new Date().toISOString());
+      return;
+    }
+  }
+  
+  clearLocalStorage();
+  loadDefaultItems();
+  localStorage.setItem(lastMediaUpdateOnKey, new Date().toISOString());
+  const src = atob(localStorage.getItem("0000_base"));
+  await loadM3U(src);
+  /*
+  const hdr=JSON.parse(atob(localStorage.getItem("0000_hdr")));
+  const lines=await fetchLines(src,hdr);
+  if(lines.length>1000){
+    let i = 0;
+    lines.forEach((line) => {
+        
+        if (line.startsWith("#EXTINF:")) {
+          channelName = line.split(",")[1].trim();
+        } else if (line.startsWith("#EXTRGRP:")) {
+        } else if (
+          line.startsWith("http") ||
+          line.startsWith("id=") ||
+          line.startsWith("file") ||
+          line.includes("📰") ||
+          line.startsWith("0000")
+        ) {
+          if (channelName) {
+          if(line.toLowerCase().endsWith(".m3u")){
+              loadM3U(line);
+          }else if (line.toLowerCase().includes("youtube")) {
+              localStorage.setItem(
+                channelName + staticChannelSuffix + " " + ++i,
+                line.trim()
+              );
+            } else if (
+              line.includes("📰") ||
+              line.endsWith("json") ||
+              channelName === "0000" ||
+              line.startsWith("0000")
+            ) {
+              localStorage.setItem(channelName, line.trim());
+            } else if (line.includes(" ")) {
+              localStorage.setItem(
+                channelName + staticChannelSuffix + " " + ++i,
+                encodeUrl(line.trim())
+              );
+            } else {
+              localStorage.setItem(
+                channelName + staticChannelSuffix + " " + ++i,
+                line.trim()
+              );
+            }
+            channelName = null;
+          }
+        }
+        
+      });
+*/
       
       loadChannels(localStorage.getItem(jsonUrlKey),"🖥️");
       loadChannels(localStorage.getItem(jsonUrlKey2),"📻");
