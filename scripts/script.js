@@ -1144,7 +1144,7 @@ async function loadM3U(lst){
         ) {
           if (channelName) {
           if(line.toLowerCase().endsWith(".m3u")){
-              await loadM3U(line);
+              loadM3U(line);
           }else if (line.toLowerCase().includes("youtube")) {
               localStorage.setItem(
                 channelName + staticChannelSuffix + " " + ++i,
