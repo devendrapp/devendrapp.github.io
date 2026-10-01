@@ -1130,6 +1130,7 @@ async function loadM3U(lst){
   const hdr=JSON.parse(atob(localStorage.getItem("0000_hdr")));
   const lines=await fetchLines(lst,hdr);
 
+  let i = 0;
   lines.forEach((line) => {
         
         if (line.startsWith("#EXTINF:")) {
