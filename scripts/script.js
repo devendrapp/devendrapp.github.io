@@ -363,7 +363,6 @@ function localStorageToPlaylistArray() {
 
 function categorizeChannel(name){
   let categories=localStorage.getItem("0000_CHANNEL_CATEGORIES").split(",");
-  //console.log(categories);
   for(ctgry of categories){
     if(ctgry==="0000") continue;
     let channels=localStorage.getItem(ctgry).split(",");    
@@ -829,7 +828,6 @@ function cacheItem(item) {
   }
 
   if(!item.name.includes(currentChannelNameWithoutSuffix)){
-    //console.log("media changed, do not cache");
       return;
   }
 
@@ -1020,7 +1018,6 @@ function quickFilters() {
     button.style.backgroundColor = "black";
     button.style.color = "white";
     button.innerHTML = buttons[i];
-    //console.log(button.innerHTML);
 
     button.addEventListener("click", () => {
       if (searchInput.value.includes(button.innerHTML)) {
@@ -1107,7 +1104,7 @@ function defaultContent() {
 
 async function fetchLines(url,hdr) {
   try {
-    const response = await fetch(`${url}&t=${new Date().getTime()}`, {headers: hdr,});
+    const response = await fetch(`${url}?t=${new Date().getTime()}`, {headers: hdr,});
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -1143,7 +1140,7 @@ async function loadM3U(lst){
           line.startsWith("0000")
         ) {
           if (channelName) {
-          if(line.toLowerCase().endsWith(".m3u")){
+          if(line.toLowerCase().endsWith("ref=master")){
               loadM3U(line);
           }else if (line.toLowerCase().includes("youtube")) {
               localStorage.setItem(
@@ -1269,7 +1266,6 @@ function isRunningAsInstalledApp() {
 }
 
 async function checkChannels() {
-    console.log("In checkChannels")
     for (const [name, url] of Object.entries(channels)) {
         try {
             const response = await fetch(url, { method: 'HEAD' });
@@ -1280,7 +1276,6 @@ async function checkChannels() {
             console.error(`Error fetching ${url}:`, error);
         }
     }
-    console.log("checkChannels completed.")
 }
 
 async function generateTOTP(base32Secret) {
