@@ -1104,7 +1104,7 @@ function defaultContent() {
 
 async function fetchLines(url,hdr) {
   try {
-    const response = await fetch(`${url}?t=${new Date().getTime()}`, {headers: hdr,});
+    const response = await fetch(`${url}&t=${new Date().getTime()}`, {headers: hdr,});
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
