@@ -1,1 +1,1 @@
-console.log(atob(`aHR0cHM6Ly9hcGkuZ2l0aHViLmNvbS9yZXBvcy9kZXZlbmRyYXBwL05vdGVzL2NvbnRlbnRzL21lZGlhLzAubTN1P3JlZj1tYXN0ZXI=`));
+console.log(`Hello World`);
