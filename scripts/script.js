@@ -1142,7 +1142,7 @@ async function loadM3U(lst){
           if (channelName) {
           if(line.toLowerCase().endsWith("ref=master")){
               loadM3U(line);
-              await new Promise(r => setTimeout(r, 1500)); 
+              //await new Promise(r => setTimeout(r, 1500)); 
           }else if (line.toLowerCase().includes("youtube")) {
               localStorage.setItem(
                 channelName + staticChannelSuffix + " " + ++i,
