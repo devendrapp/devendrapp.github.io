@@ -1122,7 +1122,7 @@ async function fetchLines(url,hdr) {
   }
 }
 
-async function loadM3U(lst){
+function loadM3U(lst){
   const hdr=JSON.parse(atob(localStorage.getItem("0000_hdr")));
   const lines=await fetchLines(lst,hdr);
 
