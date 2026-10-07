@@ -1,8 +1,5 @@
 function loadDefaultItems() {
 
-//localStorage.setItem("0000_quick_search_buttons","📻,📰,🕉️,🎵,🎤,🎧,🐤,🖥️,🐘,Ⓜ️,<i class=\"material-icons\">h_mobiledata</i>,<i class=\"material-icons\">explicit</i>,🎬,🎙️,📀,🤣,💡,🔑,🇮🇳");
-
-
   localStorage.setItem("🌺 श्री ​गणपती आरती | Ganapati Aarti 51000","shree/stotra.html?id=ga");
   localStorage.setItem("0000_base","aHR0cHM6Ly9hcGkuZ2l0aHViLmNvbS9yZXBvcy9kZXZlbmRyYXBwL05vdGVzL2NvbnRlbnRzL21lZGlhLzAubTN1P3JlZj1tYXN0ZXI=");
   localStorage.setItem("🌺 श्री शंकराची आरती | Shankar Aarti 51001","shree/stotra.html?id=sa");
@@ -42,7 +39,6 @@ function loadDefaultItems() {
   
   localStorage.setItem("🏵️ श्री सत्यनारायण कथा | Satyanarayan Katha 51200","shree/stotra.html?id=sk2");
 
-  //SubCategories
-  localStorage.setItem("🕉️","0000,🕉️,🔂,🌺,🎺,🌼,🏵️,🚩,श्री,आरती,स्तोत्र,श्लोक,मंत्र,सूक्त,कवच,प्रार्थना,दर्शन,कथा,ramkatha,dasbodh,🔔, ");
+  
   
 }
