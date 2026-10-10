@@ -1143,6 +1143,8 @@ async function loadM3U(lst){
           if(line.toLowerCase().endsWith("ref=master")){
               loadM3U(line);
               //await new Promise(r => setTimeout(r, 1500)); 
+          }else if(line.toLowerCase().endsWith("json")){              
+              loadChannels(line,channelName.split('-')[0]);
           }else if (line.toLowerCase().includes("youtube")) {
               localStorage.setItem(
                 channelName + staticChannelSuffix + " " + ++i,
@@ -1249,8 +1251,8 @@ async function overhaul(){
       });
 */
       
-      loadChannels(localStorage.getItem(jsonUrlKey),"🖥️");
-      loadChannels(localStorage.getItem(jsonUrlKey2),"📻");
+      //loadChannels(localStorage.getItem(jsonUrlKey),"🖥️");
+      //loadChannels(localStorage.getItem(jsonUrlKey2),"📻");
       localStorage.setItem("0000_overhaul",false);
       //setTimeout(function() {window.location.reload(true);}, 5000);
 }
