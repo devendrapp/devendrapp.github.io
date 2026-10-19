@@ -1122,7 +1122,7 @@ async function fetchLines(url,hdr) {
   }
 }
 
- function loadM3U(lst){
+async function loadM3U(lst){
   const hdr=JSON.parse(atob(localStorage.getItem("0000_hdr")));
   const lines=await fetchLines(lst,hdr);
 
@@ -1141,10 +1141,10 @@ async function fetchLines(url,hdr) {
         ) {
           if (channelName) {
           if(line.toLowerCase().endsWith("ref=master")){
-               loadM3U(line);
-              //await new Promise(r => setTimeout(r, 100)); 
+              loadM3U(line);
+              //await new Promise(r => setTimeout(r, 1500)); 
           }else if(line.toLowerCase().endsWith("json")){              
-               loadChannels(line,channelName.split('-')[0]);
+              loadChannels(line,channelName.split('-')[0]);
           }else if (line.toLowerCase().includes("youtube")) {
               localStorage.setItem(
                 channelName + staticChannelSuffix + " " + ++i,
@@ -1175,7 +1175,7 @@ async function fetchLines(url,hdr) {
       });
 }
 
- function overhaul(){
+async function overhaul(){
   
   const lastMediaUpdateOn = localStorage.getItem(lastMediaUpdateOnKey);
   const oneDayAgo = new Date(Date.now() -  24 * 60 * 60 * 1000);
@@ -1200,9 +1200,61 @@ async function fetchLines(url,hdr) {
   loadDefaultItems();
   localStorage.setItem(lastMediaUpdateOnKey, new Date().toISOString());
   const src = atob(localStorage.getItem("0000_base"));
-  loadM3U(src);
-  localStorage.setItem("0000_overhaul",false);
-
+  await loadM3U(src);
+  /*
+  const hdr=JSON.parse(atob(localStorage.getItem("0000_hdr")));
+  const lines=await fetchLines(src,hdr);
+  if(lines.length>1000){
+    let i = 0;
+    lines.forEach((line) => {
+        
+        if (line.startsWith("#EXTINF:")) {
+          channelName = line.split(",")[1].trim();
+        } else if (line.startsWith("#EXTRGRP:")) {
+        } else if (
+          line.startsWith("http") ||
+          line.startsWith("id=") ||
+          line.startsWith("file") ||
+          line.includes("📰") ||
+          line.startsWith("0000")
+        ) {
+          if (channelName) {
+          if(line.toLowerCase().endsWith(".m3u")){
+              loadM3U(line);
+          }else if (line.toLowerCase().includes("youtube")) {
+              localStorage.setItem(
+                channelName + staticChannelSuffix + " " + ++i,
+                line.trim()
+              );
+            } else if (
+              line.includes("📰") ||
+              line.endsWith("json") ||
+              channelName === "0000" ||
+              line.startsWith("0000")
+            ) {
+              localStorage.setItem(channelName, line.trim());
+            } else if (line.includes(" ")) {
+              localStorage.setItem(
+                channelName + staticChannelSuffix + " " + ++i,
+                encodeUrl(line.trim())
+              );
+            } else {
+              localStorage.setItem(
+                channelName + staticChannelSuffix + " " + ++i,
+                line.trim()
+              );
+            }
+            channelName = null;
+          }
+        }
+        
+      });
+*/
+      
+      //loadChannels(localStorage.getItem(jsonUrlKey),"🖥️");
+      //loadChannels(localStorage.getItem(jsonUrlKey2),"📻");
+      localStorage.setItem("0000_overhaul",false);
+      //setTimeout(function() {window.location.reload(true);}, 5000);
 }
 
 
@@ -1308,7 +1360,7 @@ async function main() {
 
   await weeklyAppUpdate();
   defaultContent();
-  overhaul();
+  await overhaul();
   quickFilters();
   await initDB()
     .then(() => {
