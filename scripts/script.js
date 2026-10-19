@@ -1122,7 +1122,7 @@ async function fetchLines(url,hdr) {
   }
 }
 
-async function loadM3U(lst){
+ function loadM3U(lst){
   const hdr=JSON.parse(atob(localStorage.getItem("0000_hdr")));
   const lines=await fetchLines(lst,hdr);
 
@@ -1141,10 +1141,10 @@ async function loadM3U(lst){
         ) {
           if (channelName) {
           if(line.toLowerCase().endsWith("ref=master")){
-              await loadM3U(line);
-              await new Promise(r => setTimeout(r, 100)); 
+               loadM3U(line);
+              //await new Promise(r => setTimeout(r, 100)); 
           }else if(line.toLowerCase().endsWith("json")){              
-              await loadChannels(line,channelName.split('-')[0]);
+               loadChannels(line,channelName.split('-')[0]);
           }else if (line.toLowerCase().includes("youtube")) {
               localStorage.setItem(
                 channelName + staticChannelSuffix + " " + ++i,
@@ -1175,7 +1175,7 @@ async function loadM3U(lst){
       });
 }
 
-async function overhaul(){
+ function overhaul(){
   
   const lastMediaUpdateOn = localStorage.getItem(lastMediaUpdateOnKey);
   const oneDayAgo = new Date(Date.now() -  24 * 60 * 60 * 1000);
@@ -1200,7 +1200,7 @@ async function overhaul(){
   loadDefaultItems();
   localStorage.setItem(lastMediaUpdateOnKey, new Date().toISOString());
   const src = atob(localStorage.getItem("0000_base"));
-  await loadM3U(src);
+  loadM3U(src);
   localStorage.setItem("0000_overhaul",false);
 
 }
@@ -1308,7 +1308,7 @@ async function main() {
 
   await weeklyAppUpdate();
   defaultContent();
-  await overhaul();
+  overhaul();
   quickFilters();
   await initDB()
     .then(() => {
