@@ -809,9 +809,8 @@ function loadDefaultPlaylist() {
   const channelsToLoad = [];
   defaultCategories.forEach((term) => {
     Object.keys(channels).forEach((channel) => {
-      if (
-        !channel.includes("🎶") &&
-        channel.toLowerCase().includes(term.toLowerCase()) &&
+      if (        
+        channel.includes(term) &&
         !channelsToLoad.find((c) => c.name === channel)
       ) {
         channelsToLoad.push({ name: channel, url: channels[channel] });
