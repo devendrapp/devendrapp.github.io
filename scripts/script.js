@@ -1180,7 +1180,7 @@ async function loadM3U(lst){
           channelName = formatChannelName(line.split(",")[1].trim());
         } else if (line.startsWith("#EXTRGRP:")) {
         } else if (
-          line.startsWith("http") ||
+          line.startsWith("https") ||
           line.startsWith("id=") ||
           line.startsWith("file") ||
           line.includes("📰") ||
