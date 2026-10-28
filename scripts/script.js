@@ -1121,22 +1121,49 @@ async function fetchLines(url,hdr) {
   }
 }
 
-function formatChannelName(chlName){
-  if(chlName.startsWith("0000")){
+function formatChannelName(chlName) {
+  if (chlName.startsWith("0000")) {
     return chlName;
   }
-  formatCategoryLine=localStorage.getItem("0000_FORMAT_MUSIC");
-  if (!formatCategoryLine) {
-    return chlName;
-  }
-  EmojiPrefix=formatCategoryLine.split(",")[1].trim();
-  const channelList = formatCategoryLine.split(",").map((item) => item.trim()).slice(2);
+
+  const formatKeys = [
+    "0000_FORMAT_MUSIC",
+    "0000_FORMAT_NEWS",
+    "0000_FORMAT_TRADE_NEWS",
+    "0000_FORMAT_ENTERTAINMENT",
+    "0000_FORMAT_MOVIES",
+    "0000_FORMAT_SPORTS",
+    "0000_FORMAT_INFOTAINMENT",
+    "0000_FORMAT_FOOD",
+    "0000_FORMAT_CARTOON",
+    "0000_FORMAT_DEVOTIONAL",
+    "0000_FORMAT_SERIES",
+    "0000_FORMAT_KIDS_SERIES",
+    "0000_FORMAT_AUTO",
+    "0000_FORMAT_PRIVATE"
+  ];
 
   const lowerChlName = chlName.toLowerCase();
-  const isMatched = channelList.some((item) => item.length > 0 && lowerChlName.includes(item.toLowerCase()));
-  if (isMatched) {
-    return `${EmojiPrefix} ${chlName}`;
+
+  for (const key of formatKeys) {
+    const formatCategoryLine = localStorage.getItem(key);
+    if (!formatCategoryLine) {
+      continue;
+    }
+
+    const parts = formatCategoryLine.split(",").map((item) => item.trim());
+    const emojiPrefix = parts[1] || "";
+    const channelList = parts.slice(2);
+
+    const isMatched = channelList.some(
+      (item) => item.length > 0 && lowerChlName.includes(item.toLowerCase())
+    );
+
+    if (isMatched) {
+      return `${emojiPrefix} ${chlName}`;
+    }
   }
+
   return chlName;
 }
 
