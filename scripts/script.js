@@ -1121,6 +1121,24 @@ async function fetchLines(url,hdr) {
   }
 }
 
+function formatChannelName(chlName){
+  if(chlName.startsWith("0000")){
+    return chlName;
+  }
+  formatCategoryLine=localStorage.getItem("0000_FORMAT_MUSIC");
+  EmojiPrefix=formatCategoryLine.split(",")[1].trim();
+  if (!formatCategoryLine) {
+    return chlName;
+  }
+  const channelList = formatCategoryLine.split(",").map((item) => item.trim()).slice(2);
+
+  const isMatched = channelList.some((item) => item.length > 0 && chlName.includes(item));
+  if (isMatched) {
+    return `${EmojiPrefix} ${chlName}`;
+  }
+  return chlName;
+}
+
 async function loadM3U(lst){
   const hdr=JSON.parse(atob(localStorage.getItem("0000_hdr")));
   const lines=await fetchLines(lst,hdr);
@@ -1129,7 +1147,7 @@ async function loadM3U(lst){
   lines.forEach((line) => {
         
         if (line.startsWith("#EXTINF:")) {
-          channelName = line.split(",")[1].trim();
+          channelName = formatChannelName(line.split(",")[1].trim());
         } else if (line.startsWith("#EXTRGRP:")) {
         } else if (
           line.startsWith("http") ||
