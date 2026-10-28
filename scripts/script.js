@@ -1162,7 +1162,7 @@ function formatChannelName(chlName) {
     );
 
     if (isMatched) {
-      return `${emojiPrefix} ${chlName}`;
+      return emojiPrefix ? `${emojiPrefix} ${chlName}` : chlName;
     }
   }
 
