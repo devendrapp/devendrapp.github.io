@@ -1132,7 +1132,8 @@ function formatChannelName(chlName){
   EmojiPrefix=formatCategoryLine.split(",")[1].trim();
   const channelList = formatCategoryLine.split(",").map((item) => item.trim()).slice(2);
 
-  const isMatched = channelList.some((item) => item.length > 0 && chlName.includes(item));
+  const lowerChlName = chlName.toLowerCase();
+  const isMatched = channelList.some((item) => item.length > 0 && lowerChlName.includes(item.toLowerCase()));
   if (isMatched) {
     return `${EmojiPrefix} ${chlName}`;
   }
