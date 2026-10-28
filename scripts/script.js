@@ -1128,7 +1128,9 @@ function formatChannelName(chlName) {
 
   const formatKeys = [
     "0000_FORMAT_MUSIC",
-    "0000_FORMAT_NEWS",
+    "0000_FORMAT_OTHER_NEWS",
+    "0000_FORMAT_MARATHI_NEWS",
+    "0000_FORMAT_HINDI_NEWS",
     "0000_FORMAT_TRADE_NEWS",
     "0000_FORMAT_ENTERTAINMENT",
     "0000_FORMAT_MOVIES",
