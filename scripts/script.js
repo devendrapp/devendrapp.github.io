@@ -1126,10 +1126,10 @@ function formatChannelName(chlName){
     return chlName;
   }
   formatCategoryLine=localStorage.getItem("0000_FORMAT_MUSIC");
-  EmojiPrefix=formatCategoryLine.split(",")[1].trim();
   if (!formatCategoryLine) {
     return chlName;
   }
+  EmojiPrefix=formatCategoryLine.split(",")[1].trim();
   const channelList = formatCategoryLine.split(",").map((item) => item.trim()).slice(2);
 
   const isMatched = channelList.some((item) => item.length > 0 && chlName.includes(item));
